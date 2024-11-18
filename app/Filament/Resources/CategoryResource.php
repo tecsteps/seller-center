@@ -24,27 +24,30 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\Toggle::make('is_active'),
-                Forms\Components\Select::make('parent_id')
-                    ->relationship('parent', 'name')
-                    ->options(function ($record) {
-                        // Get all descendant IDs to exclude them along with the current record
-                        $excludeIds = [$record?->id ?? 0];
-                        if ($record) {
-                            $descendants = Category::where('parent_id', $record->id)->get();
-                            foreach ($descendants as $descendant) {
-                                $excludeIds[] = $descendant->id;
-                                // Get children of descendants recursively
-                                $childIds = Category::where('parent_id', $descendant->id)->pluck('id')->toArray();
-                                $excludeIds = array_merge($excludeIds, $childIds);
-                            }
-                        }
-                        return Category::whereNotIn('id', $excludeIds)->pluck('name', 'id');
-                    }),
+                Forms\Components\Section::make('Category Details')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required(),
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull(),
+                        Forms\Components\Toggle::make('is_active'),
+                        Forms\Components\Select::make('parent_id')
+                            ->relationship('parent', 'name')
+                            ->options(function ($record) {
+                                // Get all descendant IDs to exclude them along with the current record
+                                $excludeIds = [$record?->id ?? 0];
+                                if ($record) {
+                                    $descendants = Category::where('parent_id', $record->id)->get();
+                                    foreach ($descendants as $descendant) {
+                                        $excludeIds[] = $descendant->id;
+                                        // Get children of descendants recursively
+                                        $childIds = Category::where('parent_id', $descendant->id)->pluck('id')->toArray();
+                                        $excludeIds = array_merge($excludeIds, $childIds);
+                                    }
+                                }
+                                return Category::whereNotIn('id', $excludeIds)->pluck('name', 'id');
+                            }),
+                    ]),
             ]);
     }
 
@@ -92,8 +95,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            
-            //
+            RelationManagers\SellerProductsRelationManager::class,
         ];
     }
 

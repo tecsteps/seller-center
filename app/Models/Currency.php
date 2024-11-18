@@ -18,6 +18,7 @@ class Currency extends Model
         'code',
         'symbol',
         'name',
+        'is_default',
     ];
 
     /**
@@ -27,5 +28,6 @@ class Currency extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'is_default' => 'boolean',
     ];
 }

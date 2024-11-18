@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Price;
+use Filament\Actions;
 
 class CurrencyResource extends Resource
 {
@@ -24,11 +25,22 @@ class CurrencyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->required(),
-                Forms\Components\TextInput::make('symbol')
-                    ->required(),
-                Forms\Components\TextInput::make('name')
+                Forms\Components\Section::make()
+                    ->schema([
+                        Forms\Components\TextInput::make('code')
+                            ->required(),
+                        Forms\Components\TextInput::make('symbol')
+                            ->required(),
+                        Forms\Components\TextInput::make('name'),
+                        Forms\Components\Toggle::make('is_default')
+                            ->afterStateUpdated(function($state, Currency $record) {
+                                if ($state) {
+                                    Currency::where('id', '!=', $record->id)
+                                        ->update(['is_default' => false]);
+                                }
+                            }),
+                    ])
+                    ->columns(2)
             ]);
     }
 
@@ -37,11 +49,14 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('symbol')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('is_default')
+                    ->boolean()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

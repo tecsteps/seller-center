@@ -17,7 +17,6 @@ class SellerProductResource extends Resource
 {
     protected static ?string $model = SellerProduct::class;
 
-    
     protected static ?string $navigationLabel = 'Products';
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
@@ -28,20 +27,26 @@ class SellerProductResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->native(false)
+                    ->required()
+                    ->suffixAction(
+                        Forms\Components\Actions\Action::make('viewCategory')
+                            ->icon('heroicon-m-arrow-top-right-on-square')
+                            ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
+                    ),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\KeyValue::make('attributes')
                     ->columnSpanFull()
                     ->keyLabel('Key')
                     ->valueLabel('Value')
-                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
+                    ->dehydrateStateUsing(fn($state) => is_array($state) ? $state : [])
                     ->reorderable()
                     ->editableKeys()
                     ->editableValues()
                     ->reorderable(),
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->required(),
             ]);
     }
 

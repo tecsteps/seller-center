@@ -12,6 +12,11 @@ class EditCategory extends EditRecord
 {
     protected static string $resource = CategoryResource::class;
 
+    public function getTitle(): string 
+    {
+        return 'Edit Category "' . $this->record->name . '"';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -21,5 +26,10 @@ class EditCategory extends EditRecord
                                !SellerProduct::where('category_id', $record->id)->exists();
                 }),
         ];
+    }
+
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
     }
 }

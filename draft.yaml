@@ -7,6 +7,7 @@ models:
 
   SellerProduct:
     name: string
+    sku: string nullable
     description: text nullable
     attributes: json nullable
     category_id: id foreign
@@ -40,6 +41,7 @@ models:
     code: string
     symbol: string
     name: string nullable
+    is_default: boolean default:false
 
   Status:
     name: enum:draft,pending_approval,approved,rejected,active,inactive,archived

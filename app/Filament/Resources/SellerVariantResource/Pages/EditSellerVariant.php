@@ -10,6 +10,11 @@ class EditSellerVariant extends EditRecord
 {
     protected static string $resource = SellerVariantResource::class;
 
+    public function getTitle(): string 
+    {
+        return 'Edit Variant "' . $this->record->name . '"';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

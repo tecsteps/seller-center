@@ -23,6 +23,7 @@ class SellerProductFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'sku' => $this->faker->word(),
             'description' => $this->faker->text(),
             'attributes' => '{}',
             'category_id' => Category::factory(),

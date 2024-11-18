@@ -24,6 +24,7 @@ class CurrencyFactory extends Factory
             'code' => $this->faker->word(),
             'symbol' => $this->faker->word(),
             'name' => $this->faker->name(),
+            'is_default' => $this->faker->boolean(),
         ];
     }
 }

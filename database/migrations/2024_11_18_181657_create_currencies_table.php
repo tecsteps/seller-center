@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('symbol');
             $table->string('name')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
 
