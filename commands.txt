@@ -1,6 +1,8 @@
 
 php artisan blueprint:erase &&  php artisan blueprint:build &&  php artisan migrate:fresh --seed
 
+blueprint:trace && php artisan blueprint:build &&  php artisan migrate:fresh --seed
+
 
 php artisan make:filament-resource Currency  --generate
 php artisan make:filament-resource Category  --generate

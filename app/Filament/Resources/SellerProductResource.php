@@ -17,7 +17,10 @@ class SellerProductResource extends Resource
 {
     protected static ?string $model = SellerProduct::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    
+    protected static ?string $navigationLabel = 'Products';
+
+    protected static ?string $navigationIcon = 'heroicon-o-cube';
 
     public static function form(Form $form): Form
     {

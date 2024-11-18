@@ -17,50 +17,53 @@ class SellerVariantResource extends Resource
 {
     protected static ?string $model = SellerVariant::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    
+    protected static ?string $navigationLabel = 'Variants';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Section::make('Variant Details')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->helperText('The display name for this variant'),
-                        Forms\Components\Select::make('seller_product_id')
-                            ->relationship('sellerProduct', 'name')
-                            ->disabled()
-                            ->required()
-                            ->helperText('The product this variant belongs to. This cannot be changed once created.')
-                            ->suffixAction(
-                                Forms\Components\Actions\Action::make('viewProduct')
-                                    ->icon('heroicon-m-arrow-top-right-on-square')
-                                    ->url(fn ($record) => SellerProductResource::getUrl('edit', ['record' => $record->seller_product_id]))
-                            ),
-                        Forms\Components\TextInput::make('sku')
-                            ->label('SKU')
-                            ->helperText('Stock Keeping Unit - A unique identifier for this variant'),
-                        Forms\Components\Textarea::make('description')
-                            ->columnSpanFull()
-                            ->helperText('Detailed description of this specific variant which overrides the product description'),
-                        Forms\Components\KeyValue::make('attributes')
-                            ->columnSpanFull()
-                            ->helperText('Custom attributes for this variant (e.g. Color: Red, Size: Large)')
-                            ->keyLabel('Key')
-                            ->valueLabel('Value')
-                            ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
-                            ->reorderable()
-                            ->editableKeys()
-                            ->editableValues(),
-                        Forms\Components\Select::make('status_id')
-                            ->relationship('status', 'name')
-                            ->native(false)
-                            ->required()
-                            ->helperText('Current status of this variant (draft, pending approval, etc.)'),
-                    ])
-                    ->columns(2)
-            ]);
+        ->schema([
+            Forms\Components\Section::make('Variant Details')
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->helperText('The display name for this variant'),
+                    Forms\Components\Select::make('seller_product_id')
+                        ->relationship('sellerProduct', 'name')
+                        ->disabled()
+                        ->required()
+                        ->helperText('The product this variant belongs to. This cannot be changed once created.')
+                        ->suffixAction(
+                            Forms\Components\Actions\Action::make('viewProduct')
+                                ->icon('heroicon-m-arrow-top-right-on-square')
+                                ->url(fn ($record) => SellerProductResource::getUrl('edit', ['record' => $record->seller_product_id]))
+                        ),
+                    Forms\Components\TextInput::make('sku')
+                        ->label('SKU')
+                        ->helperText('Stock Keeping Unit - A unique identifier for this variant'),
+                    Forms\Components\Textarea::make('description')
+                        ->columnSpanFull()
+                        ->helperText('Detailed description of this specific variant which overrides the product description'),
+                    Forms\Components\KeyValue::make('attributes')
+                        ->columnSpanFull()
+                        ->helperText('Custom attributes for this variant (e.g. Color: Red, Size: Large)')
+                        ->keyLabel('Key')
+                        ->valueLabel('Value')
+                        ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
+                        ->reorderable()
+                        ->editableKeys()
+                        ->editableValues(),
+                    Forms\Components\Select::make('status_id')
+                        ->relationship('status', 'name')
+                        ->native(false)
+                        ->required()
+                        ->helperText('Current status of this variant (draft, pending approval, etc.)'),
+                ])
+                ->columns(2)
+        ]);
+   
     }
 
     public static function table(Table $table): Table

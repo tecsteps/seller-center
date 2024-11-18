@@ -7,27 +7,13 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Filament\Resources\SellerVariantResource;
+use App\Filament\Resources\SellerProductResource;
 
 class VariantsRelationManager extends RelationManager
 {
     protected static string $relationship = 'variants';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('sku')
-                    ->nullable(),
-                Forms\Components\Textarea::make('description')
-                    ->nullable(),
-                Forms\Components\KeyValue::make('attributes')
-                    ->nullable()
-                    ->keyLabel('Property')
-                    ->valueLabel('Value'),
-            ]);
-    }
 
     public function table(Table $table): Table
     {
@@ -42,15 +28,15 @@ class VariantsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->url(fn ($record) => SellerVariantResource::getUrl('edit', ['record' => $record]))
+                    ->openUrlInNewTab(false),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
