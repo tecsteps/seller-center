@@ -97,7 +97,7 @@ class SellerVariantResource extends Resource
                         $price = $record->prices()->whereHas('currency', function ($query) use ($defaultCurrency) {
                             $query->where('id', $defaultCurrency->id);
                         })->first();
-                        
+
                         return (float) $price->amount / 100;
                     })
                     ->sortable(),
@@ -112,7 +112,46 @@ class SellerVariantResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->relationship('status', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('seller_product')
+                    ->relationship('sellerProduct', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->label('Product'),
+                Tables\Filters\Filter::make('price_range')
+                    ->form([
+                        Forms\Components\TextInput::make('price_from')
+                            ->numeric()
+                            ->label('Price from')
+                            ->prefix(\App\Models\Currency::where('is_default', true)->first()->symbol),
+                        Forms\Components\TextInput::make('price_to') 
+                            ->numeric()
+                            ->label('Price to')
+                            ->prefix(\App\Models\Currency::where('is_default', true)->first()->symbol),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $defaultCurrency = \App\Models\Currency::where('is_default', true)->first();
+                        return $query
+                            ->when(
+                                $data['price_from'],
+                                fn (Builder $query, $price): Builder => $query->whereHas(
+                                    'prices',
+                                    fn ($q) => $q->where('currency_id', $defaultCurrency->id)
+                                        ->where('amount', '>=', $price * 100)
+                                )
+                            )
+                            ->when(
+                                $data['price_to'],
+                                fn (Builder $query, $price): Builder => $query->whereHas(
+                                    'prices',
+                                    fn ($q) => $q->where('currency_id', $defaultCurrency->id)
+                                        ->where('amount', '<=', $price * 100)
+                                )
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -22,7 +22,7 @@ class PricesRelationManager extends RelationManager
                     ->relationship('currency', 'name')
                     ->disabled()
                     ->required(),
-                Forms\Components\TextInput::make('value')
+                Forms\Components\TextInput::make('amount')
                     ->numeric()
                     ->prefix('$')
                     ->required()
@@ -38,7 +38,7 @@ class PricesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('currency.name'),
-                Tables\Columns\TextColumn::make('value')
+                Tables\Columns\TextColumn::make('amount')
                     ->money(fn ($record) => $record->currency->code, 100)
             ])
             ->actions([

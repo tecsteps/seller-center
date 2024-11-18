@@ -37,16 +37,6 @@ class SellerVariant extends Model
         'status_id' => 'integer',
     ];
 
-    public function sellerProduct(): BelongsTo
-    {
-        return $this->belongsTo(SellerProduct::class);
-    }
-
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(Status::class);
-    }
-
     public function prices(): HasMany
     {
         return $this->hasMany(Price::class);
@@ -55,5 +45,15 @@ class SellerVariant extends Model
     public function stocks(): HasMany
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function sellerProduct(): BelongsTo
+    {
+        return $this->belongsTo(SellerProduct::class);
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class);
     }
 }

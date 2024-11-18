@@ -34,13 +34,13 @@ class Category extends Model
         'parent_id' => 'integer',
     ];
 
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
-
     public function sellerProducts(): HasMany
     {
         return $this->hasMany(SellerProduct::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

@@ -35,13 +35,14 @@ class SellerProduct extends Model
         'category_id' => 'integer',
     ];
 
+
+    public function sellerVariants(): HasMany
+    {
+        return $this->hasMany(SellerVariant::class);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function variants(): HasMany
-    {
-        return $this->hasMany(SellerVariant::class);
     }
 }

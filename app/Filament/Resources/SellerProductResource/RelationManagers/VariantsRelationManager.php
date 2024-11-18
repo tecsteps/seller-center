@@ -12,7 +12,7 @@ use App\Filament\Resources\SellerProductResource;
 
 class VariantsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'variants';
+    protected static string $relationship = 'sellerVariants';
 
 
     public function table(Table $table): Table

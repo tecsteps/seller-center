@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         $categories = [
             [
-                'name' => 'All Products',
+                'name' => 'Root',
                 'description' => 'Root category for all products',
                 'is_active' => true,
                 'parent_id' => null,

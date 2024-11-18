@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Currency extends Model
 {
@@ -30,4 +31,9 @@ class Currency extends Model
         'id' => 'integer',
         'is_default' => 'boolean',
     ];
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class);
+    }
 }

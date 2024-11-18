@@ -5,9 +5,12 @@ namespace App\Filament\Resources\SellerVariantResource\Pages;
 use App\Filament\Resources\SellerVariantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Traits\RedirectsToIndex;
 
 class EditSellerVariant extends EditRecord
 {
+    use RedirectsToIndex;
+
     protected static string $resource = SellerVariantResource::class;
 
     public function getTitle(): string 

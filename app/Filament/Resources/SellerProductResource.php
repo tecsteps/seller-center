@@ -71,9 +71,10 @@ class SellerProductResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('variants_count')
-                    ->counts('variants')
-                    ->label('Variants'),
+                Tables\Columns\TextColumn::make('seller_variants_count')
+                    ->label('Variants')
+                    ->counts('sellerVariants')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -84,7 +85,16 @@ class SellerProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('category')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\Filter::make('has_variants')
+                    ->query(fn (Builder $query): Builder => $query->has('sellerVariants'))
+                    ->label('Has variants'),
+                Tables\Filters\Filter::make('no_variants') 
+                    ->query(fn (Builder $query): Builder => $query->doesntHave('sellerVariants'))
+                    ->label('No variants'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

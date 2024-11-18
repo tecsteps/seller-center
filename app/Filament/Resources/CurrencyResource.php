@@ -70,7 +70,8 @@ class CurrencyResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->slideOver(),
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (Currency $record): bool {
                         return !Price::where('currency_id', $record->id)->exists();
@@ -94,8 +95,14 @@ class CurrencyResource extends Resource
     {
         return [
             'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getNavigationActions(): array
+    {
+        return [
+            Tables\Actions\CreateAction::make()
+                ->slideOver(),
         ];
     }
 }
