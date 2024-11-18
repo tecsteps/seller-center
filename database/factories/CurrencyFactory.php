@@ -24,7 +24,6 @@ class CurrencyFactory extends Factory
             'code' => $this->faker->word(),
             'symbol' => $this->faker->word(),
             'name' => $this->faker->name(),
-            'precision' => $this->faker->numberBetween(-10000, 10000),
         ];
     }
 }

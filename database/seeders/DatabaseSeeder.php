@@ -285,6 +285,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'WH-1000XM4 - Midnight Black',
                 'description' => 'Classic black colorway with premium finish',
+                'sku' => 'SONY-WH4-BLK',
                 'attributes' => [
                     'color' => 'Midnight Black',
                     'warranty' => '1 year',
@@ -296,6 +297,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'WH-1000XM4 - Platinum Silver',
                 'description' => 'Sleek silver edition with matching accessories',
+                'sku' => 'SONY-WH4-SLV',
                 'attributes' => [
                     'color' => 'Platinum Silver',
                     'warranty' => '1 year',
@@ -308,6 +310,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Dutch Oven - Flame Orange 5.5Qt',
                 'description' => 'Signature flame orange color, 5.5-quart capacity',
+                'sku' => 'LC-DO-55-FLM',
                 'attributes' => [
                     'color' => 'Flame Orange',
                     'size' => '5.5 Qt',
@@ -319,6 +322,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Dutch Oven - Marine Blue 7.25Qt',
                 'description' => 'Deep marine blue color, larger 7.25-quart capacity',
+                'sku' => 'LC-DO-72-MRN',
                 'attributes' => [
                     'color' => 'Marine Blue',
                     'size' => '7.25 Qt',
@@ -331,6 +335,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Pegasus 38 - Black/White US 9',
                 'description' => 'Classic black and white colorway, size US 9',
+                'sku' => 'NK-PG38-BW-09',
                 'attributes' => [
                     'color' => 'Black/White',
                     'size' => 'US 9',
@@ -342,6 +347,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Pegasus 38 - Grey/Volt US 10',
                 'description' => 'Grey with volt accents, size US 10',
+                'sku' => 'NK-PG38-GV-10',
                 'attributes' => [
                     'color' => 'Grey/Volt',
                     'size' => 'US 10',
@@ -354,6 +360,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'V15 Detect - Complete',
                 'description' => 'Complete set with all attachments',
+                'sku' => 'DYS-V15-CMP',
                 'attributes' => [
                     'model' => 'Complete',
                     'attachments' => ['All Standard', 'Extra Tools'],
@@ -365,6 +372,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'V15 Detect - Essential',
                 'description' => 'Essential package with standard attachments',
+                'sku' => 'DYS-V15-ESS',
                 'attributes' => [
                     'model' => 'Essential',
                     'attachments' => ['Standard Only'],
@@ -631,19 +639,16 @@ class DatabaseSeeder extends Seeder
                 'code' => 'USD',
                 'symbol' => '$',
                 'name' => 'US Dollar',
-                'precision' => 2
             ],
             [
                 'code' => 'EUR',
                 'symbol' => '€',
                 'name' => 'Euro',
-                'precision' => 2
             ],
             [
                 'code' => 'GBP',
                 'symbol' => '£',
                 'name' => 'British Pound Sterling',
-                'precision' => 2
             ]
         ];
 

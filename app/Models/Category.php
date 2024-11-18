@@ -37,9 +37,4 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
-    public function sellerProducts()
-    {
-        return $this->hasMany(SellerProduct::class);
-    }
 }

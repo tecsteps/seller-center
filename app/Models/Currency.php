@@ -18,7 +18,6 @@ class Currency extends Model
         'code',
         'symbol',
         'name',
-        'precision',
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SellerVariant extends Model
 {
@@ -17,6 +18,7 @@ class SellerVariant extends Model
      */
     protected $fillable = [
         'name',
+        'sku',
         'description',
         'attributes',
         'seller_product_id',
@@ -43,5 +45,10 @@ class SellerVariant extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class);
     }
 }

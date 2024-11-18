@@ -13,6 +13,7 @@ models:
 
   SellerVariant:
     name: string
+    sku: string nullable
     description: text nullable
     attributes: json nullable
     seller_product_id: id foreign
@@ -39,7 +40,6 @@ models:
     code: string
     symbol: string
     name: string nullable
-    precision: integer nullable
 
   Status:
     name: enum:draft,pending_approval,approved,rejected,active,inactive,archived

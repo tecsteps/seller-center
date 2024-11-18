@@ -24,6 +24,7 @@ class SellerVariantFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'sku' => $this->faker->word(),
             'description' => $this->faker->text(),
             'attributes' => '{}',
             'seller_product_id' => SellerProduct::factory(),

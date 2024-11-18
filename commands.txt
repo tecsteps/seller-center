@@ -4,3 +4,6 @@ php artisan blueprint:erase &&  php artisan blueprint:build &&  php artisan migr
 
 php artisan make:filament-resource Currency  --generate
 php artisan make:filament-resource Category  --generate
+
+php artisan make:filament-resource SellerProduct  --generate
+php artisan make:filament-resource SellerVariant  --generate

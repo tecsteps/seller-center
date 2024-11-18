@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('code');
             $table->string('symbol');
             $table->string('name')->nullable();
-            $table->integer('precision')->nullable();
             $table->timestamps();
         });
 

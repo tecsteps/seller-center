@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CurrencyResource\Pages;
-use App\Filament\Resources\CurrencyResource\RelationManagers;
-use App\Models\Currency;
+use App\Filament\Resources\SellerProductResource\Pages;
+use App\Filament\Resources\SellerProductResource\RelationManagers;
+use App\Models\SellerProduct;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,11 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Price;
 
-class CurrencyResource extends Resource
+class SellerProductResource extends Resource
 {
-    protected static ?string $model = Currency::class;
+    protected static ?string $model = SellerProduct::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -24,11 +23,22 @@ class CurrencyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->required(),
-                Forms\Components\TextInput::make('symbol')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\KeyValue::make('attributes')
+                    ->columnSpanFull()
+                    ->keyLabel('Key')
+                    ->valueLabel('Value')
+                    ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
+                    ->reorderable()
+                    ->editableKeys()
+                    ->editableValues()
+                    ->reorderable(),
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->required(),
             ]);
     }
 
@@ -37,11 +47,13 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->searchable(),
-                Tables\Columns\TextColumn::make('code')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('symbol')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('variants_count')
+                    ->counts('variants')
+                    ->label('Variants'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -56,10 +68,6 @@ class CurrencyResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->visible(function (Currency $record): bool {
-                        return !Price::where('currency_id', $record->id)->exists();
-                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -71,16 +79,16 @@ class CurrencyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\VariantsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+            'index' => Pages\ListSellerProducts::route('/'),
+            'create' => Pages\CreateSellerProduct::route('/create'),
+            'edit' => Pages\EditSellerProduct::route('/{record}/edit'),
         ];
     }
 }
