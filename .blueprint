@@ -1,2 +1,35 @@
+created:
+    - database/factories/CategoryFactory.php
+    - database/factories/SellerProductFactory.php
+    - database/factories/SellerVariantFactory.php
+    - database/factories/PriceFactory.php
+    - database/factories/StockFactory.php
+    - database/factories/LocationFactory.php
+    - database/factories/CurrencyFactory.php
+    - database/factories/StatusFactory.php
+    - database/migrations/2024_11_18_115719_create_categories_table.php
+    - database/migrations/2024_11_18_115720_create_seller_products_table.php
+    - database/migrations/2024_11_18_115721_create_seller_variants_table.php
+    - database/migrations/2024_11_18_115722_create_prices_table.php
+    - database/migrations/2024_11_18_115723_create_stocks_table.php
+    - database/migrations/2024_11_18_115724_create_locations_table.php
+    - database/migrations/2024_11_18_115725_create_currencies_table.php
+    - database/migrations/2024_11_18_115726_create_statuses_table.php
+    - app/Models/Category.php
+    - app/Models/SellerProduct.php
+    - app/Models/SellerVariant.php
+    - app/Models/Price.php
+    - app/Models/Stock.php
+    - app/Models/Location.php
+    - app/Models/Currency.php
+    - app/Models/Status.php
 models:
     User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
+    Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable' }
+    SellerProduct: { name: string, description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign' }
+    SellerVariant: { name: string, description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign' }
+    Price: { value: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
+    Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign' }
+    Location: { name: string, address: string, default_delivery_days: 'integer nullable' }
+    Currency: { code: string, symbol: string, name: 'string nullable', precision: 'integer nullable' }
+    Status: { name: 'enum:draft,pending_approval,approved,rejected,active,inactive,archived' }

@@ -1,5 +1,48 @@
 models:
-  # ...
+  Category:
+    name: string
+    description: text nullable
+    is_active: boolean nullable
+    parent_id: id foreign:categories.id nullable
+
+  SellerProduct:
+    name: string
+    description: text nullable
+    attributes: json nullable
+    category_id: id foreign
+
+  SellerVariant:
+    name: string
+    description: text nullable
+    attributes: json nullable
+    seller_product_id: id foreign
+    status_id: id foreign
+
+  Price:
+    value: integer
+    seller_variant_id: id foreign
+    currency_id: id foreign
+
+  Stock:
+    quantity: integer
+    reserved: integer nullable
+    safety_stock: integer nullable
+    seller_variant_id: id foreign
+    location_id: id foreign
+
+  Location:
+    name: string
+    address: string
+    default_delivery_days: integer nullable
+
+  Currency:
+    code: string
+    symbol: string
+    name: string nullable
+    precision: integer nullable
+
+  Status:
+    name: enum:draft,pending_approval,approved,rejected,active,inactive,archived
 
 controllers:
   # ...
