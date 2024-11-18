@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->integer('value');
+            $table->integer('amount');
             $table->foreignId('seller_variant_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('currency_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

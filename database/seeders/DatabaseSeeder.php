@@ -674,9 +674,14 @@ class DatabaseSeeder extends Seeder
                     default => $basePrice
                 };
 
+                // Set USD as default currency
+                if ($currency->code === 'USD') {
+                    $currency->is_default = true;
+                    $currency->save();
+                }
 
                 $price = new Price([
-                    'value' => $value,
+                    'amount' => $value,
                     'seller_variant_id' => $variant->id,
                     'currency_id' => $currency->id
                 ]);

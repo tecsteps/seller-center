@@ -23,7 +23,7 @@ class PriceFactory extends Factory
     public function definition(): array
     {
         return [
-            'value' => $this->faker->numberBetween(-10000, 10000),
+            'amount' => $this->faker->numberBetween(-10000, 10000),
             'seller_variant_id' => SellerVariant::factory(),
             'currency_id' => Currency::factory(),
         ];

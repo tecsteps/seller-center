@@ -7,14 +7,14 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_18_181651_create_categories_table.php
-    - database/migrations/2024_11_18_181652_create_seller_products_table.php
-    - database/migrations/2024_11_18_181653_create_seller_variants_table.php
-    - database/migrations/2024_11_18_181654_create_prices_table.php
-    - database/migrations/2024_11_18_181655_create_stocks_table.php
-    - database/migrations/2024_11_18_181656_create_locations_table.php
-    - database/migrations/2024_11_18_181657_create_currencies_table.php
-    - database/migrations/2024_11_18_181658_create_statuses_table.php
+    - database/migrations/2024_11_18_184502_create_categories_table.php
+    - database/migrations/2024_11_18_184503_create_seller_products_table.php
+    - database/migrations/2024_11_18_184504_create_seller_variants_table.php
+    - database/migrations/2024_11_18_184505_create_prices_table.php
+    - database/migrations/2024_11_18_184506_create_stocks_table.php
+    - database/migrations/2024_11_18_184507_create_locations_table.php
+    - database/migrations/2024_11_18_184508_create_currencies_table.php
+    - database/migrations/2024_11_18_184509_create_statuses_table.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
     - app/Models/SellerVariant.php
@@ -24,12 +24,12 @@ created:
     - app/Models/Currency.php
     - app/Models/Status.php
 models:
-    User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
     Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable' }
+    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false' }
+    Location: { name: string, address: string, default_delivery_days: 'integer nullable' }
+    Price: { amount: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
     SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign' }
     SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign' }
-    Price: { value: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
-    Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign' }
-    Location: { name: string, address: string, default_delivery_days: 'integer nullable' }
-    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false' }
     Status: { name: 'enum:draft,pending_approval,approved,rejected,active,inactive,archived' }
+    Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign' }
+    User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }

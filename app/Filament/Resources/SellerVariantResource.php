@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Log;
 
 class SellerVariantResource extends Resource
 {
@@ -42,7 +43,8 @@ class SellerVariantResource extends Resource
                             ),
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
-                            ->helperText('Stock Keeping Unit - A unique identifier for this variant'),
+                            ->helperText('Stock Keeping Unit - A unique identifier for this variant')
+                            ->hint(fn($record) => $record?->sellerProduct?->sku ? "Product SKU: {$record->sellerProduct->sku}" : null),
                         Forms\Components\Select::make('status_id')
                             ->relationship('status', 'name')
                             ->native(false)
@@ -75,13 +77,6 @@ class SellerVariantResource extends Resource
                 Tables\Columns\TextColumn::make('sku')
                     ->label('SKU')
                     ->searchable(),
-                // Tables\Columns\TextColumn::make('sellerProduct.name')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('price')
-                //     ->money(fn ($record) => $record->prices()->whereHas('currency', fn($q) => $q->where('is_default', true))->first()?->currency ?? 'USD')
-                //     ->getStateUsing(fn ($record) => $record->prices()->whereHas('currency', fn($q) => $q->where('is_default', true))->first()?->amount)
-                //     ->label('Price'),
                 Tables\Columns\TextColumn::make('status.name')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -94,6 +89,19 @@ class SellerVariantResource extends Resource
                         'archived' => 'danger'
                     })
                     ->sortable(),
+                Tables\Columns\TextColumn::make('prices')
+                    ->label(fn() => 'Price (' . \App\Models\Currency::where('is_default', true)->first()->code . ')')
+                    ->money(fn() => \App\Models\Currency::where('is_default', true)->first()->code)
+                    ->getStateUsing(function ($record) {
+                        $defaultCurrency = \App\Models\Currency::where('is_default', true)->first();
+                        $price = $record->prices()->whereHas('currency', function ($query) use ($defaultCurrency) {
+                            $query->where('id', $defaultCurrency->id);
+                        })->first();
+                        
+                        return (float) $price->amount / 100;
+                    })
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -120,6 +128,7 @@ class SellerVariantResource extends Resource
     {
         return [
             RelationManagers\PricesRelationManager::class,
+            RelationManagers\StocksRelationManager::class,
         ];
     }
 

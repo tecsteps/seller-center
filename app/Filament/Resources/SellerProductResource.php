@@ -25,28 +25,40 @@ class SellerProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->native(false)
-                    ->required()
-                    ->suffixAction(
-                        Forms\Components\Actions\Action::make('viewCategory')
-                            ->icon('heroicon-m-arrow-top-right-on-square')
-                            ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
-                    ),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\KeyValue::make('attributes')
-                    ->columnSpanFull()
-                    ->keyLabel('Key')
-                    ->valueLabel('Value')
-                    ->dehydrateStateUsing(fn($state) => is_array($state) ? $state : [])
-                    ->reorderable()
-                    ->editableKeys()
-                    ->editableValues()
-                    ->reorderable(),
+                Forms\Components\Section::make('Product Details')
+                    ->description('Enter the basic information about the product.')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->helperText('The display name for this product'),
+                        Forms\Components\Select::make('category_id')
+                            ->relationship('category', 'name')
+                            ->native(false)
+                            ->required()
+                            ->helperText('The category this product belongs to')
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('viewCategory')
+                                    ->icon('heroicon-m-arrow-top-right-on-square')
+                                    ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
+                            ),
+                        Forms\Components\TextInput::make('sku')
+                            ->label('SKU')
+                            ->helperText('Stock Keeping Unit - A unique identifier for this product'),
+
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull()
+                            ->helperText('A detailed description of the product'),
+                        Forms\Components\KeyValue::make('attributes')
+                            ->columnSpanFull()
+                            ->keyLabel('Attribute')
+                            ->valueLabel('Value')
+                            ->helperText('Custom attributes for this product (e.g. Brand: Nike, Material: Cotton)')
+                            ->dehydrateStateUsing(fn($state) => is_array($state) ? $state : [])
+                            ->reorderable()
+                            ->editableKeys()
+                            ->editableValues(),
+                    ])
+                    ->columns(2)
             ]);
     }
 

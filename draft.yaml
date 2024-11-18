@@ -21,7 +21,7 @@ models:
     status_id: id foreign
 
   Price:
-    value: integer
+    amount: integer
     seller_variant_id: id foreign
     currency_id: id foreign
 

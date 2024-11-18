@@ -16,7 +16,7 @@ class Price extends Model
      * @var array
      */
     protected $fillable = [
-        'value',
+        'amount',
         'seller_variant_id',
         'currency_id',
     ];

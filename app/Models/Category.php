@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\SellerProduct;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -39,7 +39,7 @@ class Category extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function sellerProducts()
+    public function sellerProducts(): HasMany
     {
         return $this->hasMany(SellerProduct::class);
     }
