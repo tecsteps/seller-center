@@ -20,20 +20,23 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 
-class AdminPanelProvider extends PanelProvider
+class OperatorPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('operator')
+            ->path('operator')
             ->login()
-            ->brandName('Seller Center')
+            ->brandName('Operator Center')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Emerald,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            // ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->resources([
+                \App\Filament\Resources\CurrencyResource::class,
+                \App\Filament\Resources\CategoryResource::class,
+            ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,

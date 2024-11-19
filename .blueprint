@@ -7,14 +7,14 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_18_190303_create_categories_table.php
-    - database/migrations/2024_11_18_190304_create_seller_products_table.php
-    - database/migrations/2024_11_18_190305_create_seller_variants_table.php
-    - database/migrations/2024_11_18_190306_create_prices_table.php
-    - database/migrations/2024_11_18_190307_create_stocks_table.php
-    - database/migrations/2024_11_18_190308_create_locations_table.php
-    - database/migrations/2024_11_18_190309_create_currencies_table.php
-    - database/migrations/2024_11_18_190310_create_statuses_table.php
+    - database/migrations/2024_11_18_200029_create_categories_table.php
+    - database/migrations/2024_11_18_200030_create_seller_products_table.php
+    - database/migrations/2024_11_18_200031_create_seller_variants_table.php
+    - database/migrations/2024_11_18_200032_create_prices_table.php
+    - database/migrations/2024_11_18_200033_create_stocks_table.php
+    - database/migrations/2024_11_18_200034_create_locations_table.php
+    - database/migrations/2024_11_18_200035_create_currencies_table.php
+    - database/migrations/2024_11_18_200036_create_statuses_table.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
     - app/Models/SellerVariant.php

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\SellerVariantResource\Pages;
+namespace App\Filament\Seller\Resources\SellerVariantResource\Pages;
 
-use App\Filament\Resources\SellerVariantResource;
+use App\Filament\Seller\Resources\SellerVariantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Traits\RedirectsToIndex;

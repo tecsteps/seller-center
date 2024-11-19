@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Seller\Resources;
 
-use App\Filament\Resources\SellerProductResource\Pages;
-use App\Filament\Resources\SellerProductResource\RelationManagers;
+use App\Filament\Seller\Resources\SellerProductResource\Pages;
+use App\Filament\Seller\Resources\SellerProductResource\RelationManagers;
 use App\Models\SellerProduct;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -35,12 +35,12 @@ class SellerProductResource extends Resource
                             ->relationship('category', 'name')
                             ->native(false)
                             ->required()
-                            ->helperText('The category this product belongs to')
-                            ->suffixAction(
-                                Forms\Components\Actions\Action::make('viewCategory')
-                                    ->icon('heroicon-m-arrow-top-right-on-square')
-                                    ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
-                            ),
+                            ->helperText('The category this product belongs to'),
+                            // ->suffixAction(
+                            //     Forms\Components\Actions\Action::make('viewCategory')
+                            //         ->icon('heroicon-m-arrow-top-right-on-square')
+                            //         ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
+                            // ),
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
                             ->helperText('Stock Keeping Unit - A unique identifier for this product'),

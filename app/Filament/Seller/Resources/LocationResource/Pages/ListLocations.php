@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\LocationResource\Pages;
+namespace App\Filament\Seller\Resources\LocationResource\Pages;
 
-use App\Filament\Resources\LocationResource;
+use App\Filament\Seller\Resources\LocationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

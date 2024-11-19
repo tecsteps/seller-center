@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Seller\Resources;
 
-use App\Filament\Resources\SellerVariantResource\Pages;
-use App\Filament\Resources\SellerVariantResource\RelationManagers;
+use App\Filament\Seller\Resources\SellerVariantResource\Pages;
+use App\Filament\Seller\Resources\SellerVariantResource\RelationManagers;
 use App\Models\SellerVariant;
 use Filament\Forms;
 use Filament\Forms\Form;

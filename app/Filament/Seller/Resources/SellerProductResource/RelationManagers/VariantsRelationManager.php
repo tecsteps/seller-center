@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\SellerProductResource\RelationManagers;
+namespace App\Filament\Seller\Resources\SellerProductResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Filament\Resources\SellerVariantResource;
-use App\Filament\Resources\SellerProductResource;
+use App\Filament\Seller\Resources\SellerVariantResource;
+use App\Filament\Seller\Resources\SellerProductResource;
 
 class VariantsRelationManager extends RelationManager
 {

@@ -35,7 +35,6 @@ class SellerProduct extends Model
         'category_id' => 'integer',
     ];
 
-
     public function sellerVariants(): HasMany
     {
         return $this->hasMany(SellerVariant::class);
