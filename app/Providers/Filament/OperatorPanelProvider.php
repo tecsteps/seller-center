@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\RegisterOperator;
+use App\Models\Operator;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,6 +30,12 @@ class OperatorPanelProvider extends PanelProvider
             ->id('operator')
             ->path('operator')
             ->login()
+            ->registration()
+            ->emailVerification()
+            ->passwordReset()
+            ->profile()
+            ->tenant(Operator::class)
+            ->tenantRegistration(RegisterOperator::class)
             ->brandName('Operator Center')
             ->colors([
                 'primary' => Color::Emerald,

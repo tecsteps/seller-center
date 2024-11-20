@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Currency;
+use App\Models\Operator;
 
 class CurrencyFactory extends Factory
 {
@@ -25,6 +26,7 @@ class CurrencyFactory extends Factory
             'symbol' => $this->faker->word(),
             'name' => $this->faker->name(),
             'is_default' => $this->faker->boolean(),
+            'operator_id' => Operator::factory(),
         ];
     }
 }

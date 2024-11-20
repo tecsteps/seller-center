@@ -8,15 +8,16 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_19_181632_create_operators_table.php
-    - database/migrations/2024_11_19_181633_create_categories_table.php
-    - database/migrations/2024_11_19_181634_create_seller_products_table.php
-    - database/migrations/2024_11_19_181635_create_seller_variants_table.php
-    - database/migrations/2024_11_19_181636_create_prices_table.php
-    - database/migrations/2024_11_19_181637_create_stocks_table.php
-    - database/migrations/2024_11_19_181638_create_locations_table.php
-    - database/migrations/2024_11_19_181639_create_currencies_table.php
-    - database/migrations/2024_11_19_181640_create_statuses_table.php
+    - database/migrations/2024_11_20_121210_create_operators_table.php
+    - database/migrations/2024_11_20_121211_create_categories_table.php
+    - database/migrations/2024_11_20_121212_create_seller_products_table.php
+    - database/migrations/2024_11_20_121213_create_seller_variants_table.php
+    - database/migrations/2024_11_20_121214_create_prices_table.php
+    - database/migrations/2024_11_20_121215_create_stocks_table.php
+    - database/migrations/2024_11_20_121216_create_locations_table.php
+    - database/migrations/2024_11_20_121217_create_currencies_table.php
+    - database/migrations/2024_11_20_121218_create_statuses_table.php
+    - database/migrations/2024_11_20_121219_create_operator_user_table.php
     - app/Models/Operator.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
@@ -27,13 +28,13 @@ created:
     - app/Models/Currency.php
     - app/Models/Status.php
 models:
-    User: { name: string, email: string, email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable', operator_id: integer }
-    Operator: { name: string }
-    Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', relationships: { hasMany: SellerProduct } }
+    User: { name: string, email: string, is_operator: "boolean default:'1'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
+    Operator: { name: string, relationships: { belongsToMany: User, hasMany: 'Currency, Category' } }
+    Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', operator_id: 'id foreign', relationships: { hasMany: SellerProduct } }
     SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign', relationships: { hasMany: SellerVariant } }
     SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign', relationships: { hasMany: 'Price, Stock' } }
     Price: { amount: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
     Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign' }
     Location: { name: string, address: string, default_delivery_days: 'integer nullable', relationships: { hasMany: Stock } }
-    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', relationships: { hasMany: Price } }
+    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', operator_id: 'id foreign', relationships: { hasMany: Price } }
     Status: { name: 'enum:draft,pending_approval,approved,rejected,active,inactive,archived', relationships: { hasMany: SellerVariant } }

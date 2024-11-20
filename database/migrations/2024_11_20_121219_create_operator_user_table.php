@@ -13,13 +13,9 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('currencies', function (Blueprint $table) {
-            $table->id();
-            $table->string('code');
-            $table->string('symbol');
-            $table->string('name')->nullable();
-            $table->boolean('is_default')->default(false);
-            $table->timestamps();
+        Schema::create('operator_user', function (Blueprint $table) {
+            $table->foreignId('operator_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
 
         Schema::enableForeignKeyConstraints();
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('operator_user');
     }
 };

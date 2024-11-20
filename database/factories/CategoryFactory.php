@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\Operator;
 
 class CategoryFactory extends Factory
 {
@@ -25,6 +26,7 @@ class CategoryFactory extends Factory
             'description' => $this->faker->text(),
             'is_active' => $this->faker->boolean(),
             'parent_id' => Category::factory(),
+            'operator_id' => Operator::factory(),
         ];
     }
 }

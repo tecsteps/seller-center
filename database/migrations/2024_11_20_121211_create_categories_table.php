@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_active')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('operator_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
 

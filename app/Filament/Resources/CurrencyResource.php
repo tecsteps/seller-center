@@ -33,7 +33,7 @@ class CurrencyResource extends Resource
                             ->required(),
                         Forms\Components\TextInput::make('name'),
                         Forms\Components\Toggle::make('is_default')
-                            ->afterStateUpdated(function($state, Currency $record) {
+                            ->afterStateUpdated(function ($state, Currency $record) {
                                 if ($state) {
                                     Currency::where('id', '!=', $record->id)
                                         ->update(['is_default' => false]);

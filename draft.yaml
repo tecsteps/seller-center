@@ -2,12 +2,16 @@ models:
 
   Operator:
     name: string
+    relationships:
+      belongsToMany: User
+      hasMany: Currency, Category
 
   Category:
     name: string
     description: text nullable
     is_active: boolean nullable
     parent_id: id foreign:categories.id nullable
+    operator_id: id foreign
     relationships:
       hasMany: SellerProduct
 
@@ -55,6 +59,7 @@ models:
     symbol: string
     name: string nullable
     is_default: boolean default:false
+    operator_id: id foreign
     relationships:
       hasMany: Price
 

@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\Stock;
 use App\Models\Currency;
 use App\Models\Price;
+use App\Models\Operator;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,88 +22,111 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create operator first
+        $operator = \App\Models\Operator::create([
+            'name' => 'FooOps',
+        ]);
 
+        // Create user and attach to operator
         $user = \App\Models\User::factory()->create([
             'name' => 'Fabian',
             'email' => 'fabian.wesner@roq.tech',
             'password' => bcrypt('fabian.wesner@roq.tech'),
         ]);
+        $user->operators()->attach($operator->id);
 
         $categories = [
+            // Create root category first
             [
                 'name' => 'Root',
                 'description' => 'Root category for all products',
                 'is_active' => true,
                 'parent_id' => null,
+                'operator_id' => $operator->id,
             ],
+        ];
+
+        // Create root category first
+        Category::create($categories[0]);
+
+        // Now create the rest of the categories
+        $mainCategories = [
             [
                 'name' => 'Electronics',
                 'description' => 'Smartphones, laptops, tablets, and other electronic devices',
                 'is_active' => true,
-                'parent_id' => 1,
+                'parent_id' => 1,  // References the Root category
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Home & Kitchen',
                 'description' => 'Appliances, kitchenware, furniture, and home décor',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Fashion',
                 'description' => 'Clothing, shoes, accessories, and jewelry',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Sports & Outdoors',
                 'description' => 'Athletic equipment, camping gear, and outdoor recreation products',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Beauty & Personal Care',
                 'description' => 'Cosmetics, skincare, haircare, and personal hygiene products',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Books & Media',
                 'description' => 'Books, e-books, movies, music, and educational content',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Toys & Games',
                 'description' => 'Children\'s toys, board games, and entertainment items',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Automotive',
                 'description' => 'Car parts, accessories, and maintenance products',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Pet Supplies',
                 'description' => 'Pet food, accessories, and care products for all types of pets',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Office Supplies',
                 'description' => 'Stationery, office furniture, and business essentials',
                 'is_active' => true,
                 'parent_id' => 1,
+                'operator_id' => $operator->id,
             ],
         ];
-        // First create parent categories
-        foreach ($categories as $category) {
+
+        foreach ($mainCategories as $category) {
             Category::create($category);
         }
 
-        // Add sub-categories
         $subCategories = [
             // Electronics sub-categories
             [
@@ -110,12 +134,14 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Mobile phones and accessories',
                 'is_active' => true,
                 'parent_id' => 2, // Electronics
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Laptops',
                 'description' => 'Notebook computers and accessories',
-                'is_active' => true, 
+                'is_active' => true,
                 'parent_id' => 2,
+                'operator_id' => $operator->id,
             ],
             // Home & Kitchen sub-categories
             [
@@ -123,12 +149,14 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Pots, pans and cooking utensils',
                 'is_active' => true,
                 'parent_id' => 3,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Small Appliances',
                 'description' => 'Coffee makers, toasters, blenders etc',
                 'is_active' => true,
                 'parent_id' => 3,
+                'operator_id' => $operator->id,
             ],
             // Fashion sub-categories
             [
@@ -136,20 +164,20 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Dresses, tops, pants and more for women',
                 'is_active' => true,
                 'parent_id' => 4,
+                'operator_id' => $operator->id,
             ],
             [
                 'name' => 'Men\'s Clothing',
                 'description' => 'Shirts, pants, suits and more for men',
                 'is_active' => true,
                 'parent_id' => 4,
+                'operator_id' => $operator->id,
             ],
         ];
 
         foreach ($subCategories as $category) {
             Category::create($category);
         }
-
-        
 
         $sellerProducts = [
             [
@@ -605,17 +633,17 @@ class DatabaseSeeder extends Seeder
 
         // Create multiple stock entries for each variant across different locations
         $stocks = [];
-        
+
         // Get all variants and locations to distribute stock across them
         $variants = SellerVariant::all();
         $locations = Location::all();
-        
+
         // Create stock entries ensuring good distribution
         foreach ($variants as $variant) {
             // Randomly decide how many locations this variant is stocked in (1-3)
             $numberOfLocations = rand(1, 3);
             $randomLocations = $locations->random($numberOfLocations);
-            
+
             foreach ($randomLocations as $location) {
                 $stocks[] = [
                     'quantity' => rand(50, 500),
@@ -626,10 +654,10 @@ class DatabaseSeeder extends Seeder
                 ];
             }
         }
-        
+
         // Trim to exactly 35 entries if we generated more
         $stocks = array_slice($stocks, 0, 35);
-        
+
         foreach ($stocks as $stock) {
             Stock::create($stock);
         }
@@ -639,21 +667,24 @@ class DatabaseSeeder extends Seeder
                 'code' => 'USD',
                 'symbol' => '$',
                 'name' => 'US Dollar',
+                'operator_id' => $operator->id,
             ],
             [
                 'code' => 'EUR',
                 'symbol' => '€',
                 'name' => 'Euro',
+                'operator_id' => $operator->id,
             ],
             [
                 'code' => 'GBP',
                 'symbol' => '£',
                 'name' => 'British Pound Sterling',
+                'operator_id' => $operator->id,
             ]
         ];
 
         foreach ($currencies as $currency) {
-            Currency::create($currency);
+            Currency::create(array_merge($currency, ['operator_id' => $operator->id]));
         }
 
         // Get all variants and currencies
