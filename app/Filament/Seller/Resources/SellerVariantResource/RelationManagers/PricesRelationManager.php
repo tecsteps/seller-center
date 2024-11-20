@@ -20,15 +20,15 @@ class PricesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Select::make('currency_id')
                     ->relationship('currency', 'name')
-                    ->disabled()
+                    ->disabled(fn($context) => $context === 'edit')
                     ->required(),
                 Forms\Components\TextInput::make('amount')
                     ->numeric()
                     ->prefix('$')
                     ->required()
                     ->step(0.01)
-                    ->formatStateUsing(fn ($state) => number_format($state / 100, 2))
-                    ->dehydrateStateUsing(fn ($state) => (float)str_replace(',', '', $state) * 100)
+                    ->formatStateUsing(fn($state) => number_format($state / 100, 2))
+                    ->dehydrateStateUsing(fn($state) => (float)str_replace(',', '', $state) * 100)
                     ->minValue(0),
             ]);
     }
@@ -39,10 +39,13 @@ class PricesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('currency.name'),
                 Tables\Columns\TextColumn::make('amount')
-                    ->money(fn ($record) => $record->currency->code, 100)
+                    ->money(fn($record) => $record->currency->code, 100)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
-} 
+}

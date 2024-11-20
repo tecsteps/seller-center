@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Log;
 
 class SellerVariantResource extends Resource
 {
+
+    // use Forms\Concerns\InteractsWithForms;
+
     protected static ?string $model = SellerVariant::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
@@ -33,18 +36,26 @@ class SellerVariantResource extends Resource
                             ->helperText('The display name for this variant'),
                         Forms\Components\Select::make('seller_product_id')
                             ->relationship('sellerProduct', 'name')
-                            ->disabled()
                             ->required()
-                            ->helperText('The product this variant belongs to. This cannot be changed once created.')
-                            ->suffixAction(
-                                Forms\Components\Actions\Action::make('viewProduct')
+                            ->native(false)
+                            ->searchable()
+                            ->helperText('The product this variant belongs to.')
+                            ->suffixAction(function (Forms\Components\Actions\Action $action, $record) {
+                                if (!$record) return null;
+                                return $action
+                                    ->make('viewProduct')
                                     ->icon('heroicon-m-arrow-top-right-on-square')
-                                    ->url(fn($record) => SellerProductResource::getUrl('edit', ['record' => $record->seller_product_id]))
-                            ),
+                                    ->url(SellerProductResource::getUrl('edit', ['record' => $record->seller_product_id]));
+                            }),
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
                             ->helperText('Stock Keeping Unit - A unique identifier for this variant')
-                            ->hint(fn($record) => $record?->sellerProduct?->sku ? "Product SKU: {$record->sellerProduct->sku}" : null),
+                            ->hint(function ($record) {
+                                if (!$record || !$record->sellerProduct || !$record->sellerProduct->sku) {
+                                    return null;
+                                }
+                                return "Product SKU: {$record->sellerProduct->sku}";
+                            }),
                         Forms\Components\Select::make('status_id')
                             ->relationship('status', 'name')
                             ->native(false)
@@ -62,7 +73,26 @@ class SellerVariantResource extends Resource
                             ->reorderable()
                             ->editableKeys()
                             ->editableValues(),
-
+                        Forms\Components\Actions::make([
+                            Forms\Components\Actions\Action::make('fillDummyData')
+                                ->label('Fill with dummy data')
+                                ->icon('heroicon-m-sparkles')
+                                ->action(function ($livewire) {
+                                    $livewire->form->fill([
+                                        'name' => fake()->words(3, true),
+                                        'sku' => strtoupper(fake()->bothify('??-####')),
+                                        'description' => fake()->paragraph(),
+                                        'seller_product_id' => \App\Models\SellerProduct::inRandomOrder()->first()->id,
+                                        'status_id' => \App\Models\Status::inRandomOrder()->first()->id,
+                                        'attributes' => [
+                                            'Color' => fake()->colorName(),
+                                            'Size' => fake()->randomElement(['Small', 'Medium', 'Large']),
+                                            'Material' => fake()->randomElement(['Cotton', 'Polyester', 'Wool', 'Silk']),
+                                            'Weight' => fake()->numberBetween(100, 1000) . 'g'
+                                        ]
+                                    ]);
+                                })
+                        ]),
                     ])
                     ->columns(2)
             ]);
@@ -98,7 +128,7 @@ class SellerVariantResource extends Resource
                             $query->where('id', $defaultCurrency->id);
                         })->first();
 
-                        return (float) $price->amount / 100;
+                        return $price ? (float) $price->amount / 100 : null;
                     })
                     ->sortable(),
 
@@ -127,7 +157,7 @@ class SellerVariantResource extends Resource
                             ->numeric()
                             ->label('Price from')
                             ->prefix(\App\Models\Currency::where('is_default', true)->first()->symbol),
-                        Forms\Components\TextInput::make('price_to') 
+                        Forms\Components\TextInput::make('price_to')
                             ->numeric()
                             ->label('Price to')
                             ->prefix(\App\Models\Currency::where('is_default', true)->first()->symbol),
@@ -137,17 +167,17 @@ class SellerVariantResource extends Resource
                         return $query
                             ->when(
                                 $data['price_from'],
-                                fn (Builder $query, $price): Builder => $query->whereHas(
+                                fn(Builder $query, $price): Builder => $query->whereHas(
                                     'prices',
-                                    fn ($q) => $q->where('currency_id', $defaultCurrency->id)
+                                    fn($q) => $q->where('currency_id', $defaultCurrency->id)
                                         ->where('amount', '>=', $price * 100)
                                 )
                             )
                             ->when(
                                 $data['price_to'],
-                                fn (Builder $query, $price): Builder => $query->whereHas(
+                                fn(Builder $query, $price): Builder => $query->whereHas(
                                     'prices',
-                                    fn ($q) => $q->where('currency_id', $defaultCurrency->id)
+                                    fn($q) => $q->where('currency_id', $defaultCurrency->id)
                                         ->where('amount', '<=', $price * 100)
                                 )
                             );
