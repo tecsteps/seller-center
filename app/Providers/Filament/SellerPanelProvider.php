@@ -27,6 +27,20 @@ class SellerPanelProvider extends PanelProvider
         return $panel
             ->id('seller')
             ->path('seller')
+            ->login()
+            ->registration(
+            //     [
+            //     'after' => function ($user) {
+            //         \App\Models\Seller::create([
+            //             'user_id' => $user->id,
+            //             'status' => 'pending', // or whatever default status you want
+            //         ]);
+            //     },
+            // ]
+            )
+            ->passwordReset()
+            ->emailVerification()
+            ->profile()
             ->brandName('Seller Center')
             ->colors([
                 'primary' => Color::Amber,

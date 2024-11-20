@@ -1,4 +1,8 @@
 models:
+
+  Operator:
+    name: string
+
   Category:
     name: string
     description: text nullable
