@@ -1,66 +1,30 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## About the project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository represents a new open source Seller Center. A Seller Center is a SaaS application that runs side-by-side to the online shop and is integrated via API. It allows sellers to manage their products, stocks, and prices, while also processing orders from the shop. If you’ve ever sold something on platforms like Amazon or eBay, you’re already familiar with the concept.
 
-## About Laravel
+Despite its importance for every marketplace, most existing e-commerce platforms lack this functionality, leaving shop operators to rely on expensive commercial solutions like Mirakl, Marketplacer or Arcadier.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Surprisingly, there’s no strong open-source alternative available...
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This project is built in public and will be free to use. I will regularly document my progress from the initial implementation to the release of the first version of the project. I aim to share insights, challenges, and solutions along the way, providing a transparent view of building an open-source Seller Center. Stay tuned as I transform this idea into a reality.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Follow me me on LinkedIn or X to get updates: 
+- https://x.com/fabianwesner
+- https://www.linkedin.com/in/fabian-wesner/
 
-## Learning Laravel
+## Install Guide
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+This is a regular Laravel & FilamentPHP application. You can install it like any other Laravel application. Just clone the repository and run `composer run dev`.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+URLs
+* Shop Operators: http://localhost:8000/operator/ (Use `operator@tecsteps.com` as username and password)
+* Sellers: http://localhost:8000/seller/ (Use `seller@tecsteps.com` as username and password)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## User Guide
 
-## Laravel Sponsors
+There is no fully blown documentation yet. The idea is pretty simple:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* Shop operators can register and configure their shop (set categories, currencies, product-types, manage their sellers, etc.)
+* Sellers can also register and apply for a shop. Then they can import their products, manage stocks, prices, etc.
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Seller Center is a multi-tenant application. Operators and Sellers are tenants. Each tenant has its own data and set of users (with permissions at some point).
