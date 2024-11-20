@@ -21,6 +21,7 @@ class Stock extends Model
         'safety_stock',
         'seller_variant_id',
         'location_id',
+        'seller_id',
     ];
 
     /**
@@ -32,6 +33,7 @@ class Stock extends Model
         'id' => 'integer',
         'seller_variant_id' => 'integer',
         'location_id' => 'integer',
+        'seller_id' => 'integer',
     ];
 
     public function sellerVariant(): BelongsTo
@@ -42,5 +44,10 @@ class Stock extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 }

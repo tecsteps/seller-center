@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class SellerProduct extends Model
+class Seller extends Model
 {
     use HasFactory;
 
@@ -18,11 +18,6 @@ class SellerProduct extends Model
      */
     protected $fillable = [
         'name',
-        'sku',
-        'description',
-        'attributes',
-        'category_id',
-        'seller_id',
     ];
 
     /**
@@ -32,23 +27,35 @@ class SellerProduct extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'attributes' => 'array',
-        'category_id' => 'integer',
-        'seller_id' => 'integer',
     ];
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function sellerProducts(): HasMany
+    {
+        return $this->hasMany(SellerProduct::class);
+    }
 
     public function sellerVariants(): HasMany
     {
         return $this->hasMany(SellerVariant::class);
     }
 
-    public function category(): BelongsTo
+    public function prices(): HasMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(Price::class);
     }
 
-    public function seller(): BelongsTo
+    public function stocks(): HasMany
     {
-        return $this->belongsTo(Seller::class);
+        return $this->hasMany(Stock::class);
+    }
+
+    public function locations(): HasMany
+    {
+        return $this->hasMany(Location::class);
     }
 }

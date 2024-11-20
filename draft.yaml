@@ -6,6 +6,12 @@ models:
       belongsToMany: User
       hasMany: Currency, Category
 
+  Seller:
+    name: string
+    relationships:
+      belongsToMany: User
+      hasMany: SellerProduct, SellerVariant, Price, Stock, Location
+
   Category:
     name: string
     description: text nullable
@@ -21,6 +27,7 @@ models:
     description: text nullable
     attributes: json nullable
     category_id: id foreign
+    seller_id: id foreign
     relationships:
       hasMany: SellerVariant
     
@@ -32,6 +39,7 @@ models:
     attributes: json nullable
     seller_product_id: id foreign
     status_id: id foreign
+    seller_id: id foreign
     relationships:
       hasMany: Price, Stock
 
@@ -46,11 +54,13 @@ models:
     safety_stock: integer nullable
     seller_variant_id: id foreign
     location_id: id foreign
+    seller_id: id foreign
 
   Location:
     name: string
     address: string
     default_delivery_days: integer nullable
+    seller_id: id foreign
     relationships:
       hasMany: Stock
 

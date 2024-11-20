@@ -12,13 +12,14 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+
+    protected static ?string $tenantOwnershipRelationshipName = 'operator';
 
     public static function canCreate(): bool
     {
@@ -105,4 +106,24 @@ class CategoryResource extends Resource
             // 'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
+
+
+
+    // public static function query(): Builder
+    // {
+    //     $user = auth()->user();
+
+    //     // If the user is a seller, show all categories.
+    //     if ($user->isSeller()) {
+    //         return static::getModel()::query();
+    //     }
+
+    //     // If the user is an operator, show only their categories.
+    //     if ($user->isOperator()) {
+    //         return static::getModel()::where('operator_id', $user->id);
+    //     }
+
+    //     // Default to no categories.
+    //     return static::getModel()::query()->whereRaw('1 = 0');
+    // }
 }

@@ -43,7 +43,7 @@ class User extends Authenticatable implements HasTenants
         if ($this->is_operator) {
             return $this->operators->contains($tenant);
         } else {
-            return true;
+            return $this->sellers->contains($tenant);
         }
     }
 
@@ -52,7 +52,7 @@ class User extends Authenticatable implements HasTenants
         if ($this->is_operator) {
             return $this->operators;
         } else {
-            return [];
+            return $this->sellers;
         }
     }
 
@@ -72,5 +72,10 @@ class User extends Authenticatable implements HasTenants
     public function operators(): BelongsToMany
     {
         return $this->belongsToMany(Operator::class);
+    }
+
+    public function sellers(): BelongsToMany
+    {
+        return $this->belongsToMany(Seller::class);
     }
 }

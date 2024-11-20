@@ -23,6 +23,7 @@ class SellerVariant extends Model
         'attributes',
         'seller_product_id',
         'status_id',
+        'seller_id',
     ];
 
     /**
@@ -35,6 +36,7 @@ class SellerVariant extends Model
         'attributes' => 'array',
         'seller_product_id' => 'integer',
         'status_id' => 'integer',
+        'seller_id' => 'integer',
     ];
 
     public function prices(): HasMany
@@ -55,5 +57,10 @@ class SellerVariant extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 }

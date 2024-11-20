@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\RegisterSeller;
+use App\Models\Seller;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,19 +30,12 @@ class SellerPanelProvider extends PanelProvider
             ->id('seller')
             ->path('seller')
             ->login()
-            ->registration(
-            //     [
-            //     'after' => function ($user) {
-            //         \App\Models\Seller::create([
-            //             'user_id' => $user->id,
-            //             'status' => 'pending', // or whatever default status you want
-            //         ]);
-            //     },
-            // ]
-            )
+            ->registration()
             ->passwordReset()
             ->emailVerification()
             ->profile()
+            ->tenant(Seller::class)
+            ->tenantRegistration(RegisterSeller::class)
             ->brandName('Seller Center')
             ->colors([
                 'primary' => Color::Amber,

@@ -29,11 +29,24 @@ class DatabaseSeeder extends Seeder
 
         // Create user and attach to operator
         $user = \App\Models\User::factory()->create([
-            'name' => 'Fabian',
-            'email' => 'fabian.wesner@roq.tech',
-            'password' => bcrypt('fabian.wesner@roq.tech'),
+            'name' => 'Mr Operator',
+            'email' => 'operator@tecsteps.com',
+            'password' => bcrypt('operator@tecsteps.com'),
+            'is_operator' => true,
         ]);
         $user->operators()->attach($operator->id);
+
+        $seller = \App\Models\Seller::create([
+            'name' => 'BarSeller',
+        ]);
+
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Mr Seller',
+            'email' => 'seller@tecsteps.com',
+            'password' => bcrypt('seller@tecsteps.com'),
+            'is_operator' => false,
+        ]);
+        $user->sellers()->attach($seller->id);
 
         $categories = [
             // Create root category first
@@ -190,6 +203,7 @@ class DatabaseSeeder extends Seeder
                     'connectivity' => 'Bluetooth 5.0'
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Le Creuset Enameled Dutch Oven',
@@ -201,6 +215,7 @@ class DatabaseSeeder extends Seeder
                     'dishwasher_safe' => true
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Nike Air Zoom Pegasus 38',
@@ -212,6 +227,7 @@ class DatabaseSeeder extends Seeder
                     'gender' => 'Unisex'
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'DJI Mini 2 Drone',
@@ -223,6 +239,7 @@ class DatabaseSeeder extends Seeder
                     'range' => '10km'
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Dyson V15 Detect',
@@ -234,6 +251,7 @@ class DatabaseSeeder extends Seeder
                     'features' => ['Laser Detection', 'LCD Screen']
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'LEGO Star Wars Millennium Falcon',
@@ -245,6 +263,7 @@ class DatabaseSeeder extends Seeder
                     'includes_minifigures' => true
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Kindle Paperwhite',
@@ -256,6 +275,7 @@ class DatabaseSeeder extends Seeder
                     'battery_life' => '10 weeks'
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Automatic Pet Feeder',
@@ -267,6 +287,7 @@ class DatabaseSeeder extends Seeder
                     'app_control' => true
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Herman Miller Aeron Chair',
@@ -278,6 +299,7 @@ class DatabaseSeeder extends Seeder
                     'adjustable_features' => ['Height', 'Tilt', 'Arms']
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'MAC Professional Makeup Kit',
@@ -289,6 +311,7 @@ class DatabaseSeeder extends Seeder
                     'travel_case' => true
                 ],
                 'category_id' => Category::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
         ];
 
@@ -321,6 +344,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'WH-1000XM4 - Platinum Silver',
@@ -333,6 +357,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Le Creuset Variants
             [
@@ -346,6 +371,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Dutch Oven - Marine Blue 7.25Qt',
@@ -358,6 +384,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Nike Shoes Variants
             [
@@ -371,6 +398,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Pegasus 38 - Grey/Volt US 10',
@@ -383,6 +411,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Dyson Variants
             [
@@ -396,6 +425,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'V15 Detect - Essential',
@@ -408,6 +438,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Kindle Variants
             [
@@ -420,6 +451,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Paperwhite 16GB - No Ads',
@@ -431,6 +463,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Herman Miller Variants
             [
@@ -443,6 +476,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Aeron - Size B Mineral',
@@ -454,6 +488,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // MAC Makeup Variants
             [
@@ -466,6 +501,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Pro Kit - Cool Tones',
@@ -477,6 +513,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // DJI Drone Variants
             [
@@ -489,6 +526,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Mini 2 - Fly More Combo',
@@ -500,6 +538,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Pet Feeder Variants
             [
@@ -512,6 +551,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Smart Feeder - Premium',
@@ -523,6 +563,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // LEGO Variants
             [
@@ -535,6 +576,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Millennium Falcon - Collector\'s Edition',
@@ -546,6 +588,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             // Additional Generic Variants
             [
@@ -558,6 +601,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Starter Bundle',
@@ -569,6 +613,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Premium Bundle',
@@ -580,6 +625,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Professional Edition',
@@ -591,6 +637,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'Basic Edition',
@@ -602,6 +649,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
                 'status_id' => Status::inRandomOrder()->first()->id,
+                'seller_id' => $seller->id,
             ],
         ];
 
@@ -613,17 +661,20 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Central Distribution Center',
                 'address' => '2250 Parkway Drive, Denver, CO 80216',
-                'default_delivery_days' => 2
+                'default_delivery_days' => 2,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'West Coast Fulfillment Center',
                 'address' => '1100 Harbor Bay Parkway, Oakland, CA 94502',
-                'default_delivery_days' => 3
+                'default_delivery_days' => 3,
+                'seller_id' => $seller->id,
             ],
             [
                 'name' => 'East Coast Warehouse',
                 'address' => '200 Liberty Way, Newark, NJ 07114',
-                'default_delivery_days' => 2
+                'default_delivery_days' => 2,
+                'seller_id' => $seller->id,
             ],
         ];
 
@@ -650,7 +701,8 @@ class DatabaseSeeder extends Seeder
                     'reserved' => rand(0, 20),
                     'safety_stock' => rand(10, 50),
                     'seller_variant_id' => $variant->id,
-                    'location_id' => $location->id
+                    'location_id' => $location->id,
+                    'seller_id' => $seller->id,
                 ];
             }
         }

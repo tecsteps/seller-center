@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Location;
+use App\Models\Seller;
 
 class LocationFactory extends Factory
 {
@@ -24,6 +25,7 @@ class LocationFactory extends Factory
             'name' => $this->faker->name(),
             'address' => $this->faker->word(),
             'default_delivery_days' => $this->faker->numberBetween(-10000, 10000),
+            'seller_id' => Seller::factory(),
         ];
     }
 }

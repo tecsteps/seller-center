@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Seller;
 use App\Models\SellerProduct;
 use App\Models\SellerVariant;
 use App\Models\Status;
@@ -29,6 +30,7 @@ class SellerVariantFactory extends Factory
             'attributes' => '{}',
             'seller_product_id' => SellerProduct::factory(),
             'status_id' => Status::factory(),
+            'seller_id' => Seller::factory(),
         ];
     }
 }

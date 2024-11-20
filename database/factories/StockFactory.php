@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Location;
+use App\Models\Seller;
 use App\Models\SellerVariant;
 use App\Models\Stock;
 
@@ -28,6 +29,7 @@ class StockFactory extends Factory
             'safety_stock' => $this->faker->numberBetween(-10000, 10000),
             'seller_variant_id' => SellerVariant::factory(),
             'location_id' => Location::factory(),
+            'seller_id' => Seller::factory(),
         ];
     }
 }
