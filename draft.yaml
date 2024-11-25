@@ -1,11 +1,8 @@
 models:
       
   Seller:
-    name: string nullable
+    name: string
     status: enum:open,submitted,accepted,rejected,review default:open
-    user_id: id foreign
-    email: string nullable
-    account_holder_name: string nullable
     description: text nullable
     company_name: string nullable
     address_line1: string nullable
@@ -22,7 +19,6 @@ models:
     swift_bic: string nullable
     bank_name: string nullable
     relationships:
-      hasOne: SellerData
       belongsToMany: User
       hasMany: SellerProduct, SellerVariant, Price, Stock, Location
 

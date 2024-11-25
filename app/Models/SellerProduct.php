@@ -51,4 +51,5 @@ class SellerProduct extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
 }

@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seller extends Model
 {
@@ -21,9 +19,6 @@ class Seller extends Model
     protected $fillable = [
         'name',
         'status',
-        'user_id',
-        'email',
-        'account_holder_name',
         'description',
         'company_name',
         'address_line1',
@@ -48,13 +43,7 @@ class Seller extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
     ];
-
-    public function sellerData(): HasOne
-    {
-        return $this->hasOne(SellerData::class);
-    }
 
     public function users(): BelongsToMany
     {
@@ -86,8 +75,4 @@ class Seller extends Model
         return $this->hasMany(Location::class);
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 }

@@ -32,4 +32,5 @@ class Status extends Model
     {
         return $this->hasMany(SellerVariant::class);
     }
+
 }

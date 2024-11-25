@@ -42,4 +42,5 @@ class Location extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
 }

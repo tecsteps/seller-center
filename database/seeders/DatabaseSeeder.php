@@ -42,8 +42,6 @@ class DatabaseSeeder extends Seeder
         $seller = \App\Models\Seller::create([
             'name' => 'BarSeller',
             'status' => 'submitted',
-            'user_id' => $sellerUser->id,
-            'email' => $sellerUser->email,
             'description' => 'BarSeller Inc. is a company that sells wooden furniture.',
             'company_name' => 'BarSeller Inc.',
             'address_line1' => '123 Market Street',
@@ -58,9 +56,10 @@ class DatabaseSeeder extends Seeder
             'eori' => 'US12345678901234',
             'iban' => 'US123456789012345678901234',
             'swift_bic' => 'CHASUS33XXX',
-            'bank_name' => 'Chase Bank',
-            'account_holder_name' => 'BarSeller Inc.',
+            'bank_name' => 'Chase Bank'
         ]);
+
+        $sellerUser->sellers()->attach($seller);
 
         $categories = [
             // Create root category first

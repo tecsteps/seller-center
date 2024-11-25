@@ -8,16 +8,16 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_25_145842_create_sellers_table.php
-    - database/migrations/2024_11_25_145843_create_categories_table.php
-    - database/migrations/2024_11_25_145844_create_seller_products_table.php
-    - database/migrations/2024_11_25_145845_create_seller_variants_table.php
-    - database/migrations/2024_11_25_145846_create_prices_table.php
-    - database/migrations/2024_11_25_145847_create_stocks_table.php
-    - database/migrations/2024_11_25_145848_create_locations_table.php
-    - database/migrations/2024_11_25_145849_create_currencies_table.php
-    - database/migrations/2024_11_25_145850_create_statuses_table.php
-    - database/migrations/2024_11_25_145851_create_seller_user_table.php
+    - database/migrations/2024_11_25_164157_create_sellers_table.php
+    - database/migrations/2024_11_25_164158_create_categories_table.php
+    - database/migrations/2024_11_25_164159_create_seller_products_table.php
+    - database/migrations/2024_11_25_164200_create_seller_variants_table.php
+    - database/migrations/2024_11_25_164201_create_prices_table.php
+    - database/migrations/2024_11_25_164202_create_stocks_table.php
+    - database/migrations/2024_11_25_164203_create_locations_table.php
+    - database/migrations/2024_11_25_164204_create_currencies_table.php
+    - database/migrations/2024_11_25_164205_create_statuses_table.php
+    - database/migrations/2024_11_25_164206_create_seller_user_table.php
     - app/Models/Seller.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
@@ -28,8 +28,8 @@ created:
     - app/Models/Currency.php
     - app/Models/Status.php
 models:
-    User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
-    Seller: { name: 'string nullable', status: 'enum:open,submitted,accepted,rejected,review default:open', user_id: 'id foreign', email: 'string nullable', account_holder_name: 'string nullable', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', relationships: { hasOne: SellerData, belongsToMany: User, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location' } }
+    User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable', seller_id: 'integer nullable' }
+    Seller: { name: string, status: 'enum:open,submitted,accepted,rejected,review default:open', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', relationships: { belongsToMany: User, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location' } }
     Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', relationships: { hasMany: SellerProduct } }
     SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: SellerVariant } }
     SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: 'Price, Stock' } }

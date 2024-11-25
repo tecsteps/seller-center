@@ -63,4 +63,5 @@ class SellerVariant extends Model
     {
         return $this->belongsTo(Seller::class);
     }
+
 }

@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Seller\Pages\Auth\SellerRegister;
+use App\Filament\Pages\Tenancy\EditSellerProfile;
+use App\Filament\Pages\Tenancy\RegisterSeller;
+use App\Models\Seller;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,6 +21,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
+use App\Filament\Seller\Pages\Dashboard;
 
 class SellerPanelProvider extends PanelProvider
 {
@@ -28,27 +31,22 @@ class SellerPanelProvider extends PanelProvider
             ->id('seller')
             ->path('seller')
             ->login()
-            ->registration(SellerRegister::class)
+            ->registration()
             ->passwordReset()
             ->emailVerification()
             ->profile()
-            // ->tenant(Seller::class)
-            // ->tenantRegistration(RegisterSeller::class)
+            ->tenant(Seller::class)
+            ->tenantRegistration(RegisterSeller::class)
+            ->tenantProfile(EditSellerProfile::class)
             ->brandName('Seller Center')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\\Filament\\Seller\\Resources')
             ->discoverPages(in: app_path('Filament/Seller/Pages'), for: 'App\\Filament\\Seller\\Pages')
-            // ->resources([
-            //     \App\Filament\Resources\LocationResource::class,
-            //     \App\Filament\Seller\Resources\SellerProductResource::class,
-            //     \App\Filament\Resources\SellerVariantResource::class,
-
-            // ])
-            // ->pages([
-            //     Pages\Dashboard::class,
-            // ])
+            ->pages([
+                Dashboard::class,
+            ])
             ->discoverWidgets(in: app_path('Filament/Seller/Widgets'), for: 'App\\Filament\\Seller\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,

@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasTenants
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -39,6 +39,24 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function canAccessTenant(Model $tenant): bool
+    {
+        if ($this->is_seller) {
+            return $this->sellers->contains($tenant);
+        } else {
+            return true;
+        }
+    }
+
+    public function getTenants(Panel $panel): array|Collection
+    {
+        if ($this->is_seller) {
+            return $this->sellers;
+        } else {
+            return [];
+        }
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'seller') {
@@ -51,24 +69,6 @@ class User extends Authenticatable
 
         return false;
     }
-
-    // public function canAccessTenant(Model $tenant): bool
-    // {
-    //     if ($this->is_Owner) {
-    //         return $this->Owners->contains($tenant);
-    //     } else {
-    //         return $this->sellers->contains($tenant);
-    //     }
-    // }
-
-    // public function getTenants(Panel $panel): array|Collection
-    // {
-    //     if ($this->is_Owner) {
-    //         return $this->Owners;
-    //     } else {
-    //         return $this->sellers;
-    //     }
-    // }
 
     /**
      * Get the attributes that should be cast.
@@ -83,8 +83,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function seller(): BelongsTo
+    public function sellers(): BelongsToMany
     {
-        return $this->BelongsTo(Seller::class);
+        return $this->BelongsToMany(Seller::class);
     }
 }
