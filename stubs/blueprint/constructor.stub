@@ -1,7 +1,0 @@
-    /**
-     * Create a new {{ type }} instance.
-     */
-    public function __construct()
-    {
-        {{ body }}
-    }
