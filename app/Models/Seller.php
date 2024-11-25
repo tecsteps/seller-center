@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seller extends Model
 {
@@ -18,22 +19,6 @@ class Seller extends Model
      */
     protected $fillable = [
         'name',
-        'status',
-        'description',
-        'company_name',
-        'address_line1',
-        'address_line2',
-        'city',
-        'state',
-        'postal_code',
-        'country_code',
-        'phone',
-        'vat',
-        'tin',
-        'eori',
-        'iban',
-        'swift_bic',
-        'bank_name',
     ];
 
     /**
@@ -48,6 +33,11 @@ class Seller extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function sellerData(): HasOne
+    {
+        return $this->hasOne(SellerData::class);
     }
 
     public function sellerProducts(): HasMany
@@ -74,5 +64,4 @@ class Seller extends Model
     {
         return $this->hasMany(Location::class);
     }
-
 }

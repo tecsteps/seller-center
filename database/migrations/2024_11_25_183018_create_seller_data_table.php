@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sellers', function (Blueprint $table) {
+        Schema::disableForeignKeyConstraints();
+
+        Schema::create('seller_data', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('email')->nullable();
             $table->enum('status', ["open","submitted","accepted","rejected","review"])->default('open');
             $table->text('description')->nullable();
             $table->string('company_name')->nullable();
@@ -32,6 +35,8 @@ return new class extends Migration
             $table->string('bank_name')->nullable();
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -39,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sellers');
+        Schema::dropIfExists('seller_data');
     }
 };

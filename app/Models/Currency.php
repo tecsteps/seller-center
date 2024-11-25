@@ -36,5 +36,4 @@ class Currency extends Model
     {
         return $this->hasMany(Price::class);
     }
-
 }

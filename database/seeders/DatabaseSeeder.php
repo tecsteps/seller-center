@@ -12,9 +12,7 @@ use App\Models\Stock;
 use App\Models\Currency;
 use App\Models\Price;
 use App\Models\Operator;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -40,7 +38,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $seller = \App\Models\Seller::create([
-            'name' => 'BarSeller',
+            'name' => 'BarSeller'
+        ]);
+
+        $sellerUser->sellers()->attach($seller);
+
+        $sellerData = \App\Models\SellerData::create([
+            'seller_id' => $seller->id,
             'status' => 'submitted',
             'description' => 'BarSeller Inc. is a company that sells wooden furniture.',
             'company_name' => 'BarSeller Inc.',
@@ -58,8 +62,6 @@ class DatabaseSeeder extends Seeder
             'swift_bic' => 'CHASUS33XXX',
             'bank_name' => 'Chase Bank'
         ]);
-
-        $sellerUser->sellers()->attach($seller);
 
         $categories = [
             // Create root category first

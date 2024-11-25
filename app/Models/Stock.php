@@ -50,5 +50,4 @@ class Stock extends Model
     {
         return $this->belongsTo(Seller::class);
     }
-
 }

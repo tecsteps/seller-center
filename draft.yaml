@@ -2,6 +2,14 @@ models:
       
   Seller:
     name: string
+    relationships:
+      belongsToMany: User
+      hasOne: SellerData
+      hasMany: SellerProduct, SellerVariant, Price, Stock, Location
+
+  SellerData:
+    seller_id: id foreign
+    email: string nullable
     status: enum:open,submitted,accepted,rejected,review default:open
     description: text nullable
     company_name: string nullable
@@ -18,9 +26,7 @@ models:
     iban: string nullable
     swift_bic: string nullable
     bank_name: string nullable
-    relationships:
-      belongsToMany: User
-      hasMany: SellerProduct, SellerVariant, Price, Stock, Location
+    account_holder_name: string nullable
 
 
   Category:
