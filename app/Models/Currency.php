@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Currency extends Model
@@ -21,7 +20,6 @@ class Currency extends Model
         'symbol',
         'name',
         'is_default',
-        'operator_id',
     ];
 
     /**
@@ -32,16 +30,10 @@ class Currency extends Model
     protected $casts = [
         'id' => 'integer',
         'is_default' => 'boolean',
-        'operator_id' => 'integer',
     ];
 
     public function prices(): HasMany
     {
         return $this->hasMany(Price::class);
-    }
-
-    public function operator(): BelongsTo
-    {
-        return $this->belongsTo(Operator::class);
     }
 }

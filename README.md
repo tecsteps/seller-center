@@ -8,9 +8,10 @@ Surprisingly, there’s no strong open-source alternative available...
 
 This project is built in public and will be free to use. I will regularly document my progress from the initial implementation to the release of the first version of the project. I aim to share insights, challenges, and solutions along the way, providing a transparent view of building an open-source Seller Center. Stay tuned as I transform this idea into a reality.
 
-Follow me me on LinkedIn or X to get updates: 
-- https://x.com/fabianwesner
+Follow me me on LinkedIn to get updates: 
 - https://www.linkedin.com/in/fabian-wesner/
+
+or find a list of all articles here: https://github.com/FabianWesner/seller-center/wiki
 
 ## Install Guide
 
@@ -28,3 +29,7 @@ There is no fully blown documentation yet. The idea is pretty simple:
 * Sellers can also register and apply for a shop. Then they can import their products, manage stocks, prices, etc.
 
 The Seller Center is a multi-tenant application. Operators and Sellers are tenants. Each tenant has its own data and set of users (with permissions at some point).
+
+## Imprint / Impressum
+
+https://github.com/tecsteps/ossc/wiki/Imprint-Impressum

@@ -21,7 +21,6 @@ class Category extends Model
         'description',
         'is_active',
         'parent_id',
-        'operator_id',
     ];
 
     /**
@@ -33,7 +32,6 @@ class Category extends Model
         'id' => 'integer',
         'is_active' => 'boolean',
         'parent_id' => 'integer',
-        'operator_id' => 'integer',
     ];
 
     public function sellerProducts(): HasMany
@@ -44,10 +42,5 @@ class Category extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function operator(): BelongsTo
-    {
-        return $this->belongsTo(Operator::class);
     }
 }

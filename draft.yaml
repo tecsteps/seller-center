@@ -1,23 +1,37 @@
 models:
-
-  Operator:
-    name: string
-    relationships:
-      belongsToMany: User
-      hasMany: Currency, Category
-
+      
   Seller:
-    name: string
+    name: string nullable
+    status: enum:open,submitted,accepted,rejected,review default:open
+    user_id: id foreign
+    email: string nullable
+    account_holder_name: string nullable
+    description: text nullable
+    company_name: string nullable
+    address_line1: string nullable
+    address_line2: string nullable
+    city: string nullable
+    state: string nullable
+    postal_code: string nullable
+    country_code: string nullable
+    phone: string nullable
+    vat: string nullable
+    tin: string nullable
+    eori: string nullable
+    iban: string nullable
+    swift_bic: string nullable
+    bank_name: string nullable
     relationships:
+      hasOne: SellerData
       belongsToMany: User
       hasMany: SellerProduct, SellerVariant, Price, Stock, Location
+
 
   Category:
     name: string
     description: text nullable
     is_active: boolean nullable
     parent_id: id foreign:categories.id nullable
-    operator_id: id foreign
     relationships:
       hasMany: SellerProduct
 
@@ -69,7 +83,7 @@ models:
     symbol: string
     name: string nullable
     is_default: boolean default:false
-    operator_id: id foreign
+    
     relationships:
       hasMany: Price
 

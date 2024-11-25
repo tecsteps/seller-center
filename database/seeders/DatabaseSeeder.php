@@ -14,6 +14,7 @@ use App\Models\Price;
 use App\Models\Operator;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,31 +23,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create operator first
-        $operator = \App\Models\Operator::create([
-            'name' => 'FooOps',
+
+        // Create user r
+        $ownerUser = \App\Models\User::factory()->create([
+            'name' => 'Mr Operator',
+            'email' => 'owner@ossc.tech',
+            'password' => bcrypt('owner@ossc.tech'),
+            'is_seller' => false,
         ]);
 
-        // Create user and attach to operator
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Mr Operator',
-            'email' => 'operator@tecsteps.com',
-            'password' => bcrypt('operator@tecsteps.com'),
-            'is_operator' => true,
+        $sellerUser = \App\Models\User::factory()->create([
+            'name' => 'Mr Seller',
+            'email' => 'seller@ossc.tech',
+            'password' => bcrypt('seller@ossc.tech'),
+            'is_seller' => true,
         ]);
-        $user->operators()->attach($operator->id);
 
         $seller = \App\Models\Seller::create([
             'name' => 'BarSeller',
+            'status' => 'submitted',
+            'user_id' => $sellerUser->id,
+            'email' => $sellerUser->email,
+            'description' => 'BarSeller Inc. is a company that sells wooden furniture.',
+            'company_name' => 'BarSeller Inc.',
+            'address_line1' => '123 Market Street',
+            'address_line2' => 'Suite 456',
+            'city' => 'San Francisco',
+            'state' => 'CA',
+            'postal_code' => '94105',
+            'country_code' => 'US',
+            'phone' => '+1-415-555-0123',
+            'vat' => 'US123456789',
+            'tin' => '12-3456789',
+            'eori' => 'US12345678901234',
+            'iban' => 'US123456789012345678901234',
+            'swift_bic' => 'CHASUS33XXX',
+            'bank_name' => 'Chase Bank',
+            'account_holder_name' => 'BarSeller Inc.',
         ]);
-
-        $user = \App\Models\User::factory()->create([
-            'name' => 'Mr Seller',
-            'email' => 'seller@tecsteps.com',
-            'password' => bcrypt('seller@tecsteps.com'),
-            'is_operator' => false,
-        ]);
-        $user->sellers()->attach($seller->id);
 
         $categories = [
             // Create root category first
@@ -55,7 +69,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Root category for all products',
                 'is_active' => true,
                 'parent_id' => null,
-                'operator_id' => $operator->id,
+
             ],
         ];
 
@@ -69,70 +83,70 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Smartphones, laptops, tablets, and other electronic devices',
                 'is_active' => true,
                 'parent_id' => 1,  // References the Root category
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Home & Kitchen',
                 'description' => 'Appliances, kitchenware, furniture, and home décor',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Fashion',
                 'description' => 'Clothing, shoes, accessories, and jewelry',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Sports & Outdoors',
                 'description' => 'Athletic equipment, camping gear, and outdoor recreation products',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Beauty & Personal Care',
                 'description' => 'Cosmetics, skincare, haircare, and personal hygiene products',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Books & Media',
                 'description' => 'Books, e-books, movies, music, and educational content',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Toys & Games',
                 'description' => 'Children\'s toys, board games, and entertainment items',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Automotive',
                 'description' => 'Car parts, accessories, and maintenance products',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Pet Supplies',
                 'description' => 'Pet food, accessories, and care products for all types of pets',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Office Supplies',
                 'description' => 'Stationery, office furniture, and business essentials',
                 'is_active' => true,
                 'parent_id' => 1,
-                'operator_id' => $operator->id,
+
             ],
         ];
 
@@ -147,14 +161,14 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Mobile phones and accessories',
                 'is_active' => true,
                 'parent_id' => 2, // Electronics
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Laptops',
                 'description' => 'Notebook computers and accessories',
                 'is_active' => true,
                 'parent_id' => 2,
-                'operator_id' => $operator->id,
+
             ],
             // Home & Kitchen sub-categories
             [
@@ -162,14 +176,14 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Pots, pans and cooking utensils',
                 'is_active' => true,
                 'parent_id' => 3,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Small Appliances',
                 'description' => 'Coffee makers, toasters, blenders etc',
                 'is_active' => true,
                 'parent_id' => 3,
-                'operator_id' => $operator->id,
+
             ],
             // Fashion sub-categories
             [
@@ -177,14 +191,14 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Dresses, tops, pants and more for women',
                 'is_active' => true,
                 'parent_id' => 4,
-                'operator_id' => $operator->id,
+
             ],
             [
                 'name' => 'Men\'s Clothing',
                 'description' => 'Shirts, pants, suits and more for men',
                 'is_active' => true,
                 'parent_id' => 4,
-                'operator_id' => $operator->id,
+
             ],
         ];
 
@@ -719,25 +733,21 @@ class DatabaseSeeder extends Seeder
                 'code' => 'USD',
                 'symbol' => '$',
                 'name' => 'US Dollar',
-                'operator_id' => $operator->id,
+
             ],
             [
                 'code' => 'EUR',
                 'symbol' => '€',
                 'name' => 'Euro',
-                'operator_id' => $operator->id,
+
             ],
             [
                 'code' => 'GBP',
                 'symbol' => '£',
                 'name' => 'British Pound Sterling',
-                'operator_id' => $operator->id,
+
             ]
         ];
-
-        foreach ($currencies as $currency) {
-            Currency::create(array_merge($currency, ['operator_id' => $operator->id]));
-        }
 
         // Get all variants and currencies
         $variants = SellerVariant::all();

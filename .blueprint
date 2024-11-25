@@ -1,5 +1,4 @@
 created:
-    - database/factories/OperatorFactory.php
     - database/factories/SellerFactory.php
     - database/factories/CategoryFactory.php
     - database/factories/SellerProductFactory.php
@@ -9,19 +8,16 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_20_171137_create_operators_table.php
-    - database/migrations/2024_11_20_171138_create_sellers_table.php
-    - database/migrations/2024_11_20_171139_create_categories_table.php
-    - database/migrations/2024_11_20_171140_create_seller_products_table.php
-    - database/migrations/2024_11_20_171141_create_seller_variants_table.php
-    - database/migrations/2024_11_20_171142_create_prices_table.php
-    - database/migrations/2024_11_20_171143_create_stocks_table.php
-    - database/migrations/2024_11_20_171144_create_locations_table.php
-    - database/migrations/2024_11_20_171145_create_currencies_table.php
-    - database/migrations/2024_11_20_171146_create_statuses_table.php
-    - database/migrations/2024_11_20_171147_create_operator_user_table.php
-    - database/migrations/2024_11_20_171148_create_seller_user_table.php
-    - app/Models/Operator.php
+    - database/migrations/2024_11_25_145842_create_sellers_table.php
+    - database/migrations/2024_11_25_145843_create_categories_table.php
+    - database/migrations/2024_11_25_145844_create_seller_products_table.php
+    - database/migrations/2024_11_25_145845_create_seller_variants_table.php
+    - database/migrations/2024_11_25_145846_create_prices_table.php
+    - database/migrations/2024_11_25_145847_create_stocks_table.php
+    - database/migrations/2024_11_25_145848_create_locations_table.php
+    - database/migrations/2024_11_25_145849_create_currencies_table.php
+    - database/migrations/2024_11_25_145850_create_statuses_table.php
+    - database/migrations/2024_11_25_145851_create_seller_user_table.php
     - app/Models/Seller.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
@@ -32,14 +28,13 @@ created:
     - app/Models/Currency.php
     - app/Models/Status.php
 models:
-    User: { name: string, email: string, is_operator: "boolean default:'1'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
-    Operator: { name: string, relationships: { belongsToMany: User, hasMany: 'Currency, Category' } }
-    Seller: { name: string, relationships: { belongsToMany: User, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location' } }
-    Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', operator_id: 'id foreign', relationships: { hasMany: SellerProduct } }
+    User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
+    Seller: { name: 'string nullable', status: 'enum:open,submitted,accepted,rejected,review default:open', user_id: 'id foreign', email: 'string nullable', account_holder_name: 'string nullable', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', relationships: { hasOne: SellerData, belongsToMany: User, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location' } }
+    Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', relationships: { hasMany: SellerProduct } }
     SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: SellerVariant } }
     SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: 'Price, Stock' } }
     Price: { amount: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
     Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign', seller_id: 'id foreign' }
     Location: { name: string, address: string, default_delivery_days: 'integer nullable', seller_id: 'id foreign', relationships: { hasMany: Stock } }
-    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', operator_id: 'id foreign', relationships: { hasMany: Price } }
+    Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', relationships: { hasMany: Price } }
     Status: { name: 'enum:draft,pending_approval,approved,rejected,active,inactive,archived', relationships: { hasMany: SellerVariant } }
