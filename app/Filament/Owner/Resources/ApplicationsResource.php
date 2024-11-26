@@ -33,6 +33,15 @@ class ApplicationsResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Owner notes')
+                    ->description('Internal notes about this application (not visible to the seller)')
+                    ->icon('heroicon-o-clipboard-document-list')
+                    ->schema([
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Internal Notes')
+                            ->placeholder('Add any internal notes or comments here...')
+                            ->maxLength(65535)
+                    ]),
                 Forms\Components\Section::make('Basic Information')
                     ->description('Primary seller account details')
                     ->schema([

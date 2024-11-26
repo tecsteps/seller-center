@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SellerData extends Model
+class Message extends Model
 {
     use HasFactory;
 
@@ -16,30 +16,9 @@ class SellerData extends Model
      * @var array
      */
     protected $fillable = [
+        'content',
         'seller_id',
-        'email',
-        'status',
-        'rejection_reason',
-        'description',
-        'company_name',
-        'address_line1',
-        'address_line2',
-        'city',
-        'state',
-        'postal_code',
-        'country_code',
-        'phone',
-        'vat',
-        'tin',
-        'eori',
-        'iban',
-        'swift_bic',
-        'bank_name',
-        'account_holder_name',
-        'file1',
-        'file2',
-        'file3',
-        'notes',
+        'message_id',
     ];
 
     /**
@@ -50,10 +29,16 @@ class SellerData extends Model
     protected $casts = [
         'id' => 'integer',
         'seller_id' => 'integer',
+        'message_id' => 'integer',
     ];
 
     public function seller(): BelongsTo
     {
         return $this->belongsTo(Seller::class);
+    }
+
+    public function message(): BelongsTo
+    {
+        return $this->belongsTo(Message::class);
     }
 }

@@ -5,7 +5,7 @@ models:
     relationships:
       belongsToMany: User
       hasOne: SellerData
-      hasMany: SellerProduct, SellerVariant, Price, Stock, Location
+      hasMany: SellerProduct, SellerVariant, Price, Stock, Location, Message
 
   SellerData:
     seller_id: id foreign
@@ -31,6 +31,7 @@ models:
     file1: string nullable
     file2: string nullable
     file3: string nullable
+    notes: text nullable
 
   Category:
     name: string
@@ -96,6 +97,12 @@ models:
     name: enum:draft,pending_approval,approved,rejected,active,inactive,archived
     relationships:
       hasMany: SellerVariant
+
+  Message:
+    content: text
+    seller_id: id foreign
+    message_id: id foreign nullable
+
 
 controllers:
   # ...

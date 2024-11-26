@@ -64,4 +64,9 @@ class Seller extends Model
     {
         return $this->hasMany(Location::class);
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
 }

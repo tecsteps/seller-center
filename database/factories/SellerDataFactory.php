@@ -45,6 +45,7 @@ class SellerDataFactory extends Factory
             'file1' => $this->faker->word(),
             'file2' => $this->faker->word(),
             'file3' => $this->faker->word(),
+            'notes' => $this->faker->text(),
         ];
     }
 }
