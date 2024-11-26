@@ -19,6 +19,7 @@ class SellerData extends Model
         'seller_id',
         'email',
         'status',
+        'rejection_reason',
         'description',
         'company_name',
         'address_line1',
@@ -34,6 +35,10 @@ class SellerData extends Model
         'iban',
         'swift_bic',
         'bank_name',
+        'account_holder_name',
+        'file1',
+        'file2',
+        'file3',
     ];
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+const KEY_DATETIME = 'Y-m-d H:i';
+
 return [
 
     /*
@@ -13,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Open Source Seller Center'),
 
     /*
     |--------------------------------------------------------------------------
@@ -123,6 +125,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-
+    KEY_DATETIME => 'Y-m-d H:i',
 
 ];

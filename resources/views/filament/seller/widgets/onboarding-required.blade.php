@@ -4,7 +4,7 @@
             <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
             <span class="text-primary-400">
                 Please complete your onboarding process.
-                <a href="/seller/{{ $tenantId }}/profile" class="text-primary-500 hover:text-primary-600 underline">
+                <a href="/seller/{{ $tenantId }}/seller-datas" class="text-primary-500 hover:text-primary-600 underline">
                     Go to your profile
                 </a>
                 to finish the setup.

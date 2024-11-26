@@ -9,17 +9,17 @@ created:
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
     - database/factories/StatusFactory.php
-    - database/migrations/2024_11_25_183017_create_sellers_table.php
-    - database/migrations/2024_11_25_183018_create_seller_data_table.php
-    - database/migrations/2024_11_25_183019_create_categories_table.php
-    - database/migrations/2024_11_25_183020_create_seller_products_table.php
-    - database/migrations/2024_11_25_183021_create_seller_variants_table.php
-    - database/migrations/2024_11_25_183022_create_prices_table.php
-    - database/migrations/2024_11_25_183023_create_stocks_table.php
-    - database/migrations/2024_11_25_183024_create_locations_table.php
-    - database/migrations/2024_11_25_183025_create_currencies_table.php
-    - database/migrations/2024_11_25_183026_create_statuses_table.php
-    - database/migrations/2024_11_25_183027_create_seller_user_table.php
+    - database/migrations/2024_11_26_105907_create_sellers_table.php
+    - database/migrations/2024_11_26_105908_create_seller_data_table.php
+    - database/migrations/2024_11_26_105909_create_categories_table.php
+    - database/migrations/2024_11_26_105910_create_seller_products_table.php
+    - database/migrations/2024_11_26_105911_create_seller_variants_table.php
+    - database/migrations/2024_11_26_105912_create_prices_table.php
+    - database/migrations/2024_11_26_105913_create_stocks_table.php
+    - database/migrations/2024_11_26_105914_create_locations_table.php
+    - database/migrations/2024_11_26_105915_create_currencies_table.php
+    - database/migrations/2024_11_26_105916_create_statuses_table.php
+    - database/migrations/2024_11_26_105917_create_seller_user_table.php
     - app/Models/Seller.php
     - app/Models/SellerData.php
     - app/Models/Category.php
@@ -33,7 +33,7 @@ created:
 models:
     User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
     Seller: { name: string, relationships: { belongsToMany: User, hasOne: SellerData, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location' } }
-    SellerData: { seller_id: 'id foreign', email: 'string nullable', status: 'enum:open,submitted,accepted,rejected,review default:open', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable' }
+    SellerData: { seller_id: 'id foreign', email: 'string nullable', status: 'enum:open,submitted,accepted,rejected,review default:open', rejection_reason: 'text nullable', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', account_holder_name: 'string nullable', file1: 'string nullable', file2: 'string nullable', file3: 'string nullable' }
     Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', relationships: { hasMany: SellerProduct } }
     SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: SellerVariant } }
     SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: 'Price, Stock' } }

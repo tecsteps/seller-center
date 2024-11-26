@@ -11,6 +11,7 @@ models:
     seller_id: id foreign
     email: string nullable
     status: enum:open,submitted,accepted,rejected,review default:open
+    rejection_reason: text nullable
     description: text nullable
     company_name: string nullable
     address_line1: string nullable
@@ -27,7 +28,9 @@ models:
     swift_bic: string nullable
     bank_name: string nullable
     account_holder_name: string nullable
-
+    file1: string nullable
+    file2: string nullable
+    file3: string nullable
 
   Category:
     name: string

@@ -28,8 +28,6 @@ class OwnerPanelProvider extends PanelProvider
             ->id('owner')
             ->path('owner')
             ->login()
-            ->registration()
-            ->emailVerification()
             ->passwordReset()
             ->profile()
             ->brandName('Owner Center')

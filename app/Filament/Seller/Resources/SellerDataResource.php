@@ -137,22 +137,38 @@ class SellerDataResource extends Resource
                             ]),
                     ]),
 
-                // Forms\Components\Section::make('Submit Application')
-                //     ->description('Once submitted, your application will be reviewed by our team')
-                //     ->schema([
-                //         Forms\Components\Toggle::make('status')
-                //             ->label('Submit Application')
-                //             ->onColor('success')
-                //             ->offColor('gray')
-                //             ->onIcon('heroicon-m-paper-airplane')
-                //             ->offIcon('heroicon-m-pencil')
-                //             ->formatStateUsing(fn($state) => $state === 'submitted')
-                //             ->dehydrateStateUsing(fn($state) => $state ? 'submitted' : 'open')
-                //             ->disabled(fn($record) => $record?->status === 'submitted')
-                //             ->helperText('By submitting, you confirm that all information provided is accurate')
-                //             ->live()
-                //     ])
-                // ->columnSpanFull(),
+                Forms\Components\Section::make('Legal Documents')
+                    ->description('Upload your Certificate of Incorporation or Trade Registry documents')
+                    ->schema([
+                        Forms\Components\Grid::make(3)
+                            ->schema([
+                                Forms\Components\FileUpload::make('file1')
+                                    ->label('Certificate of Incorporation')
+                                    ->helperText('Official document proving company registration')
+                                    ->acceptedFileTypes(['application/pdf', 'image/*'])
+                                    ->maxSize(10240)
+                                    ->directory('seller-documents')
+                                    ->openable(),
+
+                                Forms\Components\FileUpload::make('file2')
+                                    ->label('Trade Registry Extract')
+                                    ->helperText('Recent extract from trade/commerce registry')
+                                    ->acceptedFileTypes(['application/pdf', 'image/*'])
+                                    ->maxSize(10240)
+                                    ->directory('seller-documents')
+                                    ->openable(),
+
+                                Forms\Components\FileUpload::make('file3')
+                                    ->label('Additional Documentation')
+                                    ->helperText('Any other relevant business documentation')
+                                    ->acceptedFileTypes(['application/pdf', 'image/*'])
+                                    ->maxSize(10240)
+                                    ->directory('seller-documents')
+                                    ->openable(),
+                            ]),
+                    ])
+                    ->collapsible(),
+
             ]);
     }
 
