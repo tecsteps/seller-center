@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Message extends Model
 {
     use HasFactory;
 
@@ -17,10 +16,9 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
-        'is_active',
-        'parent_id',
+        'content',
+        'seller_id',
+        'message_id',
     ];
 
     /**
@@ -30,17 +28,17 @@ class Category extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'is_active' => 'boolean',
-        'parent_id' => 'integer',
+        'seller_id' => 'integer',
+        'message_id' => 'integer',
     ];
 
-    public function sellerProducts(): HasMany
+    public function seller(): BelongsTo
     {
-        return $this->hasMany(SellerProduct::class);
+        return $this->belongsTo(Seller::class);
     }
 
-    public function parent(): BelongsTo
+    public function message(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Message::class);
     }
 }

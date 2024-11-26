@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Seller\Resources;
+namespace App\Filament\Owner\Resources;
 
-use App\Filament\Seller\Resources\CategoryResource\Pages;
-use App\Filament\Seller\Resources\CategoryResource\RelationManagers;
+use App\Filament\Owner\Resources\CategoryResource\Pages;
+use App\Filament\Owner\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use App\Models\SellerProduct;
 use Filament\Forms;
@@ -12,19 +12,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
-
-    protected static bool $isScopedToTenant = false;
-
-    public static function canCreate(): bool
-    {
-        return false;
-    }
 
     public static function form(Form $form): Form
     {
@@ -83,7 +77,14 @@ class CategoryResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(function (Category $record): bool {
+                        return !Category::where('parent_id', $record->id)->exists() &&
+                            !SellerProduct::where('category_id', $record->id)->exists();
+                    }),
+            ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DeleteBulkAction::make(),
@@ -102,8 +103,8 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            // 'create' => Pages\CreateCategory::route('/create'),
-            // 'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'create' => Pages\CreateCategory::route('/create'),
+            'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }

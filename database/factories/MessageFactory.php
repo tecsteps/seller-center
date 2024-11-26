@@ -4,16 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Category;
+use App\Models\Message;
+use App\Models\Seller;
 
-class CategoryFactory extends Factory
+class MessageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Category::class;
+    protected $model = Message::class;
 
     /**
      * Define the model's default state.
@@ -21,10 +22,9 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'description' => $this->faker->text(),
-            'is_active' => $this->faker->boolean(),
-            'parent_id' => Category::factory(),
+            'content' => $this->faker->paragraphs(3, true),
+            'seller_id' => Seller::factory(),
+            'message_id' => Message::factory(),
         ];
     }
 }

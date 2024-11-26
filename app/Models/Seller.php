@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Seller extends Model
 {
@@ -34,6 +35,11 @@ class Seller extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function sellerData(): HasOne
+    {
+        return $this->hasOne(SellerData::class);
+    }
+
     public function sellerProducts(): HasMany
     {
         return $this->hasMany(SellerProduct::class);
@@ -57,5 +63,10 @@ class Seller extends Model
     public function locations(): HasMany
     {
         return $this->hasMany(Location::class);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
     }
 }

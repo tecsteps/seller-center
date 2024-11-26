@@ -6,6 +6,8 @@ use App\Models\Seller;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class RegisterSeller extends RegisterTenant
 {
@@ -23,11 +25,11 @@ class RegisterSeller extends RegisterTenant
             ]);
     }
 
-    protected function handleRegistration(array $data): Seller
+    protected function handleRegistration(array $data): Model
     {
         $seller = Seller::create($data);
 
-        $seller->users()->attach(auth()->user());
+        $seller->users()->attach(auth()->id());
 
         return $seller;
     }

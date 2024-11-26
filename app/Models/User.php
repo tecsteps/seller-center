@@ -7,6 +7,7 @@ use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,20 +41,33 @@ class User extends Authenticatable implements HasTenants
 
     public function canAccessTenant(Model $tenant): bool
     {
-        if ($this->is_operator) {
-            return $this->operators->contains($tenant);
-        } else {
+        if ($this->is_seller) {
             return $this->sellers->contains($tenant);
+        } else {
+            return true;
         }
     }
 
     public function getTenants(Panel $panel): array|Collection
     {
-        if ($this->is_operator) {
-            return $this->operators;
-        } else {
+        if ($this->is_seller) {
             return $this->sellers;
+        } else {
+            return [];
         }
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'seller') {
+            return $this->is_seller;
+        }
+
+        if ($panel->getId() === 'owner') {
+            return !$this->is_seller;
+        }
+
+        return false;
     }
 
     /**
@@ -69,13 +83,8 @@ class User extends Authenticatable implements HasTenants
         ];
     }
 
-    public function operators(): BelongsToMany
-    {
-        return $this->belongsToMany(Operator::class);
-    }
-
     public function sellers(): BelongsToMany
     {
-        return $this->belongsToMany(Seller::class);
+        return $this->BelongsToMany(Seller::class);
     }
 }
