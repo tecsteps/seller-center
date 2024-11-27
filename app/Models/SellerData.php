@@ -18,8 +18,6 @@ class SellerData extends Model
     protected $fillable = [
         'seller_id',
         'email',
-        'status',
-        'rejection_reason',
         'description',
         'company_name',
         'address_line1',
@@ -39,7 +37,6 @@ class SellerData extends Model
         'file1',
         'file2',
         'file3',
-        'notes',
     ];
 
     /**

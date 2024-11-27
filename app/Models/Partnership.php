@@ -16,10 +16,9 @@ class Partnership extends Model
      * @var array
      */
     protected $fillable = [
+        'seller_id',
         'status',
         'rejection_reason',
-        'take_all_products',
-        'seller_id',
         'notes',
     ];
 
@@ -30,14 +29,8 @@ class Partnership extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'take_all_products' => 'boolean',
         'seller_id' => 'integer',
     ];
-
-    /**
-     * Eager load relationships by default
-     */
-    protected $with = ['seller', 'seller.sellerData'];
 
     public function seller(): BelongsTo
     {

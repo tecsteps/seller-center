@@ -5,7 +5,7 @@ namespace App\Filament\Owner\Resources;
 use App\Filament\Owner\Resources\PartnerResource\Pages;
 use App\Filament\Owner\Resources\PartnerResource\RelationManagers;
 use App\Models\Partner;
-use App\Models\SellerData;
+use App\Models\Seller;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PartnerResource extends Resource
 {
-    protected static ?string $model = SellerData::class;
+    protected static ?string $model = Seller::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -44,14 +44,16 @@ class PartnerResource extends Resource
     {
         return $table
             ->query(
-                SellerData::query()->where('status', 'accepted')
+                Seller::query()->whereHas('partnership', function ($query) {
+                    $query->where('status', 'accepted');
+                })
             )
             ->columns([
-                Tables\Columns\TextColumn::make('company_name')
+                Tables\Columns\TextColumn::make('sellerData.company_name')
                     ->label('Company Name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('seller.hideProducts')
+                Tables\Columns\IconColumn::make('hideProducts')
                     ->label('Hide Products')
                     ->boolean(),
             ])

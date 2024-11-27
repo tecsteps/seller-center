@@ -5,14 +5,18 @@ models:
     hideProducts: boolean default:false
     relationships:
       belongsToMany: User
-      hasOne: SellerData
+      hasOne: SellerData, Partnership
       hasMany: SellerProduct, SellerVariant, Price, Stock, Location, Message
+
+  Partnership:
+    seller_id: id foreign
+    status: enum:submitted,accepted,rejected,review default:submitted
+    rejection_reason: text nullable
+    notes: text nullable
 
   SellerData:
     seller_id: id foreign
     email: string nullable
-    status: enum:open,submitted,accepted,rejected,review default:open
-    rejection_reason: text nullable
     description: text nullable
     company_name: string nullable
     address_line1: string nullable
@@ -32,7 +36,6 @@ models:
     file1: string nullable
     file2: string nullable
     file3: string nullable
-    notes: text nullable
 
   Category:
     name: string

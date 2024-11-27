@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::create('partnerships', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('symbol');
-            $table->string('name')->nullable();
-            $table->boolean('is_default')->default(false);
+            $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->enum('status', ["submitted","accepted","rejected","review"])->default('submitted');
+            $table->text('rejection_reason')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('partnerships');
     }
 };

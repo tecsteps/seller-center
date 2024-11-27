@@ -22,10 +22,9 @@ class PartnershipFactory extends Factory
     public function definition(): array
     {
         return [
+            'seller_id' => Seller::factory(),
             'status' => $this->faker->randomElement(["submitted","accepted","rejected","review"]),
             'rejection_reason' => $this->faker->text(),
-            'take_all_products' => $this->faker->boolean(),
-            'seller_id' => Seller::factory(),
             'notes' => $this->faker->text(),
         ];
     }

@@ -12,6 +12,7 @@ use App\Models\Stock;
 use App\Models\Currency;
 use App\Models\Price;
 use App\Models\Operator;
+use App\Models\Partnership;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -43,9 +44,14 @@ class DatabaseSeeder extends Seeder
 
         $sellerUser->sellers()->attach($seller);
 
-        $sellerData = \App\Models\SellerData::create([
+        $partnership = Partnership::create([
             'seller_id' => $seller->id,
             'status' => 'submitted',
+            'notes' => 'Initial partnership application'
+        ]);
+
+        $sellerData = \App\Models\SellerData::create([
+            'seller_id' => $seller->id,
             'description' => 'BarSeller Inc. is a company that sells wooden furniture.',
             'company_name' => 'BarSeller Inc.',
             'address_line1' => '123 Market Street',

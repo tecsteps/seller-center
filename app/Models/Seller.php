@@ -42,6 +42,11 @@ class Seller extends Model
         return $this->hasOne(SellerData::class);
     }
 
+    public function partnership(): HasOne
+    {
+        return $this->hasOne(Partnership::class);
+    }
+
     public function sellerProducts(): HasMany
     {
         return $this->hasMany(SellerProduct::class);
