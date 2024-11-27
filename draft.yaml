@@ -13,6 +13,7 @@ models:
     status: enum:submitted,accepted,rejected,review default:submitted
     rejection_reason: text nullable
     notes: text nullable
+    select_all_products: boolean default:false
 
   SellerData:
     seller_id: id foreign
@@ -54,6 +55,7 @@ models:
     category_id: id foreign nullable
     seller_id: id foreign
     status: enum:draft,active,delisted default:draft
+    selected: boolean default:false
     relationships:
       hasMany: SellerVariant,Price,Stock,SellerProductImage:image
 

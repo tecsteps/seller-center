@@ -20,6 +20,7 @@ class Partnership extends Model
         'status',
         'rejection_reason',
         'notes',
+        'select_all_products',
     ];
 
     /**
@@ -30,6 +31,7 @@ class Partnership extends Model
     protected $casts = [
         'id' => 'integer',
         'seller_id' => 'integer',
+        'select_all_products' => 'boolean',
     ];
 
     public function seller(): BelongsTo

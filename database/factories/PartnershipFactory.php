@@ -26,6 +26,7 @@ class PartnershipFactory extends Factory
             'status' => $this->faker->randomElement(["submitted","accepted","rejected","review"]),
             'rejection_reason' => $this->faker->text(),
             'notes' => $this->faker->text(),
+            'select_all_products' => $this->faker->boolean(),
         ];
     }
 }

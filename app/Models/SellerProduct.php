@@ -25,6 +25,7 @@ class SellerProduct extends Model
         'category_id',
         'seller_id',
         'status',
+        'selected',
     ];
 
     /**
@@ -37,6 +38,7 @@ class SellerProduct extends Model
         'attributes' => 'array',
         'category_id' => 'integer',
         'seller_id' => 'integer',
+        'selected' => 'boolean',
     ];
 
     public function sellerVariants(): HasMany

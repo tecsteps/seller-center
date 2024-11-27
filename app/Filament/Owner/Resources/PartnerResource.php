@@ -21,11 +21,11 @@ class PartnerResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
-    protected static ?string $navigationLabel = 'Partners';
+    protected static ?string $navigationLabel = 'Partnerships';
 
-    protected static ?string $modelLabel = 'Partner';
+    protected static ?string $modelLabel = 'Partnerships';
 
-    protected static ?string $pluralModelLabel = 'Partners';
+    protected static ?string $pluralModelLabel = 'Partnerships';
 
     public static function getNavigationGroup(): ?string
     {
@@ -53,21 +53,28 @@ class PartnerResource extends Resource
                     ->label('Company Name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('hideProducts')
-                    ->label('Hide Products')
-                    ->boolean(),
+                Tables\Columns\TextColumn::make('seller_products_count')
+                    ->label('Products')
+                    ->counts('sellerProducts')
+                    ->sortable()
+                    ->url(
+                        fn(Seller $record): string =>
+                        SellerProductResource::getUrl('index', ['tableFilters[seller][value]' => $record->id])
+                    )
+                    ->color('primary'),
+                Tables\Columns\ToggleColumn::make('partnership.select_all_products')
+                    ->label('Select All Products')
+                    ->onColor('success')
+                    ->offColor('danger')
+
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array

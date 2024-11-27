@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('seller_products', function (Blueprint $table) {
+        Schema::create('partnerships', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('brand')->nullable();
-            $table->string('sku')->nullable();
-            $table->text('description')->nullable();
-            $table->json('attributes')->nullable();
-            $table->foreignId('category_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->enum('status', ["draft","active","delisted"])->default('draft');
+            $table->enum('status', ["submitted","accepted","rejected","review"])->default('submitted');
+            $table->text('rejection_reason')->nullable();
+            $table->text('notes')->nullable();
+            $table->boolean('select_all_products')->default(false);
             $table->timestamps();
         });
 
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seller_products');
+        Schema::dropIfExists('partnerships');
     }
 };
