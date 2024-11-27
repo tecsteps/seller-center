@@ -5,7 +5,9 @@ namespace App\Filament\Owner\Resources;
 use App\Filament\Owner\Resources\SellerProductResource\Pages;
 use App\Filament\Owner\Resources\SellerProductResource\RelationManagers;
 use App\Models\SellerProduct;
-use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Resources\Resource;
@@ -26,25 +28,24 @@ class SellerProductResource extends Resource
         return 'Sellers';
     }
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required(),
-                Forms\Components\TextInput::make('sku')
+                TextInput::make('sku')
                     ->label('SKU'),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('attributes')
+                Textarea::make('attributes')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('category_id')
+                Select::make('category_id')
                     ->relationship('category', 'name'),
-                Forms\Components\Select::make('seller_id')
+                Select::make('seller_id')
                     ->relationship('seller', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                     ->required(),
             ]);
     }
@@ -93,14 +94,7 @@ class SellerProductResource extends Resource
                     ->collapsible()
                     ->columns(2),
 
-                Infolists\Components\Section::make('Prices')
-                    ->schema(
-                        [
-                            Infolists\Components\Fieldset::make('Default Prices')->schema($priceEntries)
-                        ]
-                    )
-                    ->collapsible()
-                    ->columns(2),
+
 
                 Infolists\Components\Section::make('Attributes')
                     ->schema([
@@ -182,7 +176,9 @@ class SellerProductResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\ImagesRelationManager::class,
             RelationManagers\PricesRelationManager::class,
+            RelationManagers\StocksRelationManager::class,
         ];
     }
 
