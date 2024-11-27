@@ -99,6 +99,11 @@ class SellerProductResource extends Resource
                 Infolists\Components\Section::make('Attributes')
                     ->schema([
                         Infolists\Components\KeyValueEntry::make('attributes')
+                            ->getStateUsing(function ($record) {
+                                return collect($record->attributes ?? [])->map(function ($value) {
+                                    return is_array($value) ? implode(', ', $value) : $value;
+                                })->toArray();
+                            })
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
@@ -142,30 +147,6 @@ class SellerProductResource extends Resource
                     ->relationship('seller', 'name')
                     ->searchable()
                     ->preload(),
-                Tables\Filters\Filter::make('name')
-                    ->form([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Name')
-                            ->placeholder('Search by name...'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query->when(
-                            $data['name'],
-                            fn(Builder $query, $value): Builder => $query->where('name', 'like', "%{$value}%")
-                        );
-                    }),
-                Tables\Filters\Filter::make('sku')
-                    ->form([
-                        Forms\Components\TextInput::make('sku')
-                            ->label('SKU')
-                            ->placeholder('Search by SKU...'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query->when(
-                            $data['sku'],
-                            fn(Builder $query, $value): Builder => $query->where('sku', 'like', "%{$value}%")
-                        );
-                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

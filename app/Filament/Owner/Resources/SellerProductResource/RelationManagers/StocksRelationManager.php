@@ -17,7 +17,7 @@ class StocksRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         $locations = $this->getOwnerRecord()->seller->locations;
-        
+
         $columns = [
             Tables\Columns\TextColumn::make('name')
                 ->label('Variant')

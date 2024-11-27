@@ -37,8 +37,8 @@ class ImagesRelationManager extends RelationManager
             ->groups([
                 Tables\Grouping\Group::make('variant_name')
                     ->label('Variant')
-                    ->getTitleFromRecordUsing(fn ($record) => $record->seller_variant_id 
-                        ? ($record->sellerVariant->name ?? 'Unknown') 
+                    ->getTitleFromRecordUsing(fn($record) => $record->seller_variant_id
+                        ? ($record->sellerVariant->name ?? 'Unknown')
                         : 'Default Image')
                     ->collapsible(),
             ])
