@@ -19,6 +19,7 @@ class Seller extends Model
      */
     protected $fillable = [
         'name',
+        'hideProducts',
     ];
 
     /**
@@ -28,6 +29,7 @@ class Seller extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'hideProducts' => 'boolean',
     ];
 
     public function users(): BelongsToMany

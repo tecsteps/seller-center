@@ -48,6 +48,11 @@ class SellerVariant extends Model
         return $this->hasMany(Stock::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(SellerProductImage::class);
+    }
+
     public function sellerProduct(): BelongsTo
     {
         return $this->belongsTo(SellerProduct::class);

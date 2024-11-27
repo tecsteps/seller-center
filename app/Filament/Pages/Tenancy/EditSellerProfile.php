@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Tenancy;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use App\Enums\Countries;
@@ -35,6 +36,10 @@ class EditSellerProfile extends EditTenantProfile
                     ->label('Company Name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Toggle::make('hideProducts')
+                    ->label('Restrict Product Visibility')
+                    ->helperText('When enabled, your products will only be visible to operators with whom you have a partnership')
+                    ->default(false),
             ]);
     }
 }

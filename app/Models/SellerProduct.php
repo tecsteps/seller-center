@@ -18,6 +18,7 @@ class SellerProduct extends Model
      */
     protected $fillable = [
         'name',
+        'brand',
         'sku',
         'description',
         'attributes',
@@ -51,6 +52,11 @@ class SellerProduct extends Model
     public function stocks(): HasMany
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(SellerProductImage::class);
     }
 
     public function category(): BelongsTo

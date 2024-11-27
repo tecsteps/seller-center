@@ -105,4 +105,9 @@ class LocationResource extends Resource
                 ->slideOver(),
         ];
     }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Settings';
+    }
 }

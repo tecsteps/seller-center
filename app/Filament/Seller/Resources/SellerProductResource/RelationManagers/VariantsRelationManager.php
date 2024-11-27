@@ -101,10 +101,14 @@ class VariantsRelationManager extends RelationManager
                             ->editableKeys()
                             ->editableValues(),
                     ])
+                    ->collapsible()
+                    ->collapsed()
                     ->columns(2),
 
                 Forms\Components\Section::make('Pricing')
                     ->schema($priceFields)
+                    ->collapsible()
+                    ->collapsed()
                     ->columns(3),
 
                 Forms\Components\Section::make('Stock')
@@ -121,7 +125,52 @@ class VariantsRelationManager extends RelationManager
                         }
                         return $stockFields;
                     })
-                    ->columns($locations->isEmpty() ? 1 : 3)
+                    ->collapsible()
+                    ->collapsed()
+                    ->columns($locations->isEmpty() ? 1 : 3),
+
+                Forms\Components\Section::make('Images')
+                    ->schema([
+                        Forms\Components\Repeater::make('images')
+                            ->label('Additional images for this variant')
+                            ->collapsible()
+                            ->collapsed()
+                            ->relationship(
+                                'images',
+                                modifyQueryUsing: fn($query) => $query->where('seller_product_id', $this->getOwnerRecord()->id)
+                            )
+                            ->schema([
+                                Forms\Components\TextInput::make('image')
+                                    ->label('Image URL')
+                                    ->required()
+                                    ->url()
+                                    ->helperText('Enter the URL of the image'),
+                                Forms\Components\Hidden::make('number')
+                                    ->default(function () {
+                                        return \App\Models\SellerProductImage::where('seller_product_id', $this->getOwnerRecord()->id)
+                                            ->max('number') + 1;
+                                    }),
+                            ])
+                            ->orderColumn('number')
+                            ->defaultItems(0)
+                            ->reorderable()
+                            ->reorderableWithDragAndDrop()
+                            ->collapsible()
+                            ->itemLabel(
+                                fn(array $state): ?string =>
+                                isset($state['image'])
+                                    ? "Image " . ($state['number'] ?? '?') . ": " . basename($state['image'])
+                                    : null
+                            )
+                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                                $data['seller_product_id'] = $this->getOwnerRecord()->id;
+                                return $data;
+                            })
+                            ->columns(1),
+                    ])
+                    ->collapsible()
+                    ->collapsed()
+                    ->columns(1),
             ]);
     }
 
@@ -141,6 +190,12 @@ class VariantsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('sku'),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(50),
+                Tables\Columns\TextColumn::make('stocks.quantity')
+                    ->label('Total Stock')
+                    ->default(0)
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->stocks()->sum('quantity');
+                    }),
             ])
             ->filters([
                 //

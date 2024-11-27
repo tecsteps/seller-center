@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('seller_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_variant_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('image');
+            $table->integer('number')->default(1);
             $table->timestamps();
         });
 

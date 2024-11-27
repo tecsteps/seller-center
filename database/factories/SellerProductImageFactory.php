@@ -26,6 +26,7 @@ class SellerProductImageFactory extends Factory
             'seller_product_id' => SellerProduct::factory(),
             'seller_variant_id' => SellerVariant::factory(),
             'image' => $this->faker->word(),
+            'number' => $this->faker->numberBetween(-10000, 10000),
         ];
     }
 }

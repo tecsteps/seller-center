@@ -19,6 +19,7 @@ class SellerProductImage extends Model
         'seller_product_id',
         'seller_variant_id',
         'image',
+        'number',
     ];
 
     /**

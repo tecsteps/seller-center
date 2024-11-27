@@ -26,6 +26,11 @@ class SellerDataResource extends Resource
 
     protected static ?string $navigationLabel = 'My Data';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Settings';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

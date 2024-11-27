@@ -23,6 +23,11 @@ class SellerProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Products';
+    }
+
     public static function form(Form $form): Form
     {
         $priceFields = [];
@@ -49,6 +54,17 @@ class SellerProductResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->helperText('The display name for this product'),
+
+                        Forms\Components\TextInput::make('brand')
+                            ->required()
+                            ->helperText('The brand this product')
+                            ->datalist(function () {
+                                return \App\Models\SellerProduct::query()
+                                    ->whereNotNull('brand')
+                                    ->distinct()
+                                    ->pluck('brand')
+                                    ->toArray();
+                            }),
 
                         Forms\Components\Select::make('status')
                             ->options([
@@ -83,12 +99,61 @@ class SellerProductResource extends Resource
                             ->editableKeys()
                             ->editableValues(),
                     ])
-                    ->columns(2),
+                    ->collapsible()
+                    ->collapsed()
+                    ->columns(3),
 
                 Forms\Components\Section::make('Default Prices')
                     ->description('Set the default prices for this product. These prices will be used as a base for variants.')
                     ->schema($priceFields)
-                    ->columns(3)
+                    ->collapsible()
+                    ->collapsed()
+                    ->columns(3),
+
+                Forms\Components\Section::make('Default Images')
+                    ->schema([
+                        Forms\Components\Repeater::make('images')
+                            ->label('Default product images')
+                            ->collapsible()
+                            ->collapsed()
+                            ->relationship(
+                                'images',
+                                modifyQueryUsing: fn($query) => $query->whereNull('seller_variant_id')
+                            )
+                            ->schema([
+                                Forms\Components\TextInput::make('image')
+                                    ->label('Image URL')
+                                    ->required()
+                                    ->url()
+                                    ->helperText('Enter the URL of the image'),
+                                Forms\Components\Hidden::make('number')
+                                    ->default(function (Forms\Get $get, ?Model $record) {
+                                        $productId = $record?->id ?? 0;
+                                        return \App\Models\SellerProductImage::where('seller_product_id', $productId)
+                                            ->whereNull('seller_variant_id')
+                                            ->max('number') + 1;
+                                    }),
+                            ])
+                            ->orderColumn('number')
+                            ->defaultItems(0)
+                            ->reorderable()
+                            ->reorderableWithDragAndDrop()
+                            ->collapsible()
+                            ->itemLabel(
+                                fn(array $state): ?string =>
+                                isset($state['image'])
+                                    ? "Image " . ($state['number'] ?? '?') . ": " . basename($state['image'])
+                                    : null
+                            )
+                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data, Forms\Get $get, ?Model $record): array {
+                                $data['seller_product_id'] = $record?->id;
+                                $data['seller_variant_id'] = null;
+                                return $data;
+                            })
+                            ->columns(1),
+                    ])
+                    ->collapsed()
+                    ->collapsible(),
             ]);
     }
 
@@ -97,6 +162,7 @@ class SellerProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->limit(30)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -107,12 +173,17 @@ class SellerProductResource extends Resource
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Category'),
                 Tables\Columns\TextColumn::make('seller_variants_count')
                     ->label('Variants')
                     ->counts('sellerVariants')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('total_stock')
+                    ->label('Total Stock')
+                    ->default(0)
+                    ->formatStateUsing(function ($state, $record) {
+                        return \App\Models\Stock::where('seller_product_id', $record->id)->sum('quantity');
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

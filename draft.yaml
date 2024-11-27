@@ -2,6 +2,7 @@ models:
       
   Seller:
     name: string
+    hideProducts: boolean default:false
     relationships:
       belongsToMany: User
       hasOne: SellerData
@@ -43,6 +44,7 @@ models:
 
   SellerProduct:
     name: string
+    brand: string nullable
     sku: string nullable
     description: text nullable
     attributes: json nullable
@@ -50,12 +52,13 @@ models:
     seller_id: id foreign
     status: enum:draft,active,delisted default:draft
     relationships:
-      hasMany: SellerVariant,Price,Stock
+      hasMany: SellerVariant,Price,Stock,SellerProductImage:image
 
   SellerProductImage:
     seller_product_id: id foreign
     seller_variant_id: id foreign nullable
     image: string
+    number: integer default:1
 
   SellerVariant:
     name: string
@@ -66,7 +69,7 @@ models:
     seller_id: id foreign
     status: enum:draft,active,delisted default:draft
     relationships:
-      hasMany: Price, Stock
+      hasMany: Price, Stock, SellerProductImage:image
 
   Price:
     amount: integer

@@ -22,6 +22,7 @@ class SellerFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'hideProducts' => $this->faker->boolean(),
         ];
     }
 }

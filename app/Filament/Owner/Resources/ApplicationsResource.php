@@ -29,6 +29,11 @@ class ApplicationsResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Sellers';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

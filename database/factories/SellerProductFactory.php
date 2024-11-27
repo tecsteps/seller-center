@@ -24,6 +24,7 @@ class SellerProductFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'brand' => $this->faker->word(),
             'sku' => $this->faker->word(),
             'description' => $this->faker->text(),
             'attributes' => '{}',
