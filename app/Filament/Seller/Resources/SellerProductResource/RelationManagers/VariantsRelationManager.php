@@ -25,13 +25,26 @@ class VariantsRelationManager extends RelationManager
         $stockFields = [];
         $allCurrencies = \App\Models\Currency::all();
         $locations = \App\Models\Location::where('seller_id', Filament::getTenant()->id)->get();
+        $product = $this->getOwnerRecord();
 
         foreach ($allCurrencies as $currency) {
+            $defaultPrice = $product->prices()
+                ->where('currency_id', $currency->id)
+                ->whereNull('seller_variant_id')
+                ->first();
+
             $priceFields[] = Forms\Components\TextInput::make("price_{$currency->id}")
                 ->label("{$currency->code} Price")
                 ->numeric()
                 ->prefix($currency->symbol)
-                ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state, ?Model $record) use ($currency): void {
+                ->hint(function () use ($defaultPrice, $currency): ?string {
+                    if ($defaultPrice) {
+                        return "Default price: {$currency->symbol}{$defaultPrice->amount}";
+                    }
+                    return null;
+                })
+                ->hintColor('gray')
+                ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, ?Model $record) use ($currency): void {
                     if ($record) {
                         $price = $record->prices()->where('currency_id', $currency->id)->first();
                         $component->state($price?->amount);
@@ -39,28 +52,18 @@ class VariantsRelationManager extends RelationManager
                 });
         }
 
-        if ($locations->isEmpty()) {
-            $stockFields[] = Forms\Components\Placeholder::make('no_locations')
-                ->content('You need to create at least one warehouse location before you can manage stock.')
-                ->extraAttributes(['class' => 'text-warning-600'])
-                ->helperText(function (): string {
-                    $url = LocationResource::getUrl('create');
-                    return "Click [here]({$url}) to create a new location.";
+        foreach ($locations as $location) {
+            $stockFields[] = Forms\Components\TextInput::make("stock_{$location->id}")
+                ->label("Stock at {$location->name}")
+                ->numeric()
+                ->minValue(0)
+                ->default(0)
+                ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, ?Model $record) use ($location): void {
+                    if ($record) {
+                        $stock = $record->stocks()->where('location_id', $location->id)->first();
+                        $component->state($stock?->quantity);
+                    }
                 });
-        } else {
-            foreach ($locations as $location) {
-                $stockFields[] = Forms\Components\TextInput::make("stock_{$location->id}")
-                    ->label("Stock at {$location->name}")
-                    ->numeric()
-                    ->minValue(0)
-                    ->default(0)
-                    ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state, ?Model $record) use ($location): void {
-                        if ($record) {
-                            $stock = $record->stocks()->where('location_id', $location->id)->first();
-                            $component->state($stock?->quantity);
-                        }
-                    });
-            }
         }
 
         return $form
@@ -70,6 +73,16 @@ class VariantsRelationManager extends RelationManager
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->helperText('The display name for this variant'),
+
+                        Forms\Components\Select::make('status')
+                            ->options([
+                                'draft' => 'Draft',
+                                'active' => 'Active',
+                                'delisted' => 'Delisted'
+                            ])
+                            ->default('draft')
+                            ->native(false)
+                            ->helperText('Only Active products can be sold on the marketplace.'),
 
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
@@ -95,8 +108,20 @@ class VariantsRelationManager extends RelationManager
                     ->columns(3),
 
                 Forms\Components\Section::make('Stock')
-                    ->schema($stockFields)
-                    ->columns(3)
+                    ->schema(function () use ($locations, $stockFields) {
+                        if ($locations->isEmpty()) {
+                            return [
+                                Forms\Components\Placeholder::make('no_locations')
+                                    ->content('No warehouse locations configured')
+                                    ->extraAttributes(['class' => 'text-warning-600'])
+                                    ->helperText(function (): string {
+                                        return "Please create a warehouse location first.";
+                                    })
+                            ];
+                        }
+                        return $stockFields;
+                    })
+                    ->columns($locations->isEmpty() ? 1 : 3)
             ]);
     }
 
@@ -105,6 +130,14 @@ class VariantsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'draft' => 'gray',
+                        'active' => 'success',
+                        'delisted' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('sku'),
                 Tables\Columns\TextColumn::make('description')
                     ->limit(50),

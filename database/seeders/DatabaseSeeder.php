@@ -334,18 +334,6 @@ class DatabaseSeeder extends Seeder
             SellerProduct::create($product);
         }
 
-        $statuses = [
-            ['name' => 'draft'],
-            ['name' => 'pending_approval'],
-            ['name' => 'approved'],
-            ['name' => 'active'],
-            ['name' => 'inactive'],
-        ];
-
-        foreach ($statuses as $status) {
-            Status::create($status);
-        }
-
         $sellerVariants = [
             // Sony Headphones Variants
             [

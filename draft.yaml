@@ -46,11 +46,16 @@ models:
     sku: string nullable
     description: text nullable
     attributes: json nullable
-    category_id: id foreign
+    category_id: id foreign nullable
     seller_id: id foreign
+    status: enum:draft,active,delisted default:draft
     relationships:
       hasMany: SellerVariant,Price,Stock
 
+  SellerProductImage:
+    seller_product_id: id foreign
+    seller_variant_id: id foreign nullable
+    image: string
 
   SellerVariant:
     name: string
@@ -59,12 +64,13 @@ models:
     attributes: json nullable
     seller_product_id: id foreign
     seller_id: id foreign
+    status: enum:draft,active,delisted default:draft
     relationships:
       hasMany: Price, Stock
 
   Price:
     amount: integer
-    seller_variant_id: id foreign
+    seller_variant_id: id foreign nullable
     seller_product_id: id foreign
     currency_id: id foreign
 

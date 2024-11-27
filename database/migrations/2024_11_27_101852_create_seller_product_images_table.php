@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('seller_product_images', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount');
-            $table->foreignId('seller_variant_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('currency_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('seller_variant_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('image');
             $table->timestamps();
         });
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('seller_product_images');
     }
 };

@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class SellerVariant extends Model
+class SellerProductImage extends Model
 {
     use HasFactory;
 
@@ -17,13 +16,9 @@ class SellerVariant extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'sku',
-        'description',
-        'attributes',
         'seller_product_id',
-        'seller_id',
-        'status',
+        'seller_variant_id',
+        'image',
     ];
 
     /**
@@ -33,28 +28,17 @@ class SellerVariant extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'attributes' => 'array',
         'seller_product_id' => 'integer',
-        'seller_id' => 'integer',
+        'seller_variant_id' => 'integer',
     ];
-
-    public function prices(): HasMany
-    {
-        return $this->hasMany(Price::class);
-    }
-
-    public function stocks(): HasMany
-    {
-        return $this->hasMany(Stock::class);
-    }
 
     public function sellerProduct(): BelongsTo
     {
         return $this->belongsTo(SellerProduct::class);
     }
 
-    public function seller(): BelongsTo
+    public function sellerVariant(): BelongsTo
     {
-        return $this->belongsTo(Seller::class);
+        return $this->belongsTo(SellerVariant::class);
     }
 }

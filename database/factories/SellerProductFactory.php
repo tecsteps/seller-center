@@ -29,6 +29,7 @@ class SellerProductFactory extends Factory
             'attributes' => '{}',
             'category_id' => Category::factory(),
             'seller_id' => Seller::factory(),
+            'status' => $this->faker->randomElement(["draft","active","delisted"]),
         ];
     }
 }

@@ -11,7 +11,9 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\View\View;
 
 class SellerProductResource extends Resource
 {
@@ -23,6 +25,22 @@ class SellerProductResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $priceFields = [];
+        $allCurrencies = \App\Models\Currency::all();
+
+        foreach ($allCurrencies as $currency) {
+            $priceFields[] = Forms\Components\TextInput::make("price_{$currency->id}")
+                ->label("{$currency->code} Price")
+                ->numeric()
+                ->prefix($currency->symbol)
+                ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, ?Model $record = null) use ($currency): void {
+                    if ($record) {
+                        $price = $record->prices()->where('currency_id', $currency->id)->whereNull('seller_variant_id')->first();
+                        $component->state($price?->amount);
+                    }
+                });
+        }
+
         return $form
             ->schema([
                 Forms\Components\Section::make('Product Details')
@@ -31,16 +49,23 @@ class SellerProductResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->helperText('The display name for this product'),
+
+                        Forms\Components\Select::make('status')
+                            ->options([
+                                'draft' => 'Draft',
+                                'active' => 'Active',
+                                'delisted' => 'Delisted'
+                            ])
+                            ->default('draft')
+                            ->native(false)
+                            ->helperText('Only Active products can be sold on the marketplace.'),
+
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
                             ->native(false)
                             ->required()
                             ->helperText('The category this product belongs to'),
-                        // ->suffixAction(
-                        //     Forms\Components\Actions\Action::make('viewCategory')
-                        //         ->icon('heroicon-m-arrow-top-right-on-square')
-                        //         ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
-                        // ),
+
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
                             ->helperText('Stock Keeping Unit - A unique identifier for this product'),
@@ -58,7 +83,12 @@ class SellerProductResource extends Resource
                             ->editableKeys()
                             ->editableValues(),
                     ])
-                    ->columns(2)
+                    ->columns(2),
+
+                Forms\Components\Section::make('Default Prices')
+                    ->description('Set the default prices for this product. These prices will be used as a base for variants.')
+                    ->schema($priceFields)
+                    ->columns(3)
             ]);
     }
 
@@ -68,6 +98,14 @@ class SellerProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'draft' => 'gray',
+                        'active' => 'success',
+                        'delisted' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('category.name')
                     ->numeric()
                     ->sortable(),
@@ -98,6 +136,16 @@ class SellerProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('variants')
+                    ->label('View Variants')
+                    ->icon('heroicon-m-squares-2x2')
+                    ->color('info')
+                    ->slideOver()
+                    ->form([])
+                    ->modalHeading(fn(SellerProduct $record): string => "Variants of {$record->name}")
+                    ->modalContent(fn(SellerProduct $record): View => view('filament.resources.seller-product.variants-modal', [
+                        'product' => $record
+                    ]))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

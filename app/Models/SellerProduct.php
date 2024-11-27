@@ -23,6 +23,7 @@ class SellerProduct extends Model
         'attributes',
         'category_id',
         'seller_id',
+        'status',
     ];
 
     /**
