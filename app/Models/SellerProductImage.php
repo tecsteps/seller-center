@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Stock extends Model
+class SellerProductImage extends Model
 {
     use HasFactory;
 
@@ -16,13 +16,10 @@ class Stock extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity',
-        'reserved',
-        'safety_stock',
-        'seller_variant_id',
         'seller_product_id',
-        'location_id',
-        'seller_id',
+        'seller_variant_id',
+        'image',
+        'number',
     ];
 
     /**
@@ -32,29 +29,17 @@ class Stock extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'seller_variant_id' => 'integer',
         'seller_product_id' => 'integer',
-        'location_id' => 'integer',
-        'seller_id' => 'integer',
+        'seller_variant_id' => 'integer',
     ];
-
-    public function sellerVariant(): BelongsTo
-    {
-        return $this->belongsTo(SellerVariant::class);
-    }
 
     public function sellerProduct(): BelongsTo
     {
         return $this->belongsTo(SellerProduct::class);
     }
 
-    public function location(): BelongsTo
+    public function sellerVariant(): BelongsTo
     {
-        return $this->belongsTo(Location::class);
-    }
-
-    public function seller(): BelongsTo
-    {
-        return $this->belongsTo(Seller::class);
+        return $this->belongsTo(SellerVariant::class);
     }
 }

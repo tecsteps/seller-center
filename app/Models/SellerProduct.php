@@ -18,11 +18,14 @@ class SellerProduct extends Model
      */
     protected $fillable = [
         'name',
+        'brand',
         'sku',
         'description',
         'attributes',
         'category_id',
         'seller_id',
+        'status',
+        'selected',
     ];
 
     /**
@@ -35,11 +38,27 @@ class SellerProduct extends Model
         'attributes' => 'array',
         'category_id' => 'integer',
         'seller_id' => 'integer',
+        'selected' => 'boolean',
     ];
 
     public function sellerVariants(): HasMany
     {
         return $this->hasMany(SellerVariant::class);
+    }
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class);
+    }
+
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(SellerProductImage::class);
     }
 
     public function category(): BelongsTo

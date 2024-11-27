@@ -1,48 +1,52 @@
 created:
     - database/factories/SellerFactory.php
+    - database/factories/PartnershipFactory.php
     - database/factories/SellerDataFactory.php
     - database/factories/CategoryFactory.php
     - database/factories/SellerProductFactory.php
+    - database/factories/SellerProductImageFactory.php
     - database/factories/SellerVariantFactory.php
     - database/factories/PriceFactory.php
     - database/factories/StockFactory.php
     - database/factories/LocationFactory.php
     - database/factories/CurrencyFactory.php
-    - database/factories/StatusFactory.php
     - database/factories/MessageFactory.php
-    - database/migrations/2024_11_26_113545_create_sellers_table.php
-    - database/migrations/2024_11_26_113546_create_seller_data_table.php
-    - database/migrations/2024_11_26_113547_create_categories_table.php
-    - database/migrations/2024_11_26_113548_create_seller_products_table.php
-    - database/migrations/2024_11_26_113549_create_seller_variants_table.php
-    - database/migrations/2024_11_26_113550_create_prices_table.php
-    - database/migrations/2024_11_26_113551_create_stocks_table.php
-    - database/migrations/2024_11_26_113552_create_locations_table.php
-    - database/migrations/2024_11_26_113553_create_currencies_table.php
-    - database/migrations/2024_11_26_113554_create_statuses_table.php
-    - database/migrations/2024_11_26_113555_create_messages_table.php
-    - database/migrations/2024_11_26_113556_create_seller_user_table.php
+    - database/migrations/2024_11_27_173745_create_sellers_table.php
+    - database/migrations/2024_11_27_173746_create_partnerships_table.php
+    - database/migrations/2024_11_27_173747_create_seller_data_table.php
+    - database/migrations/2024_11_27_173748_create_categories_table.php
+    - database/migrations/2024_11_27_173749_create_seller_products_table.php
+    - database/migrations/2024_11_27_173750_create_seller_product_images_table.php
+    - database/migrations/2024_11_27_173751_create_seller_variants_table.php
+    - database/migrations/2024_11_27_173752_create_prices_table.php
+    - database/migrations/2024_11_27_173753_create_stocks_table.php
+    - database/migrations/2024_11_27_173754_create_locations_table.php
+    - database/migrations/2024_11_27_173755_create_currencies_table.php
+    - database/migrations/2024_11_27_173756_create_messages_table.php
+    - database/migrations/2024_11_27_173757_create_seller_user_table.php
     - app/Models/Seller.php
+    - app/Models/Partnership.php
     - app/Models/SellerData.php
     - app/Models/Category.php
     - app/Models/SellerProduct.php
+    - app/Models/SellerProductImage.php
     - app/Models/SellerVariant.php
     - app/Models/Price.php
     - app/Models/Stock.php
     - app/Models/Location.php
     - app/Models/Currency.php
-    - app/Models/Status.php
     - app/Models/Message.php
 models:
     User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
-    Seller: { name: string, relationships: { belongsToMany: User, hasOne: SellerData, hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location, Message' } }
-    SellerData: { seller_id: 'id foreign', email: 'string nullable', status: 'enum:open,submitted,accepted,rejected,review default:open', rejection_reason: 'text nullable', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', account_holder_name: 'string nullable', file1: 'string nullable', file2: 'string nullable', file3: 'string nullable', notes: 'text nullable' }
+    Seller: { name: string, hideProducts: 'boolean default:false', relationships: { belongsToMany: User, hasOne: 'SellerData, Partnership', hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location, Message' } }
+    Partnership: { seller_id: 'id foreign', status: 'enum:submitted,accepted,rejected,review default:submitted', rejection_reason: 'text nullable', notes: 'text nullable', select_all_products: 'boolean default:false' }
+    SellerData: { seller_id: 'id foreign', email: 'string nullable', description: 'text nullable', company_name: 'string nullable', address_line1: 'string nullable', address_line2: 'string nullable', city: 'string nullable', state: 'string nullable', postal_code: 'string nullable', country_code: 'string nullable', phone: 'string nullable', vat: 'string nullable', tin: 'string nullable', eori: 'string nullable', iban: 'string nullable', swift_bic: 'string nullable', bank_name: 'string nullable', account_holder_name: 'string nullable', file1: 'string nullable', file2: 'string nullable', file3: 'string nullable' }
     Category: { name: string, description: 'text nullable', is_active: 'boolean nullable', parent_id: 'id foreign:categories.id nullable', relationships: { hasMany: SellerProduct } }
-    SellerProduct: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: SellerVariant } }
-    SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', status_id: 'id foreign', seller_id: 'id foreign', relationships: { hasMany: 'Price, Stock' } }
-    Price: { amount: integer, seller_variant_id: 'id foreign', currency_id: 'id foreign' }
-    Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', location_id: 'id foreign', seller_id: 'id foreign' }
+    SellerProduct: { name: string, brand: 'string nullable', sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', category_id: 'id foreign nullable', seller_id: 'id foreign', status: 'enum:draft,active,delisted default:draft', selected: 'boolean default:false', relationships: { hasMany: 'SellerVariant,Price,Stock,SellerProductImage:image' } }
+    SellerProductImage: { seller_product_id: 'id foreign', seller_variant_id: 'id foreign nullable', image: string, number: 'integer default:1' }
+    SellerVariant: { name: string, sku: 'string nullable', description: 'text nullable', attributes: 'json nullable', seller_product_id: 'id foreign', seller_id: 'id foreign', status: 'enum:draft,active,delisted default:draft', relationships: { hasMany: 'Price, Stock, SellerProductImage:image' } }
+    Price: { amount: integer, seller_variant_id: 'id foreign nullable', seller_product_id: 'id foreign', currency_id: 'id foreign' }
+    Stock: { quantity: integer, reserved: 'integer nullable', safety_stock: 'integer nullable', seller_variant_id: 'id foreign', seller_product_id: 'id foreign', location_id: 'id foreign', seller_id: 'id foreign' }
     Location: { name: string, address: string, default_delivery_days: 'integer nullable', seller_id: 'id foreign', relationships: { hasMany: Stock } }
     Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', relationships: { hasMany: Price } }
-    Status: { name: 'enum:draft,pending_approval,approved,rejected,active,inactive,archived', relationships: { hasMany: SellerVariant } }
     Message: { content: text, seller_id: 'id foreign', message_id: 'id foreign nullable' }

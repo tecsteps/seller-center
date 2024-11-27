@@ -29,6 +29,11 @@ class ApplicationsResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Sellers';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -49,11 +54,12 @@ class ApplicationsResource extends Resource
                             ->label('Primary Contact Email')
                             ->email()
                             ->required()
-                            ->maxLength(255)
-                            ->default(fn() => auth()->user()->email),
+                            ->disabled()
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('phone')
                             ->tel()
                             ->required()
+                            ->disabled()
                             ->maxLength(20),
                     ])->columns(3),
 
@@ -63,10 +69,12 @@ class ApplicationsResource extends Resource
                         Forms\Components\TextInput::make('company_name')
                             ->label('Company Name')
                             ->required()
+                            ->disabled()
                             ->maxLength(255),
                         Forms\Components\Textarea::make('description')
                             ->label('Business Description')
                             ->required()
+                            ->disabled()
                             ->helperText('Describe your business and what products/services you plan to offer')
                             ->maxLength(1000)
                             ->columnSpanFull(),
@@ -78,21 +86,26 @@ class ApplicationsResource extends Resource
                         Forms\Components\TextInput::make('address_line1')
                             ->label('Street Address')
                             ->required()
+                            ->disabled()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('address_line2')
                             ->label('Additional Address Details')
+                            ->disabled()
                             ->maxLength(255),
                         Forms\Components\Grid::make(3)
                             ->schema([
                                 Forms\Components\TextInput::make('city')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(100),
                                 Forms\Components\TextInput::make('state')
                                     ->required()
+                                    ->disabled()
                                     ->label('State/Province/Region')
                                     ->maxLength(100),
                                 Forms\Components\TextInput::make('postal_code')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(20),
                             ]),
                         Forms\Components\Grid::make(2)
@@ -100,6 +113,7 @@ class ApplicationsResource extends Resource
                                 Forms\Components\Select::make('country_code')
                                     ->label('Country')
                                     ->required()
+                                    ->disabled()
                                     ->options(Countries::LIST)
                                     ->native(false)
                                     ->searchable(),
@@ -111,16 +125,16 @@ class ApplicationsResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('vat')
                             ->label('VAT Number')
+                            ->disabled()
                             ->helperText('Value Added Tax identification number'),
-                        // ->requiredWithout('vat,tin,eori'), TODO NOT WORKING
                         Forms\Components\TextInput::make('tin')
                             ->label('Tax ID Number')
+                            ->disabled()
                             ->helperText('Tax Identification Number'),
-                        // ->requiredWithout('tin,vat,eori') TODO NOT WORKING
                         Forms\Components\TextInput::make('eori')
                             ->label('EORI Number')
+                            ->disabled()
                             ->helperText('Economic Operators Registration and Identification number'),
-                        // ->requiredWithout('eori,vat,tin'),  TODO NOT WORKING
                     ])->columns(3),
 
                 Forms\Components\Section::make('Banking Information')
@@ -131,20 +145,24 @@ class ApplicationsResource extends Resource
                                 Forms\Components\TextInput::make('iban')
                                     ->label('IBAN')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(34)
                                     ->helperText('International Bank Account Number'),
                                 Forms\Components\TextInput::make('swift_bic')
                                     ->label('SWIFT/BIC')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(11),
                             ]),
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('bank_name')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('account_holder_name')
                                     ->required()
+                                    ->disabled()
                                     ->maxLength(255),
                             ]),
                     ]),
@@ -157,6 +175,7 @@ class ApplicationsResource extends Resource
                                 Forms\Components\FileUpload::make('file1')
                                     ->label('Certificate of Incorporation')
                                     ->helperText('Official document proving company registration')
+                                    ->disabled()
                                     ->acceptedFileTypes(['application/pdf', 'image/*'])
                                     ->maxSize(10240)
                                     ->directory('seller-documents')
@@ -165,6 +184,7 @@ class ApplicationsResource extends Resource
                                 Forms\Components\FileUpload::make('file2')
                                     ->label('Trade Registry Extract')
                                     ->helperText('Recent extract from trade/commerce registry')
+                                    ->disabled()
                                     ->acceptedFileTypes(['application/pdf', 'image/*'])
                                     ->maxSize(10240)
                                     ->directory('seller-documents')
@@ -173,6 +193,7 @@ class ApplicationsResource extends Resource
                                 Forms\Components\FileUpload::make('file3')
                                     ->label('Additional Documentation')
                                     ->helperText('Any other relevant business documentation')
+                                    ->disabled()
                                     ->acceptedFileTypes(['application/pdf', 'image/*'])
                                     ->maxSize(10240)
                                     ->directory('seller-documents')
@@ -180,7 +201,6 @@ class ApplicationsResource extends Resource
                             ]),
                     ])
                     ->collapsible(),
-
             ]);
     }
 
@@ -189,15 +209,15 @@ class ApplicationsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('seller.partnership.status')
                     ->badge()
                     ->sortable()
                     ->color(fn(string $state): string => match ($state) {
-                        'open' => 'gray',
                         'submitted' => 'info',
                         'accepted' => 'success',
                         'rejected' => 'danger',
                         'review' => 'warning',
+                        default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('company_name')
                     ->sortable()

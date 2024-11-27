@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Currency;
 use App\Models\Price;
+use App\Models\SellerProduct;
 use App\Models\SellerVariant;
 
 class PriceFactory extends Factory
@@ -25,6 +26,7 @@ class PriceFactory extends Factory
         return [
             'amount' => $this->faker->numberBetween(-10000, 10000),
             'seller_variant_id' => SellerVariant::factory(),
+            'seller_product_id' => SellerProduct::factory(),
             'currency_id' => Currency::factory(),
         ];
     }

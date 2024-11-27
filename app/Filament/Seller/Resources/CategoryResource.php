@@ -106,4 +106,9 @@ class CategoryResource extends Resource
             // 'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Products';
+    }
 }

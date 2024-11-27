@@ -2,16 +2,22 @@ models:
       
   Seller:
     name: string
+    hideProducts: boolean default:false
     relationships:
       belongsToMany: User
-      hasOne: SellerData
+      hasOne: SellerData, Partnership
       hasMany: SellerProduct, SellerVariant, Price, Stock, Location, Message
+
+  Partnership:
+    seller_id: id foreign
+    status: enum:submitted,accepted,rejected,review default:submitted
+    rejection_reason: text nullable
+    notes: text nullable
+    select_all_products: boolean default:false
 
   SellerData:
     seller_id: id foreign
     email: string nullable
-    status: enum:open,submitted,accepted,rejected,review default:open
-    rejection_reason: text nullable
     description: text nullable
     company_name: string nullable
     address_line1: string nullable
@@ -31,7 +37,6 @@ models:
     file1: string nullable
     file2: string nullable
     file3: string nullable
-    notes: text nullable
 
   Category:
     name: string
@@ -43,14 +48,22 @@ models:
 
   SellerProduct:
     name: string
+    brand: string nullable
     sku: string nullable
     description: text nullable
     attributes: json nullable
-    category_id: id foreign
+    category_id: id foreign nullable
     seller_id: id foreign
+    status: enum:draft,active,delisted default:draft
+    selected: boolean default:false
     relationships:
-      hasMany: SellerVariant
-    
+      hasMany: SellerVariant,Price,Stock,SellerProductImage:image
+
+  SellerProductImage:
+    seller_product_id: id foreign
+    seller_variant_id: id foreign nullable
+    image: string
+    number: integer default:1
 
   SellerVariant:
     name: string
@@ -58,14 +71,15 @@ models:
     description: text nullable
     attributes: json nullable
     seller_product_id: id foreign
-    status_id: id foreign
     seller_id: id foreign
+    status: enum:draft,active,delisted default:draft
     relationships:
-      hasMany: Price, Stock
+      hasMany: Price, Stock, SellerProductImage:image
 
   Price:
     amount: integer
-    seller_variant_id: id foreign
+    seller_variant_id: id foreign nullable
+    seller_product_id: id foreign
     currency_id: id foreign
 
   Stock:
@@ -73,6 +87,7 @@ models:
     reserved: integer nullable
     safety_stock: integer nullable
     seller_variant_id: id foreign
+    seller_product_id: id foreign
     location_id: id foreign
     seller_id: id foreign
 
@@ -92,11 +107,6 @@ models:
     
     relationships:
       hasMany: Price
-
-  Status:
-    name: enum:draft,pending_approval,approved,rejected,active,inactive,archived
-    relationships:
-      hasMany: SellerVariant
 
   Message:
     content: text

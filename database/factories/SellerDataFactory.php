@@ -24,8 +24,6 @@ class SellerDataFactory extends Factory
         return [
             'seller_id' => Seller::factory(),
             'email' => $this->faker->safeEmail(),
-            'status' => $this->faker->randomElement(["open","submitted","accepted","rejected","review"]),
-            'rejection_reason' => $this->faker->text(),
             'description' => $this->faker->text(),
             'company_name' => $this->faker->word(),
             'address_line1' => $this->faker->word(),
@@ -45,7 +43,6 @@ class SellerDataFactory extends Factory
             'file1' => $this->faker->word(),
             'file2' => $this->faker->word(),
             'file3' => $this->faker->word(),
-            'notes' => $this->faker->text(),
         ];
     }
 }

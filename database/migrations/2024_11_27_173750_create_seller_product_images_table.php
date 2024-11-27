@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('statuses', function (Blueprint $table) {
+        Schema::create('seller_product_images', function (Blueprint $table) {
             $table->id();
-            $table->enum('name', ["draft","pending_approval","approved","rejected","active","inactive","archived"]);
+            $table->foreignId('seller_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('seller_variant_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('image');
+            $table->integer('number')->default(1);
             $table->timestamps();
         });
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('statuses');
+        Schema::dropIfExists('seller_product_images');
     }
 };

@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 
 class LocationResource extends Resource
 {
@@ -58,10 +59,27 @@ class LocationResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->slideOver(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->modalDescription(fn (Location $record): string => "Are you sure you want to delete this location? This will also remove all stock records associated with this location.")
+                    ->modalHeading('Delete Location')
+                    ->before(function (Location $record) {
+                        // Delete all stocks associated with this location
+                        $record->stocks()->delete();
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->modalDescription('Are you sure you want to delete these locations? This will also remove all stock records associated with these locations.')
+                        ->modalHeading('Delete Locations')
+                        ->before(function (Collection $records) {
+                            // Delete all stocks associated with these locations
+                            foreach ($records as $record) {
+                                $record->stocks()->delete();
+                            }
+                        }),
                 ]),
             ]);
     }
@@ -86,5 +104,10 @@ class LocationResource extends Resource
             Tables\Actions\CreateAction::make()
                 ->slideOver(),
         ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Settings';
     }
 }

@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('prices', function (Blueprint $table) {
+        Schema::create('partnerships', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount');
-            $table->foreignId('seller_variant_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('currency_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->enum('status', ["submitted","accepted","rejected","review"])->default('submitted');
+            $table->text('rejection_reason')->nullable();
+            $table->text('notes')->nullable();
+            $table->boolean('select_all_products')->default(false);
             $table->timestamps();
         });
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prices');
+        Schema::dropIfExists('partnerships');
     }
 };

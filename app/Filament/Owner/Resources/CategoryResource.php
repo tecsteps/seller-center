@@ -20,6 +20,11 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Configuration';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

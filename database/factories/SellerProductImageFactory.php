@@ -4,18 +4,18 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Seller;
 use App\Models\SellerProduct;
+use App\Models\SellerProductImage;
 use App\Models\SellerVariant;
 
-class SellerVariantFactory extends Factory
+class SellerProductImageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = SellerVariant::class;
+    protected $model = SellerProductImage::class;
 
     /**
      * Define the model's default state.
@@ -23,13 +23,10 @@ class SellerVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'sku' => $this->faker->word(),
-            'description' => $this->faker->text(),
-            'attributes' => '{}',
             'seller_product_id' => SellerProduct::factory(),
-            'seller_id' => Seller::factory(),
-            'status' => $this->faker->randomElement(["draft","active","delisted"]),
+            'seller_variant_id' => SellerVariant::factory(),
+            'image' => $this->faker->word(),
+            'number' => $this->faker->numberBetween(-10000, 10000),
         ];
     }
 }

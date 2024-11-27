@@ -20,10 +20,18 @@ class EditSellerData extends EditRecord
                 ->color('success')
                 ->tooltip('Submit your application for review - this cannot be undone')
                 ->requiresConfirmation()
-                ->visible(fn() => $this->record->status !== 'submitted')
+                ->visible(fn() => $this->record->seller->partnership?->status !== 'submitted')
                 ->action(function () {
-                    $this->record->status = 'submitted';
-                    $this->record->save();
+                    $partnership = $this->record->seller->partnership;
+                    
+                    if (!$partnership) {
+                        $partnership = $this->record->seller->partnership()->create([
+                            'status' => 'submitted'
+                        ]);
+                    } else {
+                        $partnership->status = 'submitted';
+                        $partnership->save();
+                    }
 
                     Notification::make()
                         ->success()

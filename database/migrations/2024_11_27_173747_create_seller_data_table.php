@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('email')->nullable();
-            $table->enum('status', ["open","submitted","accepted","rejected","review"])->default('open');
-            $table->text('rejection_reason')->nullable();
             $table->text('description')->nullable();
             $table->string('company_name')->nullable();
             $table->string('address_line1')->nullable();
@@ -38,7 +36,6 @@ return new class extends Migration
             $table->string('file1')->nullable();
             $table->string('file2')->nullable();
             $table->string('file3')->nullable();
-            $table->text('notes')->nullable();
             $table->timestamps();
         });
 
