@@ -358,7 +358,7 @@ class DatabaseSeeder extends Seeder
                     'includes' => ['Carrying Case', 'Audio Cable', 'USB-C Cable']
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -371,7 +371,7 @@ class DatabaseSeeder extends Seeder
                     'includes' => ['Carrying Case', 'Audio Cable', 'USB-C Cable']
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Le Creuset Variants
@@ -385,7 +385,7 @@ class DatabaseSeeder extends Seeder
                     'material' => 'Enameled Cast Iron'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -398,7 +398,7 @@ class DatabaseSeeder extends Seeder
                     'material' => 'Enameled Cast Iron'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Nike Shoes Variants
@@ -412,7 +412,7 @@ class DatabaseSeeder extends Seeder
                     'width' => 'Regular'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -425,7 +425,7 @@ class DatabaseSeeder extends Seeder
                     'width' => 'Wide'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Dyson Variants
@@ -439,7 +439,7 @@ class DatabaseSeeder extends Seeder
                     'warranty' => '2 years'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -452,7 +452,7 @@ class DatabaseSeeder extends Seeder
                     'warranty' => '2 years'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Kindle Variants
@@ -465,7 +465,7 @@ class DatabaseSeeder extends Seeder
                     'color' => 'Black'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -477,7 +477,7 @@ class DatabaseSeeder extends Seeder
                     'color' => 'Black'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Herman Miller Variants
@@ -490,7 +490,7 @@ class DatabaseSeeder extends Seeder
                     'lumbar_support' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -502,7 +502,7 @@ class DatabaseSeeder extends Seeder
                     'lumbar_support' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // MAC Makeup Variants
@@ -515,7 +515,7 @@ class DatabaseSeeder extends Seeder
                     'includes_brushes' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -527,7 +527,7 @@ class DatabaseSeeder extends Seeder
                     'includes_brushes' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // DJI Drone Variants
@@ -540,7 +540,7 @@ class DatabaseSeeder extends Seeder
                     'carrying_case' => 'Basic'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -552,7 +552,7 @@ class DatabaseSeeder extends Seeder
                     'carrying_case' => 'Premium'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Pet Feeder Variants
@@ -565,7 +565,7 @@ class DatabaseSeeder extends Seeder
                     'battery_backup' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -577,7 +577,7 @@ class DatabaseSeeder extends Seeder
                     'battery_backup' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // LEGO Variants
@@ -590,7 +590,7 @@ class DatabaseSeeder extends Seeder
                     'display_stand' => false
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -602,7 +602,7 @@ class DatabaseSeeder extends Seeder
                     'display_stand' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             // Additional Generic Variants
@@ -615,7 +615,7 @@ class DatabaseSeeder extends Seeder
                     'numbered' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -627,7 +627,7 @@ class DatabaseSeeder extends Seeder
                     'bonus_items' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -639,7 +639,7 @@ class DatabaseSeeder extends Seeder
                     'extended_warranty' => true
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -651,7 +651,7 @@ class DatabaseSeeder extends Seeder
                     'support_level' => 'Priority'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
             [
@@ -663,7 +663,7 @@ class DatabaseSeeder extends Seeder
                     'support_level' => 'Standard'
                 ],
                 'seller_product_id' => SellerProduct::inRandomOrder()->first()->id,
-                'status_id' => Status::inRandomOrder()->first()->id,
+
                 'seller_id' => $seller->id,
             ],
         ];
@@ -716,6 +716,7 @@ class DatabaseSeeder extends Seeder
                     'reserved' => rand(0, 20),
                     'safety_stock' => rand(10, 50),
                     'seller_variant_id' => $variant->id,
+                    'seller_product_id' => $variant->sellerProduct->id,
                     'location_id' => $location->id,
                     'seller_id' => $seller->id,
                 ];
@@ -750,6 +751,11 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
+        foreach ($currencies as $currency) {
+            Currency::create($currency);
+        }
+
+
         // Get all variants and currencies
         $variants = SellerVariant::all();
         $currencies = Currency::all();
@@ -777,6 +783,7 @@ class DatabaseSeeder extends Seeder
                 $price = new Price([
                     'amount' => $value,
                     'seller_variant_id' => $variant->id,
+                    'seller_product_id' => $variant->sellerProduct->id,
                     'currency_id' => $currency->id
                 ]);
                 $price->save();

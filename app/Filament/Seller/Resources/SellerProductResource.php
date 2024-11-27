@@ -36,11 +36,11 @@ class SellerProductResource extends Resource
                             ->native(false)
                             ->required()
                             ->helperText('The category this product belongs to'),
-                            // ->suffixAction(
-                            //     Forms\Components\Actions\Action::make('viewCategory')
-                            //         ->icon('heroicon-m-arrow-top-right-on-square')
-                            //         ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
-                            // ),
+                        // ->suffixAction(
+                        //     Forms\Components\Actions\Action::make('viewCategory')
+                        //         ->icon('heroicon-m-arrow-top-right-on-square')
+                        //         ->url(fn($record) => CategoryResource::getUrl('edit', ['record' => $record->category_id]))
+                        // ),
                         Forms\Components\TextInput::make('sku')
                             ->label('SKU')
                             ->helperText('Stock Keeping Unit - A unique identifier for this product'),
@@ -90,10 +90,10 @@ class SellerProductResource extends Resource
                     ->searchable()
                     ->preload(),
                 Tables\Filters\Filter::make('has_variants')
-                    ->query(fn (Builder $query): Builder => $query->has('sellerVariants'))
+                    ->query(fn(Builder $query): Builder => $query->has('sellerVariants'))
                     ->label('Has variants'),
-                Tables\Filters\Filter::make('no_variants') 
-                    ->query(fn (Builder $query): Builder => $query->doesntHave('sellerVariants'))
+                Tables\Filters\Filter::make('no_variants')
+                    ->query(fn(Builder $query): Builder => $query->doesntHave('sellerVariants'))
                     ->label('No variants'),
             ])
             ->actions([

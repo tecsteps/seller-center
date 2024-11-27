@@ -49,8 +49,8 @@ models:
     category_id: id foreign
     seller_id: id foreign
     relationships:
-      hasMany: SellerVariant
-    
+      hasMany: SellerVariant,Price,Stock
+
 
   SellerVariant:
     name: string
@@ -58,7 +58,6 @@ models:
     description: text nullable
     attributes: json nullable
     seller_product_id: id foreign
-    status_id: id foreign
     seller_id: id foreign
     relationships:
       hasMany: Price, Stock
@@ -66,6 +65,7 @@ models:
   Price:
     amount: integer
     seller_variant_id: id foreign
+    seller_product_id: id foreign
     currency_id: id foreign
 
   Stock:
@@ -73,6 +73,7 @@ models:
     reserved: integer nullable
     safety_stock: integer nullable
     seller_variant_id: id foreign
+    seller_product_id: id foreign
     location_id: id foreign
     seller_id: id foreign
 
@@ -92,11 +93,6 @@ models:
     
     relationships:
       hasMany: Price
-
-  Status:
-    name: enum:draft,pending_approval,approved,rejected,active,inactive,archived
-    relationships:
-      hasMany: SellerVariant
 
   Message:
     content: text

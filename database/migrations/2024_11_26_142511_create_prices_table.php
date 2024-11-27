@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('amount');
             $table->foreignId('seller_variant_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('seller_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('currency_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

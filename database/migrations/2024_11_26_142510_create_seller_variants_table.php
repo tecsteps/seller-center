@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('seller_variants', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
-            $table->integer('reserved')->nullable();
-            $table->integer('safety_stock')->nullable();
-            $table->foreignId('seller_variant_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('location_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('name');
+            $table->string('sku')->nullable();
+            $table->text('description')->nullable();
+            $table->json('attributes')->nullable();
+            $table->foreignId('seller_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('seller_variants');
     }
 };

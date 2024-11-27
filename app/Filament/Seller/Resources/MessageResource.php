@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Resources;
 
 use App\Filament\Seller\Resources\MessageResource\Pages;
 use App\Models\Message;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -85,13 +86,11 @@ class MessageResource extends Resource
             'index' => Pages\ListMessages::route('/'),
         ];
     }
-
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
             ->whereHas('seller', function ($query) {
-                $query->where('seller_id', auth()->user()->sellers->first()->id);
-            })
-            ->whereNull('message_id'); // Only show parent messages, not replies
+                $query->where('seller_id', Filament::getTenant()->id);
+            });
     }
 }

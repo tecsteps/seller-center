@@ -42,6 +42,16 @@ class SellerProduct extends Model
         return $this->hasMany(SellerVariant::class);
     }
 
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class);
+    }
+
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

@@ -20,6 +20,7 @@ class Stock extends Model
         'reserved',
         'safety_stock',
         'seller_variant_id',
+        'seller_product_id',
         'location_id',
         'seller_id',
     ];
@@ -32,6 +33,7 @@ class Stock extends Model
     protected $casts = [
         'id' => 'integer',
         'seller_variant_id' => 'integer',
+        'seller_product_id' => 'integer',
         'location_id' => 'integer',
         'seller_id' => 'integer',
     ];
@@ -39,6 +41,11 @@ class Stock extends Model
     public function sellerVariant(): BelongsTo
     {
         return $this->belongsTo(SellerVariant::class);
+    }
+
+    public function sellerProduct(): BelongsTo
+    {
+        return $this->belongsTo(SellerProduct::class);
     }
 
     public function location(): BelongsTo

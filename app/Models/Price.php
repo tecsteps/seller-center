@@ -18,6 +18,7 @@ class Price extends Model
     protected $fillable = [
         'amount',
         'seller_variant_id',
+        'seller_product_id',
         'currency_id',
     ];
 
@@ -29,12 +30,18 @@ class Price extends Model
     protected $casts = [
         'id' => 'integer',
         'seller_variant_id' => 'integer',
+        'seller_product_id' => 'integer',
         'currency_id' => 'integer',
     ];
 
     public function sellerVariant(): BelongsTo
     {
         return $this->belongsTo(SellerVariant::class);
+    }
+
+    public function sellerProduct(): BelongsTo
+    {
+        return $this->belongsTo(SellerProduct::class);
     }
 
     public function currency(): BelongsTo

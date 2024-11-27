@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use App\Models\Seller;
 use App\Models\SellerProduct;
 use App\Models\SellerVariant;
-use App\Models\Status;
 
 class SellerVariantFactory extends Factory
 {
@@ -29,7 +28,6 @@ class SellerVariantFactory extends Factory
             'description' => $this->faker->text(),
             'attributes' => '{}',
             'seller_product_id' => SellerProduct::factory(),
-            'status_id' => Status::factory(),
             'seller_id' => Seller::factory(),
         ];
     }
