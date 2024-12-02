@@ -24,6 +24,10 @@ return new class extends Migration
             $table->foreignId('seller_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('status', ["draft","active","delisted"])->default('draft');
             $table->boolean('selected')->default(false);
+            $table->string('ean')->nullable();
+            $table->string('upc')->nullable();
+            $table->string('gtin_14')->nullable();
+            $table->string('gtin_8')->nullable();
             $table->timestamps();
         });
 

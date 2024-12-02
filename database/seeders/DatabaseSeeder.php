@@ -13,6 +13,7 @@ use App\Models\Currency;
 use App\Models\Price;
 use App\Models\Operator;
 use App\Models\Partnership;
+use App\Models\ProductType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -749,6 +750,221 @@ class DatabaseSeeder extends Seeder
             Currency::create($currency);
         }
 
+        $productTypes = [
+            [
+                'name' => 'T-Shirt',
+                'attributes' => [
+                    [
+                        'name' => 'Size',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Standard t-shirt size using international sizing system (XS to XL)',
+                        'is_variant_attribute' => true,
+                        'rank' => 1,
+                        'options' => [
+                            ['label' => 'Extra Small', 'value' => 'XS'],
+                            ['label' => 'Small', 'value' => 'S'],
+                            ['label' => 'Medium', 'value' => 'M'],
+                            ['label' => 'Large', 'value' => 'L'],
+                            ['label' => 'Extra Large', 'value' => 'XL'],
+                        ],
+                    ],
+                    [
+                        'name' => 'Color',
+                        'type' => 'select',
+                        'field' => 'ColorPicker',
+                        'description' => 'Main color of the t-shirt. For multi-colored shirts, choose the dominant color',
+                        'is_variant_attribute' => true,
+                        'rank' => 2,
+                    ],
+                    [
+                        'name' => 'Material',
+                        'type' => 'text',
+                        'field' => 'TextInput',
+                        'description' => 'Fabric composition (e.g., "100% Cotton" or "95% Cotton, 5% Elastane")',
+                        'is_variant_attribute' => false,
+                        'rank' => 3,
+                        'unit' => '%',
+                        'validators' => [
+                            'max_length' => 100,
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Jeans',
+                'attributes' => [
+                    [
+                        'name' => 'Waist Size',
+                        'type' => 'number',
+                        'field' => 'TextInput',
+                        'description' => 'Waist measurement in inches. Measure around the natural waistline',
+                        'is_variant_attribute' => true,
+                        'rank' => 1,
+                        'unit' => 'inch',
+                        'validators' => [
+                            'min' => 24,
+                            'max' => 48,
+                        ],
+                    ],
+                    [
+                        'name' => 'Length',
+                        'type' => 'number',
+                        'field' => 'TextInput',
+                        'description' => 'Inseam length in inches, measured from crotch to hem',
+                        'is_variant_attribute' => true,
+                        'rank' => 2,
+                        'unit' => 'inch',
+                        'validators' => [
+                            'min' => 26,
+                            'max' => 36,
+                        ],
+                    ],
+                    [
+                        'name' => 'Style',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Cut and fit style of the jeans, affecting how they shape to the body',
+                        'is_variant_attribute' => true,
+                        'rank' => 3,
+                        'options' => [
+                            ['label' => 'Skinny', 'value' => 'skinny'],
+                            ['label' => 'Slim', 'value' => 'slim'],
+                            ['label' => 'Regular', 'value' => 'regular'],
+                            ['label' => 'Relaxed', 'value' => 'relaxed'],
+                            ['label' => 'Boot Cut', 'value' => 'boot_cut'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Dress',
+                'attributes' => [
+                    [
+                        'name' => 'Size',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Standard dress size using international sizing system (XS to XL)',
+                        'is_variant_attribute' => true,
+                        'rank' => 1,
+                        'options' => [
+                            ['label' => 'Extra Small', 'value' => 'XS'],
+                            ['label' => 'Small', 'value' => 'S'],
+                            ['label' => 'Medium', 'value' => 'M'],
+                            ['label' => 'Large', 'value' => 'L'],
+                            ['label' => 'Extra Large', 'value' => 'XL'],
+                        ],
+                    ],
+                    [
+                        'name' => 'Length',
+                        'description' => 'Length of the dress',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Overall length of the dress, measured from shoulder to hem',
+                        'is_variant_attribute' => false,
+                        'rank' => 2,
+                        'options' => [
+                            ['label' => 'Mini', 'value' => 'mini'],
+                            ['label' => 'Knee Length', 'value' => 'knee'],
+                            ['label' => 'Midi', 'value' => 'midi'],
+                            ['label' => 'Maxi', 'value' => 'maxi'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Shoes',
+                'attributes' => [
+                    [
+                        'name' => 'Size',
+                        'type' => 'number',
+                        'field' => 'TextInput',
+                        'description' => 'European shoe size. For half sizes, round up to the nearest whole number',
+                        'is_variant_attribute' => true,
+                        'rank' => 1,
+                        'unit' => 'EU',
+                        'validators' => [
+                            'min' => 35,
+                            'max' => 47,
+                            'decimal_places' => 0,
+                        ],
+                    ],
+                    [
+                        'name' => 'Color',
+                        'type' => 'select',
+                        'field' => 'ColorPicker',
+                        'description' => 'Primary color of the shoes. For multi-colored shoes, select the dominant color',
+                        'is_variant_attribute' => true,
+                        'rank' => 2,
+                    ],
+                    [
+                        'name' => 'Material',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Primary material used in the shoe construction',
+                        'is_variant_attribute' => false,
+                        'rank' => 3,
+                        'options' => [
+                            ['label' => 'Leather', 'value' => 'leather'],
+                            ['label' => 'Suede', 'value' => 'suede'],
+                            ['label' => 'Canvas', 'value' => 'canvas'],
+                            ['label' => 'Synthetic', 'value' => 'synthetic'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Bag',
+                'attributes' => [
+                    [
+                        'name' => 'Size',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'General size category of the bag, based on carrying capacity and dimensions',
+                        'is_variant_attribute' => false,
+                        'rank' => 1,
+                        'options' => [
+                            ['label' => 'Small', 'value' => 'small'],
+                            ['label' => 'Medium', 'value' => 'medium'],
+                            ['label' => 'Large', 'value' => 'large'],
+                        ],
+                    ],
+                    [
+                        'name' => 'Color',
+                        'type' => 'select',
+                        'field' => 'ColorPicker',
+                        'description' => 'Main color of the bag. For multi-colored bags, choose the predominant color',
+                        'is_variant_attribute' => true,
+                        'rank' => 2,
+                    ],
+                    [
+                        'name' => 'Material',
+                        'type' => 'select',
+                        'field' => 'Select',
+                        'description' => 'Primary material used in the bag construction. Affects durability and care instructions',
+                        'is_variant_attribute' => false,
+                        'rank' => 3,
+                        'options' => [
+                            ['label' => 'Leather', 'value' => 'leather'],
+                            ['label' => 'Canvas', 'value' => 'canvas'],
+                            ['label' => 'Nylon', 'value' => 'nylon'],
+                            ['label' => 'Synthetic', 'value' => 'synthetic'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        foreach ($productTypes as $productTypeData) {
+            $attributes = $productTypeData['attributes'];
+            unset($productTypeData['attributes']);
+            
+            $productType = \App\Models\ProductType::create($productTypeData);
+            
+            foreach ($attributes as $attributeData) {
+                $productType->attributes()->create($attributeData);
+            }
+        }
 
         // Get all variants and currencies
         $variants = SellerVariant::all();

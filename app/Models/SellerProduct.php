@@ -26,6 +26,10 @@ class SellerProduct extends Model
         'seller_id',
         'status',
         'selected',
+        'ean',
+        'upc',
+        'gtin_14',
+        'gtin_8',
     ];
 
     /**

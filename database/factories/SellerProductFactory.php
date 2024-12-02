@@ -32,6 +32,10 @@ class SellerProductFactory extends Factory
             'seller_id' => Seller::factory(),
             'status' => $this->faker->randomElement(["draft","active","delisted"]),
             'selected' => $this->faker->boolean(),
+            'ean' => $this->faker->word(),
+            'upc' => $this->faker->word(),
+            'gtin_14' => $this->faker->word(),
+            'gtin_8' => $this->faker->word(),
         ];
     }
 }

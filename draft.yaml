@@ -45,7 +45,6 @@ models:
     parent_id: id foreign:categories.id nullable
     relationships:
       hasMany: SellerProduct
-
   SellerProduct:
     name: string
     brand: string nullable
@@ -56,6 +55,10 @@ models:
     seller_id: id foreign
     status: enum:draft,active,delisted default:draft
     selected: boolean default:false
+    ean: string nullable
+    upc: string nullable
+    gtin_14: string nullable
+    gtin_8: string nullable
     relationships:
       hasMany: SellerVariant,Price,Stock,SellerProductImage:image
 
@@ -113,6 +116,23 @@ models:
     seller_id: id foreign
     message_id: id foreign nullable
 
+  ProductType:
+    name: string
+    relationships:
+      hasMany: ProductTypeAttribute:attribute
+  
+  ProductTypeAttribute:
+    name: string
+    type: enum:text,boolean,number,select,url,color
+    field: enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker
+    required: boolean default:false
+    rank: integer default:0
+    description: string nullable
+    unit: string nullable
+    is_variant_attribute: boolean default:false
+    options: json nullable
+    validators: json nullable
+    product_type_id: id foreign
 
 controllers:
   # ...

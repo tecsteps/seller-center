@@ -5,7 +5,7 @@ php artisan blueprint:trace && php artisan blueprint:build &&  php artisan migra
 
 
 
-php artisan make:filament-resource Currency  --generate
+php artisan make:filament-resource Currency  --generate --panel=owner
 php artisan make:filament-resource Category  --generate
 
 php artisan make:filament-resource SellerProduct  --generate
