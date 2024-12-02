@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GoldenProduct extends Model
 {
@@ -16,9 +17,6 @@ class GoldenProduct extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
-        'attributes',
         'product_type_id',
     ];
 
@@ -29,9 +27,13 @@ class GoldenProduct extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'attributes' => 'array',
         'product_type_id' => 'integer',
     ];
+
+    public function translations(): HasMany
+    {
+        return $this->hasMany(GoldenProductLocalized::class);
+    }
 
     public function productType(): BelongsTo
     {

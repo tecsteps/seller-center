@@ -24,12 +24,17 @@ class AttributesRelationManager extends RelationManager
                             ->required()
                             ->maxLength(255)
                             ->label('Attribute Name')
+                            ->columnSpan(2)
                             ->placeholder('e.g., Color, Size, Material')
                             ->helperText('Enter a unique, descriptive name for this attribute.'),
 
                         Forms\Components\Toggle::make('is_variant_attribute')
                             ->label('Is Variant Attribute')
                             ->helperText('Enable this if this attribute differs between product variants'),
+
+                        Forms\Components\Toggle::make('is_translatable')
+                            ->label('Is Translatable')
+                            ->helperText('Enable this if this attribute needs to be translated into different languages'),
 
                         Forms\Components\Textarea::make('description')
                             ->maxLength(255)

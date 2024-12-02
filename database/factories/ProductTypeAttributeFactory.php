@@ -24,6 +24,7 @@ class ProductTypeAttributeFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'type' => $this->faker->randomElement(["text","boolean","number","select","url","color"]),
+            'is_translatable' => $this->faker->boolean(),
             'field' => $this->faker->randomElement(["TextInput","Textarea","Checkbox","Toggle","Select","ColorPicker"]),
             'required' => $this->faker->boolean(),
             'rank' => $this->faker->numberBetween(-10000, 10000),

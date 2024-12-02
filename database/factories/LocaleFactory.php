@@ -4,17 +4,16 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\GoldenProduct;
-use App\Models\ProductType;
+use App\Models\Locale;
 
-class GoldenProductFactory extends Factory
+class LocaleFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = GoldenProduct::class;
+    protected $model = Locale::class;
 
     /**
      * Define the model's default state.
@@ -22,7 +21,9 @@ class GoldenProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'product_type_id' => ProductType::factory(),
+            'code' => $this->faker->word(),
+            'name' => $this->faker->name(),
+            'default' => $this->faker->boolean(),
         ];
     }
 }

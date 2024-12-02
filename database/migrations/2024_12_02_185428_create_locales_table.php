@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('golden_products', function (Blueprint $table) {
+        Schema::create('locales', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->json('attributes')->nullable();
-            $table->foreignId('product_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->boolean('default');
             $table->timestamps();
         });
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('golden_products');
+        Schema::dropIfExists('locales');
     }
 };

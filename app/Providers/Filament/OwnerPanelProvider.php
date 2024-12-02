@@ -32,8 +32,11 @@ class OwnerPanelProvider extends PanelProvider
             ->profile()
             ->brandName('Owner Center')
             ->colors([
-                'primary' => Color::Emerald,
+                'primary' => Color::Indigo,
+                'secondary' => Color::Cyan,
+                'gray' => Color::Slate,
             ])
+            ->darkMode()
             ->discoverResources(in: app_path('Filament/Owner/Resources'), for: 'App\\Filament\\Owner\\Resources')
             ->discoverPages(in: app_path('Filament/Owner/Pages'), for: 'App\\Filament\\Owner\\Pages')
             ->pages([

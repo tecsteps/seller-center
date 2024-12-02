@@ -14,22 +14,26 @@ created:
     - database/factories/ProductTypeFactory.php
     - database/factories/ProductTypeAttributeFactory.php
     - database/factories/GoldenProductFactory.php
-    - database/migrations/2024_12_02_181739_create_sellers_table.php
-    - database/migrations/2024_12_02_181740_create_partnerships_table.php
-    - database/migrations/2024_12_02_181741_create_seller_data_table.php
-    - database/migrations/2024_12_02_181742_create_categories_table.php
-    - database/migrations/2024_12_02_181743_create_seller_products_table.php
-    - database/migrations/2024_12_02_181744_create_seller_product_images_table.php
-    - database/migrations/2024_12_02_181745_create_seller_variants_table.php
-    - database/migrations/2024_12_02_181746_create_prices_table.php
-    - database/migrations/2024_12_02_181747_create_stocks_table.php
-    - database/migrations/2024_12_02_181748_create_locations_table.php
-    - database/migrations/2024_12_02_181749_create_currencies_table.php
-    - database/migrations/2024_12_02_181750_create_messages_table.php
-    - database/migrations/2024_12_02_181751_create_product_types_table.php
-    - database/migrations/2024_12_02_181752_create_product_type_attributes_table.php
-    - database/migrations/2024_12_02_181753_create_golden_products_table.php
-    - database/migrations/2024_12_02_181754_create_seller_user_table.php
+    - database/factories/GoldenProductLocalizedFactory.php
+    - database/factories/LocaleFactory.php
+    - database/migrations/2024_12_02_185412_create_sellers_table.php
+    - database/migrations/2024_12_02_185413_create_partnerships_table.php
+    - database/migrations/2024_12_02_185414_create_seller_data_table.php
+    - database/migrations/2024_12_02_185415_create_categories_table.php
+    - database/migrations/2024_12_02_185416_create_seller_products_table.php
+    - database/migrations/2024_12_02_185417_create_seller_product_images_table.php
+    - database/migrations/2024_12_02_185418_create_seller_variants_table.php
+    - database/migrations/2024_12_02_185419_create_prices_table.php
+    - database/migrations/2024_12_02_185420_create_stocks_table.php
+    - database/migrations/2024_12_02_185421_create_locations_table.php
+    - database/migrations/2024_12_02_185422_create_currencies_table.php
+    - database/migrations/2024_12_02_185423_create_messages_table.php
+    - database/migrations/2024_12_02_185424_create_product_types_table.php
+    - database/migrations/2024_12_02_185425_create_product_type_attributes_table.php
+    - database/migrations/2024_12_02_185426_create_golden_products_table.php
+    - database/migrations/2024_12_02_185427_create_golden_product_localizeds_table.php
+    - database/migrations/2024_12_02_185428_create_locales_table.php
+    - database/migrations/2024_12_02_185429_create_seller_user_table.php
     - app/Models/Seller.php
     - app/Models/Partnership.php
     - app/Models/SellerData.php
@@ -45,6 +49,8 @@ created:
     - app/Models/ProductType.php
     - app/Models/ProductTypeAttribute.php
     - app/Models/GoldenProduct.php
+    - app/Models/GoldenProductLocalized.php
+    - app/Models/Locale.php
 models:
     User: { name: string, email: string, is_seller: "boolean default:'0'", email_verified_at: 'datetime nullable', password: string, remember_token: 'string nullable' }
     Seller: { name: string, hideProducts: 'boolean default:false', relationships: { belongsToMany: User, hasOne: 'SellerData, Partnership', hasMany: 'SellerProduct, SellerVariant, Price, Stock, Location, Message' } }
@@ -60,5 +66,7 @@ models:
     Currency: { code: string, symbol: string, name: 'string nullable', is_default: 'boolean default:false', relationships: { hasMany: Price } }
     Message: { content: text, seller_id: 'id foreign', message_id: 'id foreign nullable' }
     ProductType: { name: string, relationships: { hasMany: 'ProductTypeAttribute:attribute, GoldenProduct:product' } }
-    ProductTypeAttribute: { name: string, type: 'enum:text,boolean,number,select,url,color', field: 'enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker', required: 'boolean default:false', rank: 'integer default:0', description: 'string nullable', unit: 'string nullable', is_variant_attribute: 'boolean default:false', options: 'json nullable', validators: 'json nullable', product_type_id: 'id foreign' }
-    GoldenProduct: { name: string, description: 'text nullable', attributes: 'json nullable', product_type_id: 'id foreign' }
+    ProductTypeAttribute: { name: string, type: 'enum:text,boolean,number,select,url,color', is_translatable: 'boolean default:false', field: 'enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker', required: 'boolean default:false', rank: 'integer default:0', description: 'string nullable', unit: 'string nullable', is_variant_attribute: 'boolean default:false', options: 'json nullable', validators: 'json nullable', product_type_id: 'id foreign' }
+    GoldenProduct: { product_type_id: 'id foreign', relationships: { hasMany: 'GoldenProductLocalized:translation' } }
+    GoldenProductLocalized: { name: string, description: 'text nullable', attributes: 'json nullable', product_type_id: 'id foreign', locale_id: 'id foreign', golden_product_id: 'id foreign' }
+    Locale: { code: string, name: string, default: boolean }

@@ -14,7 +14,9 @@ use App\Models\Price;
 use App\Models\Operator;
 use App\Models\Partnership;
 use App\Models\ProductType;
+use App\Models\GoldenProduct;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -760,6 +762,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'Standard t-shirt size using international sizing system (XS to XL)',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 1,
                         'options' => [
                             ['label' => 'Extra Small', 'value' => 'XS'],
@@ -775,6 +778,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'ColorPicker',
                         'description' => 'Main color of the t-shirt. For multi-colored shirts, choose the dominant color',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 2,
                     ],
                     [
@@ -783,6 +787,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'TextInput',
                         'description' => 'Fabric composition (e.g., "100% Cotton" or "95% Cotton, 5% Elastane")',
                         'is_variant_attribute' => false,
+                        'is_translatable' => true,
                         'rank' => 3,
                         'unit' => '%',
                         'validators' => [
@@ -800,6 +805,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'TextInput',
                         'description' => 'Waist measurement in inches. Measure around the natural waistline',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 1,
                         'unit' => 'inch',
                         'validators' => [
@@ -813,6 +819,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'TextInput',
                         'description' => 'Inseam length in inches, measured from crotch to hem',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 2,
                         'unit' => 'inch',
                         'validators' => [
@@ -826,6 +833,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'Cut and fit style of the jeans, affecting how they shape to the body',
                         'is_variant_attribute' => true,
+                        'is_translatable' => true,
                         'rank' => 3,
                         'options' => [
                             ['label' => 'Skinny', 'value' => 'skinny'],
@@ -846,6 +854,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'Standard dress size using international sizing system (XS to XL)',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 1,
                         'options' => [
                             ['label' => 'Extra Small', 'value' => 'XS'],
@@ -857,11 +866,11 @@ class DatabaseSeeder extends Seeder
                     ],
                     [
                         'name' => 'Length',
-                        'description' => 'Length of the dress',
                         'type' => 'select',
                         'field' => 'Select',
                         'description' => 'Overall length of the dress, measured from shoulder to hem',
                         'is_variant_attribute' => false,
+                        'is_translatable' => true,
                         'rank' => 2,
                         'options' => [
                             ['label' => 'Mini', 'value' => 'mini'],
@@ -881,6 +890,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'TextInput',
                         'description' => 'European shoe size. For half sizes, round up to the nearest whole number',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 1,
                         'unit' => 'EU',
                         'validators' => [
@@ -895,6 +905,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'ColorPicker',
                         'description' => 'Primary color of the shoes. For multi-colored shoes, select the dominant color',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 2,
                     ],
                     [
@@ -903,6 +914,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'Primary material used in the shoe construction',
                         'is_variant_attribute' => false,
+                        'is_translatable' => true,
                         'rank' => 3,
                         'options' => [
                             ['label' => 'Leather', 'value' => 'leather'],
@@ -922,6 +934,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'General size category of the bag, based on carrying capacity and dimensions',
                         'is_variant_attribute' => false,
+                        'is_translatable' => false,
                         'rank' => 1,
                         'options' => [
                             ['label' => 'Small', 'value' => 'small'],
@@ -935,6 +948,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'ColorPicker',
                         'description' => 'Main color of the bag. For multi-colored bags, choose the predominant color',
                         'is_variant_attribute' => true,
+                        'is_translatable' => false,
                         'rank' => 2,
                     ],
                     [
@@ -943,6 +957,7 @@ class DatabaseSeeder extends Seeder
                         'field' => 'Select',
                         'description' => 'Primary material used in the bag construction. Affects durability and care instructions',
                         'is_variant_attribute' => false,
+                        'is_translatable' => true,
                         'rank' => 3,
                         'options' => [
                             ['label' => 'Leather', 'value' => 'leather'],
@@ -958,13 +973,32 @@ class DatabaseSeeder extends Seeder
         foreach ($productTypes as $productTypeData) {
             $attributes = $productTypeData['attributes'];
             unset($productTypeData['attributes']);
-            
+
             $productType = \App\Models\ProductType::create($productTypeData);
-            
+
             foreach ($attributes as $attributeData) {
                 $productType->attributes()->create($attributeData);
             }
         }
+
+        // Create locales
+        DB::table('locales')->insert([
+            [
+                'code' => 'en-US',
+                'name' => 'English (US)',
+                'default' => true,
+            ],
+            [
+                'code' => 'fr-FR',
+                'name' => 'French',
+                'default' => false,
+            ],
+            [
+                'code' => 'de-DE',
+                'name' => 'German',
+                'default' => false,
+            ],
+        ]);
 
         // Get all variants and currencies
         $variants = SellerVariant::all();
@@ -997,6 +1031,141 @@ class DatabaseSeeder extends Seeder
                     'currency_id' => $currency->id
                 ]);
                 $price->save();
+            }
+        }
+
+        // Create Golden Products
+        $goldenProducts = [
+            [
+                'product_type_id' => ProductType::where('name', 'Jeans')->first()->id,
+                'translations' => [
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                        'name' => 'Classic Comfort Jeans',
+                        'description' => 'Premium denim jeans with a comfortable regular fit. Perfect for everyday wear.',
+                        'attributes' => [
+                            'Style' => 'regular',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                        'name' => 'Jean Confort Classique',
+                        'description' => 'Jean en denim premium avec une coupe régulière confortable. Parfait pour un usage quotidien.',
+                        'attributes' => [
+                            'Style' => 'regular',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                        'name' => 'Klassische Komfort-Jeans',
+                        'description' => 'Premium-Denim-Jeans mit bequemer regulärer Passform. Perfekt für den Alltag.',
+                        'attributes' => [
+                            'Style' => 'regular',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'product_type_id' => ProductType::where('name', 'Dress')->first()->id,
+                'translations' => [
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                        'name' => 'Elegant Evening Dress',
+                        'description' => 'A stunning midi dress perfect for special occasions and evening events.',
+                        'attributes' => [
+                            'Length' => 'midi',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                        'name' => 'Robe de Soirée Élégante',
+                        'description' => 'Une superbe robe midi parfaite pour les occasions spéciales et les soirées.',
+                        'attributes' => [
+                            'Length' => 'midi',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                        'name' => 'Elegantes Abendkleid',
+                        'description' => 'Ein atemberaubendes Midi-Kleid, perfekt für besondere Anlässe und Abendveranstaltungen.',
+                        'attributes' => [
+                            'Length' => 'midi',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'product_type_id' => ProductType::where('name', 'Shoes')->first()->id,
+                'translations' => [
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                        'name' => 'Classic Leather Oxford',
+                        'description' => 'Timeless leather oxford shoes crafted with premium materials and expert craftsmanship.',
+                        'attributes' => [
+                            'Material' => 'leather',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                        'name' => 'Oxford en Cuir Classique',
+                        'description' => 'Chaussures oxford intemporelles en cuir fabriquées avec des matériaux premium et un savoir-faire expert.',
+                        'attributes' => [
+                            'Material' => 'leather',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                        'name' => 'Klassischer Leder-Oxford',
+                        'description' => 'Zeitlose Leder-Oxford-Schuhe, gefertigt aus Premium-Materialien mit expertenhafter Handwerkskunst.',
+                        'attributes' => [
+                            'Material' => 'leather',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'product_type_id' => ProductType::where('name', 'Bag')->first()->id,
+                'translations' => [
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                        'name' => 'Premium Leather Tote',
+                        'description' => 'Spacious leather tote bag with premium finishes and durable construction.',
+                        'attributes' => [
+                            'Size' => 'large',
+                            'Material' => 'leather',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                        'name' => 'Cabas en Cuir Premium',
+                        'description' => 'Grand sac cabas en cuir avec finitions premium et construction durable.',
+                        'attributes' => [
+                            'Size' => 'large',
+                            'Material' => 'leather',
+                        ],
+                    ],
+                    [
+                        'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                        'name' => 'Premium Leder-Shopper',
+                        'description' => 'Geräumige Ledertasche mit Premium-Verarbeitung und langlebiger Konstruktion.',
+                        'attributes' => [
+                            'Size' => 'large',
+                            'Material' => 'leather',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        foreach ($goldenProducts as $productData) {
+            $translations = $productData['translations'];
+            unset($productData['translations']);
+
+            $goldenProduct = \App\Models\GoldenProduct::create($productData);
+
+            foreach ($translations as $translationData) {
+                $translationData['product_type_id'] = $productData['product_type_id'];
+                $goldenProduct->translations()->create($translationData);
             }
         }
     }

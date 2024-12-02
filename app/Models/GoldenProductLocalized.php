@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductTypeAttribute extends Model
+class GoldenProductLocalized extends Model
 {
     use HasFactory;
 
@@ -17,17 +17,11 @@ class ProductTypeAttribute extends Model
      */
     protected $fillable = [
         'name',
-        'type',
-        'is_translatable',
-        'field',
-        'required',
-        'rank',
         'description',
-        'unit',
-        'is_variant_attribute',
-        'options',
-        'validators',
+        'attributes',
         'product_type_id',
+        'locale_id',
+        'golden_product_id',
     ];
 
     /**
@@ -37,16 +31,24 @@ class ProductTypeAttribute extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'is_translatable' => 'boolean',
-        'required' => 'boolean',
-        'is_variant_attribute' => 'boolean',
-        'options' => 'array',
-        'validators' => 'array',
+        'attributes' => 'array',
         'product_type_id' => 'integer',
+        'locale_id' => 'integer',
+        'golden_product_id' => 'integer',
     ];
 
     public function productType(): BelongsTo
     {
         return $this->belongsTo(ProductType::class);
+    }
+
+    public function locale(): BelongsTo
+    {
+        return $this->belongsTo(Locale::class);
+    }
+
+    public function goldenProduct(): BelongsTo
+    {
+        return $this->belongsTo(GoldenProduct::class);
     }
 }

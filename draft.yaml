@@ -124,6 +124,7 @@ models:
   ProductTypeAttribute:
     name: string
     type: enum:text,boolean,number,select,url,color
+    is_translatable: boolean default:false
     field: enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker
     required: boolean default:false
     rank: integer default:0
@@ -135,10 +136,22 @@ models:
     product_type_id: id foreign
 
   GoldenProduct:
+    product_type_id: id foreign
+    relationships:
+      hasMany: GoldenProductLocalized:translation
+
+  GoldenProductLocalized:
     name: string
     description: text nullable
     attributes: json nullable
     product_type_id: id foreign
+    locale_id: id foreign
+    golden_product_id: id foreign
+
+  Locale:
+    code: string
+    name: string
+    default: boolean
 
 controllers:
   # ...

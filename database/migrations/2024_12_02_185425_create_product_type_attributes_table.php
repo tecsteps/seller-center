@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('type', ["text","boolean","number","select","url","color"]);
+            $table->boolean('is_translatable')->default(false);
             $table->enum('field', ["TextInput","Textarea","Checkbox","Toggle","Select","ColorPicker"]);
             $table->boolean('required')->default(false);
             $table->integer('rank')->default(0);

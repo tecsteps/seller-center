@@ -27,6 +27,10 @@ Field type and Validators:
 | **CheckboxList**  | Array, Required                                          |
 | **KeyValue**      | Array (with key-value format validation), Required       |
 
+TODO: 
+- attribute options must be translatable
+
+
 ## Product Type Mapping
 When a seller sets a seller-product to "active", then:
 - [ ] ... a golden product is created or selected (if EAN or other non-merchant specific article number matches).
