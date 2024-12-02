@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductType extends Model
+class GoldenProduct extends Model
 {
     use HasFactory;
 
@@ -17,6 +17,9 @@ class ProductType extends Model
      */
     protected $fillable = [
         'name',
+        'description',
+        'attributes',
+        'product_type_id',
     ];
 
     /**
@@ -26,15 +29,12 @@ class ProductType extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'attributes' => 'array',
+        'product_type_id' => 'integer',
     ];
 
-    public function attributes(): HasMany
+    public function productType(): BelongsTo
     {
-        return $this->hasMany(ProductTypeAttribute::class);
-    }
-
-    public function products(): HasMany
-    {
-        return $this->hasMany(GoldenProduct::class);
+        return $this->belongsTo(ProductType::class);
     }
 }

@@ -119,7 +119,7 @@ models:
   ProductType:
     name: string
     relationships:
-      hasMany: ProductTypeAttribute:attribute
+      hasMany: ProductTypeAttribute:attribute, GoldenProduct:product
   
   ProductTypeAttribute:
     name: string
@@ -132,6 +132,12 @@ models:
     is_variant_attribute: boolean default:false
     options: json nullable
     validators: json nullable
+    product_type_id: id foreign
+
+  GoldenProduct:
+    name: string
+    description: text nullable
+    attributes: json nullable
     product_type_id: id foreign
 
 controllers:
