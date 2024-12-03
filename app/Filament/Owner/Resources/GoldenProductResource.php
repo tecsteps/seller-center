@@ -45,6 +45,7 @@ class GoldenProductResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('active_locale')
+                    ->label('')
                     ->options(function () {
                         return Locale::query()
                             ->orderBy('default', 'desc')
@@ -95,7 +96,7 @@ class GoldenProductResource extends Resource
                                     $translation = $record->translations()
                                         ->where('locale_id', $defaultLocale->id)
                                         ->first();
-                                    
+
                                     $component->state($translation?->name);
                                 }
                             }),
@@ -109,7 +110,7 @@ class GoldenProductResource extends Resource
                                     $translation = $record->translations()
                                         ->where('locale_id', $defaultLocale->id)
                                         ->first();
-                                    
+
                                     $component->state($translation?->description);
                                 }
                             }),
@@ -230,7 +231,7 @@ class GoldenProductResource extends Resource
     protected function handleRecordCreation(array $data): Model
     {
         $localeId = $data['active_locale'] ?? Locale::where('default', true)->first()?->id;
-        
+
         $record = new GoldenProduct([
             'product_type_id' => $data['product_type_id'],
         ]);
@@ -250,7 +251,7 @@ class GoldenProductResource extends Resource
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $localeId = $data['active_locale'] ?? Locale::where('default', true)->first()?->id;
-        
+
         $record->update([
             'product_type_id' => $data['product_type_id'],
         ]);
