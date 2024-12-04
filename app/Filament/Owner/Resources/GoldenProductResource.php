@@ -308,6 +308,10 @@ class GoldenProductResource extends Resource
                 Tables\Columns\TextColumn::make('productType.name')
                     ->label('Product Type')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('seller_products_count')
+                    ->label('Seller Products')
+                    ->counts('sellerProducts')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

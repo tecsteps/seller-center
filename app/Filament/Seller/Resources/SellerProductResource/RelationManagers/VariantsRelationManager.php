@@ -71,7 +71,6 @@ class VariantsRelationManager extends RelationManager
                 Forms\Components\Section::make('Variant Details')
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->required()
                             ->helperText('The display name for this variant'),
 
                         Forms\Components\Select::make('status')

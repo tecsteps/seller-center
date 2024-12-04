@@ -40,13 +40,21 @@ When a seller sets a seller-product to "active", then:
 - [ ] ... prices and stocks are copied to the golden product and marked with the seller's ID (existing entities must get the prefix Seller*)
 - [ ] ... images are copied to the golden product (with seller ID). AI chooses one set of products and marks it, so the shop can use it.
 - [ ] If there is already a golden record that is related to a seller-product then ....
-- [ ] - [ ] If there is already a golden record that is not yet related to a seller-product, but has the same EAN then ....
+- [ ] If there is already a golden record that is not yet related to a seller-product, but has the same EAN then ....
+- [ ] TODO Variant creation
 
 # Owner - Golden Products
-- [ ] As an Owner, I can see a list of all Golden Products, with badge for "new" and "updated". I can also see the number of related seller-products (from different sellers that sell the same product)
+- [ ] As an Owner, I can see a list of all Golden Products. I can also see the number of related seller-products (from different sellers that sell the same product).
+- [ ] As an owner, I see the selected images for each golden product
+- [ ] As an owner, I see the stock levels of the golden product (accross sellers)
+- [ ] As an owner, there is a status badge for "new" and "updated"
+- [ ] As an owner, I can see the golden product data in all configured languages
 - [ ] As an owner, I can see golden product form based on the defined product types and their attributes in all configured languages, side-by-side with the seller's data.
 - [ ] As an owner, I can change any data of the golden record.
 - [ ] As an owner, I can choose which image set is used for my shop.
 - [ ] As an owner, I can set a status on the golden product, so it's published to my shop.
 - [ ] TODO status
 
+
+TODO:
+- Variant - localizable flag is ignored 

@@ -71,7 +71,7 @@ models:
     number: integer default:1
 
   SellerVariant:
-    name: string
+    name: string nullable
     sku: string nullable
     description: text nullable
     attributes: json nullable
