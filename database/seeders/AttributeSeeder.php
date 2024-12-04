@@ -12,66 +12,129 @@ class AttributeSeeder extends Seeder
         $attributesByType = [
             'Sneakers' => [
                 [
-                    'name' => 'size',
+                    'name' => 'material',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
-                    'options' => ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45']
+                    'options' => [
+                        ['label' => 'Leather', 'value' => 'leather'],
+                        ['label' => 'Canvas', 'value' => 'canvas'],
+                        ['label' => 'Synthetic', 'value' => 'synthetic'],
+                        ['label' => 'Mesh', 'value' => 'mesh'],
+                        ['label' => 'Suede', 'value' => 'suede']
+                    ],
+                    'description' => 'Main material of the sneaker'
                 ],
                 [
-                    'name' => 'color',
-                    'type' => 'select',
-                    'field' => 'ColorPicker',
+                    'name' => 'is_waterproof',
+                    'type' => 'boolean',
+                    'field' => 'Toggle',
                     'required' => true,
-                    'options' => ['Black', 'White', 'Red', 'Blue', 'Grey']
+                    'description' => 'Whether the sneaker is waterproof'
+                ],
+                [
+                    'name' => 'product_description',
+                    'type' => 'text',
+                    'field' => 'Textarea',
+                    'required' => false,
+                    'description' => 'Detailed product description with formatting'
                 ]
             ],
             'T-Shirt' => [
                 [
-                    'name' => 'size',
+                    'name' => 'fabric_composition',
+                    'type' => 'text',
+                    'field' => 'TextInput',
+                    'required' => true,
+                    'description' => 'Material composition (e.g., "100% Cotton")'
+                ],
+                [
+                    'name' => 'style_categories',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
-                    'options' => ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+                    'options' => [
+                        ['label' => 'Casual', 'value' => 'casual'],
+                        ['label' => 'Sport', 'value' => 'sport'],
+                        ['label' => 'Streetwear', 'value' => 'streetwear'],
+                        ['label' => 'Business', 'value' => 'business']
+                    ],
+                    'description' => 'Style categories this shirt belongs to'
                 ],
                 [
-                    'name' => 'color',
-                    'type' => 'select',
-                    'field' => 'ColorPicker',
-                    'required' => true,
-                    'options' => ['Black', 'White', 'Navy', 'Grey', 'Red']
+                    'name' => 'is_sustainable',
+                    'type' => 'boolean',
+                    'field' => 'Checkbox',
+                    'required' => false,
+                    'description' => 'Made with sustainable materials/processes'
                 ]
             ],
             'Jeans' => [
                 [
-                    'name' => 'size',
+                    'name' => 'fit_style',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
-                    'options' => ['28/30', '30/30', '32/30', '34/30', '36/30', '28/32', '30/32', '32/32', '34/32', '36/32']
+                    'options' => [
+                        ['label' => 'Skinny', 'value' => 'skinny'],
+                        ['label' => 'Slim', 'value' => 'slim'],
+                        ['label' => 'Regular', 'value' => 'regular'],
+                        ['label' => 'Relaxed', 'value' => 'relaxed'],
+                        ['label' => 'Bootcut', 'value' => 'bootcut']
+                    ],
+                    'description' => 'Style of the fit'
                 ],
                 [
-                    'name' => 'wash',
+                    'name' => 'fabric_weight',
+                    'type' => 'number',
+                    'field' => 'TextInput',
+                    'required' => true,
+                    'description' => 'Weight of the denim in oz/yd²',
+                    'unit' => 'oz/yd²'
+                ],
+                [
+                    'name' => 'features',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
-                    'options' => ['Light', 'Medium', 'Dark', 'Black', 'Raw']
+                    'options' => [
+                        ['label' => 'Stretch', 'value' => 'stretch'],
+                        ['label' => 'Distressed', 'value' => 'distressed'],
+                        ['label' => 'Raw Denim', 'value' => 'raw_denim'],
+                        ['label' => 'Stone Washed', 'value' => 'stone_washed'],
+                        ['label' => 'Ripped', 'value' => 'ripped']
+                    ],
+                    'description' => 'Special features of the jeans'
                 ]
             ],
             'Dress' => [
                 [
-                    'name' => 'size',
+                    'name' => 'style',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
-                    'options' => ['XS', 'S', 'M', 'L', 'XL']
+                    'options' => [
+                        ['label' => 'Casual', 'value' => 'casual'],
+                        ['label' => 'Formal', 'value' => 'formal'],
+                        ['label' => 'Party', 'value' => 'party'],
+                        ['label' => 'Business', 'value' => 'business'],
+                        ['label' => 'Evening', 'value' => 'evening']
+                    ],
+                    'description' => 'Style category of the dress'
                 ],
                 [
-                    'name' => 'color',
-                    'type' => 'select',
+                    'name' => 'care_instructions',
+                    'type' => 'text',
+                    'field' => 'Textarea',
+                    'required' => true,
+                    'description' => 'Care and washing instructions'
+                ],
+                [
+                    'name' => 'primary_color',
+                    'type' => 'color',
                     'field' => 'ColorPicker',
                     'required' => true,
-                    'options' => ['Black', 'Navy', 'Red', 'White', 'Floral']
+                    'description' => 'Primary color of the dress'
                 ]
             ]
         ];

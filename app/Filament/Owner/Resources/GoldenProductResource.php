@@ -142,10 +142,10 @@ class GoldenProductResource extends Resource
                             ->required(),
                     ]),
 
-                // Section::make('Attributes')
-                //     ->schema(fn(Get $get): array => static::getAttributeFields($get('product_type_id')))
-                //     ->columns(2)
-                //     ->visible(fn(Get $get): bool => (bool) $get('product_type_id')),
+                Section::make('Attributes')
+                    ->schema(fn(Get $get): array => static::getAttributeFields($get('product_type_id')))
+                    ->columns(2)
+                    ->visible(fn(Get $get): bool => (bool) $get('product_type_id')),
             ]);
     }
 
@@ -167,7 +167,12 @@ class GoldenProductResource extends Resource
 
                     'Select' => Forms\Components\Select::make("attributes.{$attribute->name}")
                         ->label($attribute->name)
-                        ->options(collect($attribute->options)->pluck('value', 'value')->toArray())
+                        ->options(function () use ($attribute) {
+                            // Handle options as a simple array of values
+                            return collect($attribute->options)->mapWithKeys(function ($option) {
+                                return [$option => $option];
+                            })->toArray();
+                        })
                         ->helperText($attribute->description)
                         ->native(false)
                         ->required($attribute->required),
