@@ -30,6 +30,7 @@ class SellerProduct extends Model
         'upc',
         'gtin_14',
         'gtin_8',
+        'golden_product_id',
     ];
 
     /**
@@ -43,6 +44,7 @@ class SellerProduct extends Model
         'category_id' => 'integer',
         'seller_id' => 'integer',
         'selected' => 'boolean',
+        'golden_product_id' => 'integer',
     ];
 
     public function sellerVariants(): HasMany
@@ -73,5 +75,10 @@ class SellerProduct extends Model
     public function seller(): BelongsTo
     {
         return $this->belongsTo(Seller::class);
+    }
+
+    public function goldenProduct(): BelongsTo
+    {
+        return $this->belongsTo(GoldenProduct::class);
     }
 }

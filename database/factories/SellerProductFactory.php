@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Category;
+use App\Models\GoldenProduct;
 use App\Models\Seller;
 use App\Models\SellerProduct;
 
@@ -36,6 +37,7 @@ class SellerProductFactory extends Factory
             'upc' => $this->faker->word(),
             'gtin_14' => $this->faker->word(),
             'gtin_8' => $this->faker->word(),
+            'golden_product_id' => GoldenProduct::factory(),
         ];
     }
 }

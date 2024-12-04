@@ -45,6 +45,7 @@ models:
     parent_id: id foreign:categories.id nullable
     relationships:
       hasMany: SellerProduct
+
   SellerProduct:
     name: string
     brand: string nullable
@@ -59,6 +60,7 @@ models:
     upc: string nullable
     gtin_14: string nullable
     gtin_8: string nullable
+    golden_product_id: id foreign nullable
     relationships:
       hasMany: SellerVariant,Price,Stock,SellerProductImage:image
 
@@ -138,7 +140,7 @@ models:
   GoldenProduct:
     product_type_id: id foreign
     relationships:
-      hasMany: GoldenProductLocalized:translation
+      hasMany: GoldenProductLocalized:translation, SellerProduct
 
   GoldenProductLocalized:
     name: string

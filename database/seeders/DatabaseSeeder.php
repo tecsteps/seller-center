@@ -339,8 +339,20 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($sellerProducts as $product) {
-            SellerProduct::create($product);
+        foreach ($sellerProducts as $productData) {
+            SellerProduct::create($productData);
+        }
+
+        // Relate some seller products with golden products
+        $goldenProducts = GoldenProduct::all();
+        $sellerProducts = SellerProduct::all();
+
+        // For each golden product, relate it with 2-3 seller products
+        foreach ($goldenProducts as $goldenProduct) {
+            $randomSellerProducts = $sellerProducts->random(rand(2, 3));
+            foreach ($randomSellerProducts as $sellerProduct) {
+                $sellerProduct->update(['golden_product_id' => $goldenProduct->id]);
+            }
         }
 
         $sellerVariants = [

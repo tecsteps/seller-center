@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use App\Models\Locale;
+use App\Filament\Owner\Resources\GoldenProductResource\RelationManagers\SellerProductsRelationManager;
 
 class GoldenProductResource extends Resource
 {
@@ -332,7 +333,7 @@ class GoldenProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SellerProductsRelationManager::class,
         ];
     }
 

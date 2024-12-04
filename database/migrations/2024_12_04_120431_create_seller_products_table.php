@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('upc')->nullable();
             $table->string('gtin_14')->nullable();
             $table->string('gtin_8')->nullable();
+            $table->foreignId('golden_product_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
 

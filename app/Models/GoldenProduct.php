@@ -35,6 +35,11 @@ class GoldenProduct extends Model
         return $this->hasMany(GoldenProductLocalized::class);
     }
 
+    public function sellerProducts(): HasMany
+    {
+        return $this->hasMany(SellerProduct::class);
+    }
+
     public function productType(): BelongsTo
     {
         return $this->belongsTo(ProductType::class);
