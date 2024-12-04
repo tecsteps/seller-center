@@ -1179,6 +1179,87 @@ class DatabaseSeeder extends Seeder
                 $translationData['product_type_id'] = $productData['product_type_id'];
                 $goldenProduct->translations()->create($translationData);
             }
+
+            // Create variants for each golden product
+            $variantData = [
+                [
+                    'translations' => [
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                            'name' => 'Large Size',
+                            'description' => 'Large size variant of the product',
+                            'attributes' => [
+                                'Size' => 'large',
+                                'Material' => 'premium',
+                            ],
+                        ],
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                            'name' => 'Grande Taille',
+                            'description' => 'Variante de grande taille du produit',
+                            'attributes' => [
+                                'Size' => 'large',
+                                'Material' => 'premium',
+                            ],
+                        ],
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                            'name' => 'Große Größe',
+                            'description' => 'Große Variante des Produkts',
+                            'attributes' => [
+                                'Size' => 'large',
+                                'Material' => 'premium',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'translations' => [
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'en-US')->first()->id,
+                            'name' => 'Medium Size',
+                            'description' => 'Medium size variant of the product',
+                            'attributes' => [
+                                'Size' => 'medium',
+                                'Material' => 'standard',
+                            ],
+                        ],
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'fr-FR')->first()->id,
+                            'name' => 'Taille Moyenne',
+                            'description' => 'Variante de taille moyenne du produit',
+                            'attributes' => [
+                                'Size' => 'medium',
+                                'Material' => 'standard',
+                            ],
+                        ],
+                        [
+                            'locale_id' => DB::table('locales')->where('code', 'de-DE')->first()->id,
+                            'name' => 'Mittlere Größe',
+                            'description' => 'Mittlere Variante des Produkts',
+                            'attributes' => [
+                                'Size' => 'medium',
+                                'Material' => 'standard',
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+
+            // Create variants for this golden product
+            foreach ($variantData as $variant) {
+                $translations = $variant['translations'];
+                
+                // Create the variant
+                $goldenProductVariant = $goldenProduct->variants()->create([
+                    'golden_product_id' => $goldenProduct->id,
+                ]);
+
+                // Create translations for the variant
+                foreach ($translations as $translationData) {
+                    $goldenProductVariant->translations()->create($translationData);
+                }
+            }
         }
     }
 }

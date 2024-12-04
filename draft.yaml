@@ -140,7 +140,7 @@ models:
   GoldenProduct:
     product_type_id: id foreign
     relationships:
-      hasMany: GoldenProductLocalized:translation, SellerProduct
+      hasMany: GoldenProductLocalized:translation, SellerProduct, GoldenProductVariant:variant
 
   GoldenProductLocalized:
     name: string
@@ -149,6 +149,18 @@ models:
     product_type_id: id foreign
     locale_id: id foreign
     golden_product_id: id foreign
+
+  GoldenProductVariant:
+    golden_product_id: id foreign
+    relationships:
+      hasMany: GoldenProductVariantLocalized:translation
+
+  GoldenProductVariantLocalized:
+    name: string nullable
+    description: text nullable
+    attributes: json nullable
+    golden_product_variant_id: id foreign
+    locale_id: id foreign
 
   Locale:
     code: string

@@ -40,6 +40,11 @@ class GoldenProduct extends Model
         return $this->hasMany(SellerProduct::class);
     }
 
+    public function variants(): HasMany
+    {
+        return $this->hasMany(GoldenProductVariant::class);
+    }
+
     public function productType(): BelongsTo
     {
         return $this->belongsTo(ProductType::class);
