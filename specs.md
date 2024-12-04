@@ -36,15 +36,15 @@ When a seller sets a seller-product to "active", then:
 - [ ] ... a golden product is created or selected (if EAN or other non-merchant specific article number matches).
 - [ ] ... the product-type is determined via AI
 - [ ] ... the attributes (of the seller) are mapped to the attributes of the selected product-type via AI. Attributes may be split or merged during this step (e.g. dimensions). Attributes, that cannot be mapped, will be saved to an unmapped attributes field in the golden record
+
+
 - [ ] ... all textual content is translated into the owner's configured locales
-- [ ] ... prices and stocks are copied to the golden product and marked with the seller's ID (existing entities must get the prefix Seller*)
-- [ ] ... images are copied to the golden product (with seller ID). AI chooses one set of products and marks it, so the shop can use it.
 - [ ] If there is already a golden record that is related to a seller-product then ....
 - [ ] If there is already a golden record that is not yet related to a seller-product, but has the same EAN then ....
 - [ ] TODO Variant creation
 
 # Owner - Golden Products
-- [ ] As an Owner, I can see a list of all Golden Products. I can also see the number of related seller-products (from different sellers that sell the same product).
+- [x] As an Owner, I can see a list of all Golden Products. I can also see the number of related seller-products (from different sellers that sell the same product).
 - [ ] As an owner, I see the selected images for each golden product
 - [ ] As an owner, I see the stock levels of the golden product (accross sellers)
 - [ ] As an owner, there is a status badge for "new" and "updated"

@@ -5,6 +5,7 @@ namespace App\Filament\Seller\Resources;
 use App\Filament\Seller\Resources\SellerProductResource\Pages;
 use App\Filament\Seller\Resources\SellerProductResource\RelationManagers;
 use App\Models\SellerProduct;
+use App\Services\GoldenProductService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -74,8 +75,12 @@ class SellerProductResource extends Resource
                             ])
                             ->default('draft')
                             ->native(false)
-                            ->helperText('Only Active products can be sold on the marketplace.'),
-
+                            ->helperText('Only Active products can be sold on the marketplace.')
+                            ->afterStateUpdated(function ($state, $old, $record) {
+                                if ($state === 'active' && $old !== 'active') {
+                                    app(GoldenProductService::class)->createFromSellerProduct($record);
+                                }
+                            }),
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
                             ->native(false)
