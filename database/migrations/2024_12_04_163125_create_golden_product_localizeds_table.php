@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->json('attributes')->nullable();
-            $table->foreignId('product_type_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('locale_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('golden_product_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

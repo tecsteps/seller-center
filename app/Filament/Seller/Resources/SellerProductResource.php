@@ -57,7 +57,6 @@ class SellerProductResource extends Resource
                             ->helperText('The display name for this product'),
 
                         Forms\Components\TextInput::make('brand')
-                            ->required()
                             ->helperText('The brand this product')
                             ->datalist(function () {
                                 return \App\Models\SellerProduct::query()
@@ -84,7 +83,6 @@ class SellerProductResource extends Resource
                         Forms\Components\Select::make('category_id')
                             ->relationship('category', 'name')
                             ->native(false)
-                            ->required()
                             ->helperText('The category this product belongs to'),
 
                         Forms\Components\TextInput::make('sku')

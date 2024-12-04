@@ -146,7 +146,6 @@ models:
     name: string
     description: text nullable
     attributes: json nullable
-    product_type_id: id foreign
     locale_id: id foreign
     golden_product_id: id foreign
 

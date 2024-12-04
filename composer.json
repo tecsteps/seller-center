@@ -9,10 +9,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "fakerphp/faker": "^1.23",
         "filament/filament": "^3.2",
+        "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "fakerphp/faker": "^1.23"
+        "openai-php/client": "^0.10.3"
     },
     "require-dev": {
         "laravel-shift/blueprint": "^2.10",

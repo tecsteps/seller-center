@@ -19,7 +19,6 @@ class GoldenProductLocalized extends Model
         'name',
         'description',
         'attributes',
-        'product_type_id',
         'locale_id',
         'golden_product_id',
     ];
@@ -32,15 +31,9 @@ class GoldenProductLocalized extends Model
     protected $casts = [
         'id' => 'integer',
         'attributes' => 'array',
-        'product_type_id' => 'integer',
         'locale_id' => 'integer',
         'golden_product_id' => 'integer',
     ];
-
-    public function productType(): BelongsTo
-    {
-        return $this->belongsTo(ProductType::class);
-    }
 
     public function locale(): BelongsTo
     {

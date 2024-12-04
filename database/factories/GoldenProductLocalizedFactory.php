@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 use App\Models\GoldenProduct;
 use App\Models\GoldenProductLocalized;
 use App\Models\Locale;
-use App\Models\ProductType;
 
 class GoldenProductLocalizedFactory extends Factory
 {
@@ -27,7 +26,6 @@ class GoldenProductLocalizedFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
             'attributes' => '{}',
-            'product_type_id' => ProductType::factory(),
             'locale_id' => Locale::factory(),
             'golden_product_id' => GoldenProduct::factory(),
         ];
