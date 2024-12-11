@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             ProductTypeSeeder::class,
+            LocaleSeeder::class,
             AttributeSeeder::class,
             SellerDataSeeder::class,
             LocationSeeder::class,
-            LocaleSeeder::class,
             ProductSeeder::class,
         ]);
     }

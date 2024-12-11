@@ -23,6 +23,7 @@ class ProductTypeAttributeFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'slug' => $this->faker->slug(),
             'type' => $this->faker->randomElement(["text","boolean","number","select","url","color"]),
             'is_translatable' => $this->faker->boolean(),
             'field' => $this->faker->randomElement(["TextInput","Textarea","Checkbox","Toggle","Select","ColorPicker"]),
@@ -31,7 +32,6 @@ class ProductTypeAttributeFactory extends Factory
             'description' => $this->faker->text(),
             'unit' => $this->faker->word(),
             'is_variant_attribute' => $this->faker->boolean(),
-            'options' => '{}',
             'validators' => '{}',
             'product_type_id' => ProductType::factory(),
         ];

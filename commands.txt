@@ -11,3 +11,6 @@ php artisan make:filament-resource Category  --generate
 php artisan make:filament-resource SellerProduct  --generate
 php artisan make:filament-resource SellerVariant  --generate
 php artisan make:filament-resource Location  --generate
+
+
+http://localhost:8000/log-viewer

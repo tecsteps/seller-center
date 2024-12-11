@@ -2,11 +2,16 @@
 
 namespace App\Filament\Owner\Resources\ProductTypeResource\RelationManagers;
 
+use App\Models\Locale;
+use App\Models\ProductTypeAttribute;
+use App\Models\ProductTypeAttributeOption;
+use App\Models\ProductTypeAttributeOptionValue;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class AttributesRelationManager extends RelationManager
 {
@@ -20,13 +25,26 @@ class AttributesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Section::make('Basic Attribute Information')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255)
-                            ->label('Attribute Name')
-                            ->columnSpan(2)
-                            ->placeholder('e.g., Color, Size, Material')
-                            ->helperText('Enter a unique, descriptive name for this attribute.'),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->label('Attribute Name')
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (string $state, Forms\Set $set) {
+                                        $set('slug', Str::slug($state));
+                                    })
+                                    ->columnSpan(1)
+                                    ->placeholder('e.g., Color, Size, Material')
+                                    ->helperText('Enter a unique, descriptive name for this attribute.'),
+
+                                Forms\Components\TextInput::make('slug')
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->columnSpan(1)
+                                    ->helperText('Automatically generated from name'),
+                            ]),
 
                         Forms\Components\Toggle::make('is_variant_attribute')
                             ->label('Is Variant Attribute')
@@ -115,20 +133,87 @@ class AttributesRelationManager extends RelationManager
                         Forms\Components\Repeater::make('options')
                             ->label('Options')
                             ->schema([
-                                Forms\Components\Grid::make(2)
-                                    ->schema([
-                                        Forms\Components\TextInput::make('label')
-                                            ->required(),
-                                        Forms\Components\TextInput::make('value')
-                                            ->required(),
-                                    ]),
+                                Forms\Components\Grid::make()
+                                    ->schema(function (Forms\Get $get) {
+                                        $fields = [];
+                                        $defaultLocale = Locale::where('default', true)->first();
+                                        
+                                        foreach (Locale::orderBy('default', 'desc')->get() as $locale) {
+                                            $fields[] = Forms\Components\TextInput::make("values.{$locale->code}")
+                                                ->label($locale->name)
+                                                ->required($locale->default)
+                                                ->disabled(fn() => !$locale->default && !$get('../../is_translatable'))
+                                                ->helperText($locale->default ? 'Default language' : null)
+                                                ->live()
+                                                ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) use ($locale, $defaultLocale) {
+                                                    // If this is the default locale and is_translatable is false,
+                                                    // copy the value to all other locales
+                                                    if ($locale->default && !$get('../../is_translatable')) {
+                                                        foreach (Locale::where('default', false)->get() as $otherLocale) {
+                                                            $set("values.{$otherLocale->code}", $state);
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                        
+                                        return $fields;
+                                    })
+                                    ->columns(2),
                             ])
                             ->collapsible()
                             ->collapsed()
-                            ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
+                            ->itemLabel(function (array $state): ?string {
+                                $defaultLocale = Locale::where('default', true)->first();
+                                return $state['values'][$defaultLocale->code] ?? null;
+                            })
                             ->defaultItems(0)
                             ->visible(fn(Forms\Get $get): bool => $get('field') === 'Select' || $get('field') === 'ColorPicker')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            // Load options from the relationship
+                            ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set, ?ProductTypeAttribute $record) {
+                                if (!$record) return;
+
+                                $options = $record->options->map(function ($option) {
+                                    $values = [];
+                                    
+                                    foreach ($option->values as $value) {
+                                        $values[$value->locale->code] = $value->value;
+                                    }
+
+                                    return [
+                                        'values' => $values,
+                                    ];
+                                })->toArray();
+
+                                $set('options', $options);
+                            })
+                            // Save options to the relationship
+                            ->afterStateUpdated(function ($state, ?ProductTypeAttribute $record) {
+                                if (!$record) return;
+
+                                // Delete existing options and their values
+                                foreach ($record->options as $option) {
+                                    $option->values()->delete();
+                                }
+                                $record->options()->delete();
+
+                                // Create new options with localized values
+                                foreach ($state ?? [] as $optionData) {
+                                    $option = $record->options()->create([
+                                        'product_type_attribute_id' => $record->id,
+                                    ]);
+
+                                    // Create values for each locale
+                                    foreach (Locale::all() as $locale) {
+                                        if (isset($optionData['values'][$locale->code])) {
+                                            $option->values()->create([
+                                                'value' => $optionData['values'][$locale->code],
+                                                'locale_id' => $locale->id,
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }),
 
                         Forms\Components\TextInput::make('unit')
                             ->maxLength(255)
@@ -209,6 +294,9 @@ class AttributesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->badge()
+                    ->color('gray'),
                 Tables\Columns\IconColumn::make('required')
                     ->boolean()
                     ->sortable(),

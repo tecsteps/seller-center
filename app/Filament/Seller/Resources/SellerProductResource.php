@@ -76,7 +76,7 @@ class SellerProductResource extends Resource
                             ->native(false)
                             ->helperText('Only Active products can be sold on the marketplace.')
                             ->afterStateUpdated(function ($state, $old, $record) {
-                                if ($state === 'active' && $old !== 'active') {
+                                if ($state === 'active' && $old !== 'active') { // TODO
                                     app(GoldenProductService::class)->createFromSellerProduct($record);
                                 }
                             }),
@@ -103,7 +103,7 @@ class SellerProductResource extends Resource
                             ->editableValues(),
                     ])
                     ->collapsible()
-                    ->collapsed()
+                    // ->collapsed() TODO
                     ->columns(3),
 
                 Forms\Components\Section::make('Default Prices')

@@ -6,211 +6,163 @@ use App\Models\GoldenProduct;
 use App\Models\SellerProduct;
 use App\Models\ProductType;
 use App\Models\Locale;
+use App\Models\ProductTypeAttribute;
+use App\Models\ProductTypeAttributeOptionValue;
+use App\Models\GoldenProductAttribute;
+use App\Models\GoldenProductAttributeValue;
 use App\Services\OpenAIService;
+use App\Services\AttributeMappingService;
+use App\Services\ProductTypeClassificationService;
+use App\Services\ProductTranslationService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class GoldenProductService
 {
-    private $openAIService;
+    public function __construct(
+        private readonly OpenAIService $openAIService,
+        private readonly AttributeMappingService $attributeMapper,
+        private readonly ProductTypeClassificationService $productTypeClassifier,
+        private readonly ProductTranslationService $translator,
+    ) {}
 
-    public function __construct(OpenAIService $openAIService)
-    {
-        $this->openAIService = $openAIService;
-    }
-
+    /**
+     * TODO This should happen asynchronously
+     * @throws \Exception
+     */
     public function createFromSellerProduct(SellerProduct $sellerProduct): GoldenProduct
     {
-        if ($sellerProduct->golden_product_id) {
-            return $sellerProduct->goldenProduct;
-        }
+        // we don't create a golden product if it already exists
+        // TODO
+        // if ($sellerProduct->golden_product_id) {
+        //     return $sellerProduct->goldenProduct;
+        // }
 
-        $productTypeId = $this->determineProductType($sellerProduct);
-        $productType = ProductType::with('attributes')->find($productTypeId);
+        $productType = $this->productTypeClassifier->determineProductType($sellerProduct);
+        $translations = $this->translateProductName($sellerProduct);
 
-        // TODO handle the case when the product type is not found
+        $mappedAttributes = $this->attributeMapper->mapAttributes($sellerProduct->attributes, $productType);
+        $attributes = $this->translateTextAttributeValues($mappedAttributes, $productType, $translations);
+        $attributes = $this->addAttributeOptionValues($attributes, $mappedAttributes, $productType);
 
-        $goldenProduct = GoldenProduct::create([
-            'product_type_id' => $productTypeId,
-        ]);
+        $goldenProduct = $this->createGoldenProduct($productType);
 
-        // Create translations with mapped attributes for each locale
-        foreach (Locale::all() as $locale) {
-            $translatedName = $this->translateProductData($sellerProduct->name, $locale->code);
-            $translatedDescription = $this->translateProductData($sellerProduct->description, $locale->code);
+        $this->createTranslations($goldenProduct, $translations);
+        $this->createAttributes($goldenProduct, $attributes);
 
-            // Map and translate attributes if they exist
-            $mappedAttributes = null;
-            if ($sellerProduct->attributes) {
-                $mappedAttributes = $this->mapAttributes($sellerProduct->attributes, $productType);
-                if ($locale->code !== 'en') {
-                    $mappedAttributes = json_decode($this->translateProductData(
-                        json_encode($mappedAttributes),
-                        $locale->code
-                    ), true);
-                }
-            }
-
-            $goldenProduct->translations()->create([
-                'name' => $translatedName,
-                'description' => $translatedDescription,
-                'attributes' => $mappedAttributes,
-                'locale_id' => $locale->id,
-            ]);
-        }
-
-        $sellerProduct->update(['golden_product_id' => $goldenProduct->id]);
+        $this->updateSellerProduct($sellerProduct, $goldenProduct);
 
         return $goldenProduct;
     }
 
-    private function mapAttributes(array $sellerAttributes, ProductType $productType): array
+
+
+    private function createGoldenProduct(ProductType $productType): GoldenProduct
     {
-        $client = $this->openAIService->getClient();
-
-        // Get the schema of valid attributes from the product type
-        $attributeSchema = $productType->attributes->map(function ($attr) {
-            return [
-                'name' => $attr->name,
-                'type' => $attr->type,
-                'description' => $attr->description,
-                'unit' => $attr->unit,
-                'options' => $attr->options,
-                'is_variant_attribute' => $attr->is_variant_attribute,
-            ];
-        })->toArray();
-
-        // Log input data for debugging
-        Log::info('Mapping attributes', [
-            'seller_attributes' => $sellerAttributes,
-            'schema' => $attributeSchema
+        $goldenProduct = GoldenProduct::create([
+            'product_type_id' => $productType->id,
         ]);
 
-        $response = $client->chat()->create([
-            'model' => $this->openAIService->getSmallModel(),
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => "Map the seller's attributes to the product type schema, following these rules:
-                    1. Match attributes based on semantic similarity and field type compatibility
-                    2. Convert values to match the required type (text, boolean, number, select, url, color)
-                    3. Ensure select values match the available options
-                    4. Return a valid JSON object in the format: { schemaFieldName: convertedValue }"
-                ],
-                [
-                    'role' => 'user',
-                    'content' => "Please provide a JSON object mapping these seller attributes to the schema:
-                    
-                    Seller Attributes: " . json_encode($sellerAttributes) . "
-                    
-                    Schema: " . json_encode($attributeSchema)
-                ]
-            ],
-            'response_format' => ['type' => 'json_object'],
-            'temperature' => 0.2
-        ]);
-
-        // Log the raw response for debugging
-        Log::info('OpenAI Response', [
-            'response' => $response
-        ]);
-
-        $content = $response->choices[0]->message->content ?? '{}';
-        $mappedAttributes = json_decode($content, true);
-
-        // Log the final mapped attributes
-        Log::info('Mapped attributes', [
-            'mapped' => $mappedAttributes
-        ]);
-
-        return $mappedAttributes;
+        return $goldenProduct;
     }
 
-    private function determineProductType(SellerProduct $sellerProduct): int
+    public function translateProductName(SellerProduct $sellerProduct): array
     {
-        $client = $this->openAIService->getClient();
-
-        $availableTypes = ProductType::pluck('name')->toArray();
-
-        $response = $client->chat()->create([
-            'model' =>  $this->openAIService->getSmallModel(),
-            'messages' => [
-                ['role' => 'user', 'content' => $sellerProduct->name],
-            ],
-            'tools' => [
-                [
-                    'type' => 'function',
-                    'function' => [
-                        'name' => 'classify_product',
-                        'description' => 'Classify a product into predefined product types',
-                        'parameters' => [
-                            'type' => 'object',
-                            'properties' => [
-                                'product_type' => [
-                                    'type' => 'string',
-                                    'enum' => $availableTypes,
-                                    'description' => 'The type of product',
-                                ],
-                                'confidence' => [
-                                    'type' => 'number',
-                                    'minimum' => 0,
-                                    'maximum' => 1,
-                                    'description' => 'Confidence level in the classification',
-                                ],
-                            ],
-                            'required' => ['product_type', 'confidence'],
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-
-
-        $toolCall = $response->choices[0]->message->toolCalls[0];
-        $arguments = json_decode($toolCall->function->arguments, true);
-        $productType = ProductType::where('name', $arguments['product_type'])->first();
-
-        return $productType ? $productType->id : null;
+        $translations = [];
+        foreach (Locale::all() as $locale) {
+            $translations[$locale->id] = $this->translator->translateTexts([
+                'name' => $sellerProduct->name,
+                'description' => $sellerProduct->description
+            ], $locale->code);
+        }
+        return $translations;
     }
 
-    private function translateProductData(string $text, string $targetLocale): string
+    public function translateTextAttributeValues(array $mappedAttributes, ProductType $productType, array $translations): array
     {
-        return $text; // TODO
+        $attributes = [];
+        foreach (Locale::all() as $locale) {
+            $attributes[$locale->id] = [];
+            $toBetranslatedValues = [];
+            foreach ($mappedAttributes as $attributeConfigId => $value) {
+                $attributeConfiguration = $productType->attributes->find($attributeConfigId); // TODO too many queries
 
-        $client = $this->openAIService->getClient();
+                if ($attributeConfiguration->type !== 'select' && $attributeConfiguration->is_translatable === true) {
+                    // $translatedValue = $this->translator->translateString($value, $locale->code);
+                    $toBetranslatedValues[$attributeConfigId] = $value;
+                }
+            }
+            $translations = $this->translator->translateTexts($toBetranslatedValues, $locale->code);
+            foreach ($mappedAttributes as $attributeConfigId => $value) {
+                if (array_key_exists($attributeConfigId, $translations)) {
+                    $attributes[$locale->id][$attributeConfigId] = $translations[$attributeConfigId];
+                } else {
+                    $attributes[$locale->id][$attributeConfigId] = $value;
+                }
+            }
+        }
+        return $attributes;
+    }
 
-        $response = $client->chat()->create([
-            'model' => $this->openAIService->getSmallModel(),
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => "Translate the following text to {$targetLocale}:\n\n{$text}"
-                ],
-            ],
-            'tools' => [
-                [
-                    'type' => 'function',
-                    'function' => [
-                        'name' => 'translate_text',
-                        'description' => 'Translate text to the target language while maintaining the original meaning and tone',
-                        'parameters' => [
-                            'type' => 'object',
-                            'properties' => [
-                                'translated_text' => [
-                                    'type' => 'string',
-                                    'description' => 'The translated text in the target language',
-                                ],
-                            ],
-                            'required' => ['translated_text'],
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+    public function addAttributeOptionValues(array $attributes, array $mappedAttributes, ProductType $productType): array
+    {
+        foreach ($mappedAttributes as $attributeConfigId => $value) {
+            $attributeConfiguration = $productType->attributes->find($attributeConfigId); // TODO too many queries
 
-        $toolCall = $response->choices[0]->message->toolCalls[0];
-        $arguments = json_decode($toolCall->function->arguments, true);
+            foreach (Locale::all() as $locale) {
+                if ($attributeConfiguration->type === 'select') {
+                    $optionEntity = ProductTypeAttributeOptionValue::where('product_type_attribute_option_id', $value)
+                        ->where('locale_id', $locale->id)
+                        ->first();
+                    $attributes[$locale->id][$attributeConfigId] = $optionEntity;
+                }
+            }
+        }
+        return $attributes;
+    }
 
-        return $arguments['translated_text'];
+    private function createTranslations(GoldenProduct $goldenProduct, array $translations): void
+    {
+        foreach (Locale::all() as $locale) {
+            $translation = $translations[$locale->id];
+            $goldenProduct->translations()->create([
+                'name' => $translation['name'],
+                'description' => $translation['description'],
+                'locale_id' => $locale->id,
+            ]);
+        }
+    }
+
+    private function createAttributes(GoldenProduct $goldenProduct, array $attributes): void
+    {
+        foreach ($attributes as $localeId => $attributes) {
+            foreach ($attributes as $attributeConfigId => $value) {
+                $goldenProductAttribute = GoldenProductAttribute::create([
+                    'golden_product_id' => $goldenProduct->id,
+                    'product_type_attribute_id' => $attributeConfigId,
+                ]);
+
+                if (is_scalar($value)) {
+                    GoldenProductAttributeValue::create([
+                        'golden_product_attribute_id' => $goldenProductAttribute->id,
+                        'value' => $value,
+                        'locale_id' => $localeId
+                    ]);
+                } else if ($value instanceof ProductTypeAttributeOptionValue) {
+                    // Directly insert into the pivot table
+                    DB::table('golden_product_attribute_product_type_attribute_option_value')->insert([
+                        'golden_product_attribute_id' => $goldenProductAttribute->id,
+                        'product_type_attribute_option_value_id' => $value->id,
+                    ]);
+                } else {
+                    throw new \Exception('Unsupported attribute value type for value: ' . $value);
+                }
+            }
+        }
+    }
+
+    private function updateSellerProduct(SellerProduct $sellerProduct, GoldenProduct $goldenProduct): void
+    {
+        $sellerProduct->update(['golden_product_id' => $goldenProduct->id]);
     }
 }

@@ -1,5 +1,5 @@
 models:
-      
+
   Seller:
     name: string
     hideProducts: boolean default:false
@@ -69,6 +69,8 @@ models:
     seller_variant_id: id foreign nullable
     image: string
     number: integer default:1
+    relationships:
+      hasOne: GoldenProductImage
 
   SellerVariant:
     name: string nullable
@@ -109,7 +111,7 @@ models:
     symbol: string
     name: string nullable
     is_default: boolean default:false
-    
+
     relationships:
       hasMany: Price
 
@@ -122,9 +124,10 @@ models:
     name: string
     relationships:
       hasMany: ProductTypeAttribute:attribute, GoldenProduct:product
-  
+
   ProductTypeAttribute:
     name: string
+    slug: string
     type: enum:text,boolean,number,select,url,color
     is_translatable: boolean default:false
     field: enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker
@@ -133,14 +136,40 @@ models:
     description: string nullable
     unit: string nullable
     is_variant_attribute: boolean default:false
-    options: json nullable
     validators: json nullable
     product_type_id: id foreign
+    relationships:
+      hasMany: ProductTypeAttributeOption:option
+
+  ProductTypeAttributeOption:
+    product_type_attribute_id: id foreign
+    relationships:
+      hasMany: ProductTypeAttributeOptionValue:value
+
+  ProductTypeAttributeOptionValue:
+    value: string
+    locale_id: id foreign
+    product_type_attribute_option_id: id foreign  
+    relationships:
+      belongsToMany: GoldenProductAttribute
 
   GoldenProduct:
     product_type_id: id foreign
     relationships:
-      hasMany: GoldenProductLocalized:translation, SellerProduct, GoldenProductVariant:variant
+      hasMany: GoldenProductLocalized:translation, SellerProduct, GoldenProductVariant:variant, GoldenProductAttribute:attribute
+
+  GoldenProductAttribute:
+    product_type_attribute_id: id foreign
+    golden_product_id: id foreign
+    is_option: boolean default:false
+    relationships:
+      hasMany: GoldenProductAttributeValue:value
+      belongsToMany: ProductTypeAttributeOptionValue:optionValue
+
+  GoldenProductAttributeValue:
+    value: string
+    golden_product_attribute_id: id foreign
+    locale_id: id foreign
 
   GoldenProductLocalized:
     name: string
@@ -160,6 +189,12 @@ models:
     attributes: json nullable
     golden_product_variant_id: id foreign
     locale_id: id foreign
+
+  GoldenProductImage:
+    golden_product_id: id foreign
+    image: string
+    number: integer default:1
+    seller_product_image_id: id foreign
 
   Locale:
     code: string

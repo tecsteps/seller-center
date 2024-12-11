@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProductTypeAttribute extends Model
 {
@@ -17,6 +18,7 @@ class ProductTypeAttribute extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'type',
         'is_translatable',
         'field',
@@ -25,7 +27,6 @@ class ProductTypeAttribute extends Model
         'description',
         'unit',
         'is_variant_attribute',
-        'options',
         'validators',
         'product_type_id',
     ];
@@ -40,10 +41,14 @@ class ProductTypeAttribute extends Model
         'is_translatable' => 'boolean',
         'required' => 'boolean',
         'is_variant_attribute' => 'boolean',
-        'options' => 'array',
         'validators' => 'array',
         'product_type_id' => 'integer',
     ];
+
+    public function options(): HasMany
+    {
+        return $this->hasMany(ProductTypeAttributeOption::class);
+    }
 
     public function productType(): BelongsTo
     {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SellerProductImage extends Model
 {
@@ -32,6 +33,11 @@ class SellerProductImage extends Model
         'seller_product_id' => 'integer',
         'seller_variant_id' => 'integer',
     ];
+
+    public function goldenProductImage(): HasOne
+    {
+        return $this->hasOne(GoldenProductImage::class);
+    }
 
     public function sellerProduct(): BelongsTo
     {

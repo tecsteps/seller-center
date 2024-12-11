@@ -27,21 +27,13 @@ Field type and Validators:
 | **CheckboxList**  | Array, Required                                          |
 | **KeyValue**      | Array (with key-value format validation), Required       |
 
-TODO: 
-- attribute options must be translatable
-
 
 ## Product Type Mapping
 When a seller sets a seller-product to "active", then:
-- [ ] ... a golden product is created or selected (if EAN or other non-merchant specific article number matches).
-- [ ] ... the product-type is determined via AI
+- [x] ... a golden product is created or selected (if EAN or other non-merchant specific article number matches).
+- [x] ... the product-type is determined via AI
 - [ ] ... the attributes (of the seller) are mapped to the attributes of the selected product-type via AI. Attributes may be split or merged during this step (e.g. dimensions). Attributes, that cannot be mapped, will be saved to an unmapped attributes field in the golden record
-
-
-- [ ] ... all textual content is translated into the owner's configured locales
-- [ ] If there is already a golden record that is related to a seller-product then ....
-- [ ] If there is already a golden record that is not yet related to a seller-product, but has the same EAN then ....
-- [ ] TODO Variant creation
+- [x] ... all textual content is translated into the owner's configured locales
 
 # Owner - Golden Products
 - [x] As an Owner, I can see a list of all Golden Products. I can also see the number of related seller-products (from different sellers that sell the same product).
@@ -55,6 +47,26 @@ When a seller sets a seller-product to "active", then:
 - [ ] As an owner, I can set a status on the golden product, so it's published to my shop.
 - [ ] TODO status
 
+ 
+# Variant creation
+- [ ] TODO
 
 TODO:
 - Variant - localizable flag is ignored 
+
+
+Flow (Traditinal Marketplace)
+- Sellers upload their products and variants (any language)
+- Golden Product is created (based on the seller's data and translated to the configured locales)
+- Seller products are linked to the golden product
+- Seller images are copied over to the golden product
+- Golden product has no own price or stock, because the customer is selecting the seller in the shop before checkout
+
+How the product master data of the golden product is created. Options:
+- The given data from the seller is used as a base for the golden product.
+- The product data is retrieved from an external data provider (like Icecat, or GS1). If such a source is available, this often results in a higher quality.
+
+How & when a golden product is created:
+- You might want to create your catalog (~ golden products) upfront and let sellers link their offers to it. This way you have full control over your catalog, but restrict the number of products.
+- You might want to create the golden products on the fly, when a seller uploads a product. This requires a review and rating process to ensure qualityl
+- There are also mixed approaches, where you create golden products on the fly based on seller's data and then improve/enrich them via a review process.
