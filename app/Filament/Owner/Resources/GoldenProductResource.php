@@ -159,30 +159,35 @@ class GoldenProductResource extends Resource
         return $productType->attributes
             ->sortBy('rank')
             ->map(function ($attribute) {
-                $baseField = match ($attribute->field) {
-                    'TextInput' => Forms\Components\TextInput::make("attributes.{$attribute->name}")
-                        ->label($attribute->name)
-                        ->helperText($attribute->description)
-                        ->required($attribute->required),
-
-                    'Select' => Forms\Components\Select::make("attributes.{$attribute->name}")
+                $baseField = match ($attribute->type) {
+                    'select' => Forms\Components\Select::make("attributes.{$attribute->id}")
                         ->label($attribute->name)
                         ->options(function () use ($attribute) {
-                            // Handle options as a simple array of values
-                            return collect($attribute->options)->mapWithKeys(function ($option) {
-                                return [$option => $option];
-                            })->toArray();
+                            $defaultLocale = Locale::where('default', true)->first();
+                            return $attribute->options()
+                                ->with(['values' => function ($query) use ($defaultLocale) {
+                                    $query->where('locale_id', $defaultLocale->id);
+                                }])
+                                ->get()
+                                ->mapWithKeys(function ($option) {
+                                    return [$option->id => $option->values->first()?->value];
+                                });
                         })
                         ->helperText($attribute->description)
                         ->native(false)
                         ->required($attribute->required),
 
-                    'ColorPicker' => Forms\Components\ColorPicker::make("attributes.{$attribute->name}")
+                    'color' => Forms\Components\ColorPicker::make("attributes.{$attribute->id}")
                         ->label($attribute->name)
                         ->helperText($attribute->description)
                         ->required($attribute->required),
 
-                    default => Forms\Components\TextInput::make("attributes.{$attribute->name}")
+                    'boolean' => Forms\Components\Toggle::make("attributes.{$attribute->id}")
+                        ->label($attribute->name)
+                        ->helperText($attribute->description)
+                        ->required($attribute->required),
+
+                    default => Forms\Components\TextInput::make("attributes.{$attribute->id}")
                         ->label($attribute->name)
                         ->helperText($attribute->description)
                         ->required($attribute->required),
@@ -190,45 +195,31 @@ class GoldenProductResource extends Resource
 
                 $field = $baseField->afterStateHydrated(function ($component, $state, $record) use ($attribute) {
                     if (!$state && $record) {
-                        $defaultLocale = Locale::where('default', true)->first();
-                        if (!$defaultLocale) return;
-
-                        $translation = $record->translations()
-                            ->where('locale_id', $defaultLocale->id)
+                        $selectedLocaleId = $component->getState(); // Get the selected locale ID from the component
+                        $goldenProductAttribute = $record->attributes()
+                            ->where('product_type_attribute_id', $attribute->id)
                             ->first();
 
-                        $attributes = $translation?->attributes ?? [];
-                        $component->state($attributes[$attribute->name] ?? null);
+                        if (!$goldenProductAttribute) return;
+
+                        if ($goldenProductAttribute->is_option) {
+                            // Get the option value through the many-to-many relationship
+                            $optionValue = $goldenProductAttribute->productTypeAttributeOptionValues()
+                                // ->whereHas('locale', fn($query) => $query->where('id', $selectedLocaleId))
+                                ->first();
+
+                            if ($optionValue) {
+                                $component->state($optionValue->product_type_attribute_option_id);
+                            }
+                        } else {
+                            // Get the direct value from golden_product_attribute_values
+                            $value = $goldenProductAttribute->values()
+                                ->where('locale_id', $selectedLocaleId)
+                                ->first();
+                            $component->state($value?->value);
+                        }
                     }
                 });
-
-                if ($attribute->validators) {
-                    $validators = $attribute->validators;
-
-                    if ($attribute->type === 'number') {
-                        if (isset($validators['min'])) {
-                            $field->minValue((float) $validators['min']);
-                        }
-                        if (isset($validators['max'])) {
-                            $field->maxValue((float) $validators['max']);
-                        }
-                        if (isset($validators['decimal_places'])) {
-                            $field->numeric()->step(pow(0.1, (int) $validators['decimal_places']));
-                        }
-                    }
-
-                    if ($attribute->type === 'text') {
-                        if (isset($validators['min_length'])) {
-                            $field->minLength((int) $validators['min_length']);
-                        }
-                        if (isset($validators['max_length'])) {
-                            $field->maxLength((int) $validators['max_length']);
-                        }
-                        if (isset($validators['pattern'])) {
-                            $field->regex($validators['pattern']);
-                        }
-                    }
-                }
 
                 return $field;
             })
@@ -244,13 +235,36 @@ class GoldenProductResource extends Resource
         ]);
         $record->save();
 
+        // Create translations
         $record->translations()->create([
             'locale_id' => $localeId,
             'name' => $data['name'],
             'description' => $data['description'],
-            'attributes' => $data['attributes'] ?? [],
             'product_type_id' => $data['product_type_id'],
         ]);
+
+        // Create attributes with their values
+        if (isset($data['attributes'])) {
+            foreach ($data['attributes'] as $attributeId => $value) {
+                $attribute = $record->productType->attributes()->find($attributeId);
+                if (!$attribute) continue;
+
+                $goldenProductAttribute = $record->attributes()->create([
+                    'product_type_attribute_id' => $attributeId,
+                    'golden_product_id' => $record->id,
+                    'is_option' => $attribute->type === 'select'
+                ]);
+
+                if ($attribute->type === 'select') {
+                    $goldenProductAttribute->productTypeAttributeOptionValues()->attach($value);
+                } else {
+                    $goldenProductAttribute->values()->create([
+                        'value' => $value,
+                        'locale_id' => $localeId
+                    ]);
+                }
+            }
+        }
 
         return $record;
     }
@@ -263,15 +277,42 @@ class GoldenProductResource extends Resource
             'product_type_id' => $data['product_type_id'],
         ]);
 
+        // Update translations
         $translation = $record->translations()->updateOrCreate(
             ['locale_id' => $localeId],
             [
                 'name' => $data['name'],
                 'description' => $data['description'],
-                'attributes' => $data['attributes'] ?? [],
                 'product_type_id' => $data['product_type_id'],
             ]
         );
+
+        // Update attributes with their values
+        if (isset($data['attributes'])) {
+            // First, delete existing attributes and their values
+            $record->attributes()->delete();
+
+            // Then create new ones
+            foreach ($data['attributes'] as $attributeId => $value) {
+                $attribute = $record->productType->attributes()->find($attributeId);
+                if (!$attribute) continue;
+
+                $goldenProductAttribute = $record->attributes()->create([
+                    'product_type_attribute_id' => $attributeId,
+                    'golden_product_id' => $record->id,
+                    'is_option' => $attribute->type === 'select'
+                ]);
+
+                if ($attribute->type === 'select') {
+                    $goldenProductAttribute->productTypeAttributeOptionValues()->attach($value);
+                } else {
+                    $goldenProductAttribute->values()->create([
+                        'value' => $value,
+                        'locale_id' => $localeId
+                    ]);
+                }
+            }
+        }
 
         return $record;
     }

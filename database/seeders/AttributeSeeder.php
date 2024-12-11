@@ -30,6 +30,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The material from which the product is made.',
                     'options' => [
                         [
                             'translations' => [
@@ -79,7 +80,8 @@ class AttributeSeeder extends Seeder
                     'name' => 'Is Waterproof',
                     'type' => 'boolean',
                     'field' => 'Toggle',
-                    'required' => true
+                    'required' => true,
+                    'description' => 'Indicates whether the product is waterproof.',
                 ],
                 [
                     'name' => 'Style',
@@ -88,6 +90,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The style of the product, such as athletic or casual.',
                     'options' => [
                         [
                             'translations' => [
@@ -140,6 +143,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The type of closure used on the product, such as lace-up or slip-on.',
                     'options' => [
                         [
                             'translations' => [
@@ -182,7 +186,8 @@ class AttributeSeeder extends Seeder
                     'name' => 'Main Color',
                     'type' => 'color',
                     'field' => 'ColorPicker',
-                    'required' => true
+                    'required' => true,
+                    'description' => 'The primary color of the product.',
                 ]
             ],
             'T-Shirt' => [
@@ -193,6 +198,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The type of fabric used to make the product.',
                     'options' => [
                         [
                             'translations' => [
@@ -245,6 +251,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The style of the neckline, such as crew neck or V-neck.',
                     'options' => [
                         [
                             'translations' => [
@@ -290,6 +297,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The type of sleeves, such as short sleeve or long sleeve.',
                     'options' => [
                         [
                             'translations' => [
@@ -339,7 +347,8 @@ class AttributeSeeder extends Seeder
                     'name' => 'Is Sustainable',
                     'type' => 'boolean',
                     'field' => 'Toggle',
-                    'required' => false
+                    'required' => false,
+                    'description' => 'Indicates whether the product is made from sustainable materials.',
                 ],
                 [
                     'name' => 'Print Type',
@@ -348,6 +357,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => false,
                     'is_translatable' => true,
+                    'description' => 'The type of print used on the product, such as screen print or digital print.',
                     'options' => [
                         [
                             'translations' => [
@@ -389,12 +399,22 @@ class AttributeSeeder extends Seeder
             ],
             'Jeans' => [
                 [
+                    'name' => 'Made in',
+                    'slug' => 'made-in',
+                    'type' => 'text',
+                    'field' => 'TextInput',
+                    'required' => true,
+                    'is_translatable' => false,
+                    'description' => 'The country where the product was manufactured.',
+                ],
+                [
                     'name' => 'Fit',
                     'slug' => 'fit',
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The fit style of the product, such as slim, regular, or loose.',
                     'options' => [
                         [
                             'translations' => [
@@ -447,6 +467,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The height of the waistline, such as low rise or high rise.',
                     'options' => [
                         [
                             'translations' => [
@@ -485,6 +506,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The type of wash used on the product, such as light wash or dark wash.',
                     'options' => [
                         [
                             'translations' => [
@@ -535,6 +557,7 @@ class AttributeSeeder extends Seeder
                     'type' => 'select',
                     'field' => 'Select',
                     'required' => true,
+                    'description' => 'The level of stretch in the product, such as no stretch or super stretch.',
                     'options' => [
                         [
                             'translations' => [
@@ -571,7 +594,8 @@ class AttributeSeeder extends Seeder
                     'type' => 'number',
                     'field' => 'TextInput',
                     'required' => true,
-                    'unit' => 'cm'
+                    'unit' => 'cm',
+                    'description' => 'The length of the inseam in centimeters.',
                 ]
             ],
             'Dress' => [
@@ -582,6 +606,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The length of the dress, such as mini or maxi.',
                     'options' => [
                         [
                             'translations' => [
@@ -627,6 +652,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The shape of the dress, such as A-line or bodycon.',
                     'options' => [
                         [
                             'translations' => [
@@ -679,6 +705,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => false,
+                    'description' => 'The style of the neckline, such as V-neck or round neck.',
                     'options' => [
                         [
                             'translations' => [
@@ -731,6 +758,7 @@ class AttributeSeeder extends Seeder
                     'field' => 'Select',
                     'required' => true,
                     'is_translatable' => true,
+                    'description' => 'The type of sleeves, such as short sleeve or long sleeve.',
                     'options' => [
                         [
                             'translations' => [
@@ -780,13 +808,15 @@ class AttributeSeeder extends Seeder
                     'name' => 'Main Color',
                     'type' => 'color',
                     'field' => 'ColorPicker',
-                    'required' => true
+                    'required' => true,
+                    'description' => 'The primary color of the product.',
                 ],
                 [
                     'name' => 'Has Pockets',
                     'type' => 'boolean',
                     'field' => 'Toggle',
-                    'required' => false
+                    'required' => false,
+                    'description' => 'Indicates whether the product has pockets.',
                 ]
             ]
         ];
@@ -809,6 +839,7 @@ class AttributeSeeder extends Seeder
                     'rank' => $rank,
                     'unit' => $attributeData['unit'] ?? null,
                     'is_translatable' => $attributeData['is_translatable'] ?? false,
+                    'description' => $attributeData['description'] ?? null,
                     'product_type_id' => $type->id,
                 ]);
 

@@ -23,33 +23,32 @@ created:
     - database/factories/GoldenProductVariantLocalizedFactory.php
     - database/factories/GoldenProductImageFactory.php
     - database/factories/LocaleFactory.php
-    - database/migrations/2024_12_11_153010_create_sellers_table.php
-    - database/migrations/2024_12_11_153011_create_partnerships_table.php
-    - database/migrations/2024_12_11_153012_create_seller_data_table.php
-    - database/migrations/2024_12_11_153013_create_categories_table.php
-    - database/migrations/2024_12_11_153014_create_seller_products_table.php
-    - database/migrations/2024_12_11_153015_create_seller_product_images_table.php
-    - database/migrations/2024_12_11_153016_create_seller_variants_table.php
-    - database/migrations/2024_12_11_153017_create_prices_table.php
-    - database/migrations/2024_12_11_153018_create_stocks_table.php
-    - database/migrations/2024_12_11_153019_create_locations_table.php
-    - database/migrations/2024_12_11_153020_create_currencies_table.php
-    - database/migrations/2024_12_11_153021_create_messages_table.php
-    - database/migrations/2024_12_11_153022_create_product_types_table.php
-    - database/migrations/2024_12_11_153023_create_product_type_attributes_table.php
-    - database/migrations/2024_12_11_153024_create_product_type_attribute_options_table.php
-    - database/migrations/2024_12_11_153025_create_product_type_attribute_option_values_table.php
-    - database/migrations/2024_12_11_153026_create_golden_products_table.php
-    - database/migrations/2024_12_11_153027_create_golden_product_attributes_table.php
-    - database/migrations/2024_12_11_153028_create_golden_product_attribute_values_table.php
-    - database/migrations/2024_12_11_153029_create_golden_product_localizeds_table.php
-    - database/migrations/2024_12_11_153030_create_golden_product_variants_table.php
-    - database/migrations/2024_12_11_153031_create_golden_product_variant_localizeds_table.php
-    - database/migrations/2024_12_11_153032_create_golden_product_images_table.php
-    - database/migrations/2024_12_11_153033_create_locales_table.php
-    - database/migrations/2024_12_11_153034_create_seller_user_table.php
-    - database/migrations/2024_12_11_153035_create_golden_product_attribute_product_type_attribute_option_value_table.php
-    - database/migrations/2024_12_11_153036_create_optionValue_table.php
+    - database/migrations/2024_12_11_171700_create_sellers_table.php
+    - database/migrations/2024_12_11_171701_create_partnerships_table.php
+    - database/migrations/2024_12_11_171702_create_seller_data_table.php
+    - database/migrations/2024_12_11_171703_create_categories_table.php
+    - database/migrations/2024_12_11_171704_create_seller_products_table.php
+    - database/migrations/2024_12_11_171705_create_seller_product_images_table.php
+    - database/migrations/2024_12_11_171706_create_seller_variants_table.php
+    - database/migrations/2024_12_11_171707_create_prices_table.php
+    - database/migrations/2024_12_11_171708_create_stocks_table.php
+    - database/migrations/2024_12_11_171709_create_locations_table.php
+    - database/migrations/2024_12_11_171710_create_currencies_table.php
+    - database/migrations/2024_12_11_171711_create_messages_table.php
+    - database/migrations/2024_12_11_171712_create_product_types_table.php
+    - database/migrations/2024_12_11_171713_create_product_type_attributes_table.php
+    - database/migrations/2024_12_11_171714_create_product_type_attribute_options_table.php
+    - database/migrations/2024_12_11_171715_create_product_type_attribute_option_values_table.php
+    - database/migrations/2024_12_11_171716_create_golden_products_table.php
+    - database/migrations/2024_12_11_171717_create_golden_product_attributes_table.php
+    - database/migrations/2024_12_11_171718_create_golden_product_attribute_values_table.php
+    - database/migrations/2024_12_11_171719_create_golden_product_localizeds_table.php
+    - database/migrations/2024_12_11_171720_create_golden_product_variants_table.php
+    - database/migrations/2024_12_11_171721_create_golden_product_variant_localizeds_table.php
+    - database/migrations/2024_12_11_171722_create_golden_product_images_table.php
+    - database/migrations/2024_12_11_171723_create_locales_table.php
+    - database/migrations/2024_12_11_171724_create_seller_user_table.php
+    - database/migrations/2024_12_11_171725_create_golden_product_attribute_product_type_attribute_option_value_table.php
     - app/Models/Seller.php
     - app/Models/Partnership.php
     - app/Models/SellerData.php
@@ -96,7 +95,7 @@ models:
     ProductTypeAttributeOption: { product_type_attribute_id: 'id foreign', relationships: { hasMany: 'ProductTypeAttributeOptionValue:value' } }
     ProductTypeAttributeOptionValue: { value: string, locale_id: 'id foreign', product_type_attribute_option_id: 'id foreign', relationships: { belongsToMany: GoldenProductAttribute } }
     GoldenProduct: { product_type_id: 'id foreign', relationships: { hasMany: 'GoldenProductLocalized:translation, SellerProduct, GoldenProductVariant:variant, GoldenProductAttribute:attribute' } }
-    GoldenProductAttribute: { product_type_attribute_id: 'id foreign', golden_product_id: 'id foreign', is_option: 'boolean default:false', relationships: { hasMany: 'GoldenProductAttributeValue:value', belongsToMany: 'ProductTypeAttributeOptionValue:optionValue' } }
+    GoldenProductAttribute: { product_type_attribute_id: 'id foreign', golden_product_id: 'id foreign', is_option: 'boolean default:false', relationships: { hasMany: 'GoldenProductAttributeValue:value', belongsToMany: ProductTypeAttributeOptionValue } }
     GoldenProductAttributeValue: { value: string, golden_product_attribute_id: 'id foreign', locale_id: 'id foreign' }
     GoldenProductLocalized: { name: string, description: 'text nullable', attributes: 'json nullable', locale_id: 'id foreign', golden_product_id: 'id foreign' }
     GoldenProductVariant: { golden_product_id: 'id foreign', relationships: { hasMany: 'GoldenProductVariantLocalized:translation' } }

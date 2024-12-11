@@ -28,7 +28,9 @@ class GoldenProductService
 
     /**
      * TODO This should happen asynchronously
-     * @throws \Exception
+     * TODO When an required field cannot be set, we don't save the product and throw an error
+     * TODO Save the remaining fields into unmapped attributes
+     * TODO Unit conversion and field splitting
      */
     public function createFromSellerProduct(SellerProduct $sellerProduct): GoldenProduct
     {
@@ -135,12 +137,18 @@ class GoldenProductService
 
     private function createAttributes(GoldenProduct $goldenProduct, array $attributes): void
     {
-        foreach ($attributes as $localeId => $attributes) {
-            foreach ($attributes as $attributeConfigId => $value) {
-                $goldenProductAttribute = GoldenProductAttribute::create([
-                    'golden_product_id' => $goldenProduct->id,
-                    'product_type_attribute_id' => $attributeConfigId,
-                ]);
+
+        foreach ($attributes as $localeId => $attributeValues) {
+            $create = true;
+            foreach ($attributeValues as $attributeConfigId => $value) {
+
+                if ($create) {
+                    $goldenProductAttribute = GoldenProductAttribute::create([
+                        'golden_product_id' => $goldenProduct->id,
+                        'product_type_attribute_id' => $attributeConfigId,
+                    ]);
+                    $create = false;
+                }
 
                 if (is_scalar($value)) {
                     GoldenProductAttributeValue::create([
@@ -154,6 +162,8 @@ class GoldenProductService
                         'golden_product_attribute_id' => $goldenProductAttribute->id,
                         'product_type_attribute_option_value_id' => $value->id,
                     ]);
+                    $goldenProductAttribute->is_option = true;
+                    $goldenProductAttribute->save();
                 } else {
                     throw new \Exception('Unsupported attribute value type for value: ' . $value);
                 }

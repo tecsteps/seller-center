@@ -88,7 +88,9 @@ class ProductSeeder extends Seeder
                     'Care Instructions' => 'Machine wash cold, inside out',
                     'Origin' => 'Made in USA',
                     'Stretch' => 'Non-stretch',
-                    'Pocket Style' => '5-pocket styling'
+                    'Pocket Style' => '5-pocket styling',
+                    'Wash Type' => 'Light Wash',
+                    'Inseam Measurement' => '32'
                 ],
                 'variant_attributes' => [
                     ['size' => '32/32', 'wash' => 'Dark'],

@@ -164,7 +164,7 @@ models:
     is_option: boolean default:false
     relationships:
       hasMany: GoldenProductAttributeValue:value
-      belongsToMany: ProductTypeAttributeOptionValue:optionValue
+      belongsToMany: ProductTypeAttributeOptionValue
 
   GoldenProductAttributeValue:
     value: string

@@ -42,7 +42,7 @@ class GoldenProductAttribute extends Model
 
     public function productTypeAttributeOptionValues(): BelongsToMany
     {
-        return $this->belongsToMany(ProductTypeAttributeOptionValue::class, 'optionValue');
+        return $this->belongsToMany(ProductTypeAttributeOptionValue::class);
     }
 
     public function productTypeAttribute(): BelongsTo
