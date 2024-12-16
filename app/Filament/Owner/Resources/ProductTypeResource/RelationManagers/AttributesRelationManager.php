@@ -112,7 +112,7 @@ class AttributesRelationManager extends RelationManager
                                     ],
                                     'select' => [
                                         'Select' => 'Single Select',
-                                        'MultiSelect' => 'Mutli Select',
+                                        'MultiSelect' => 'Mutli Select', // TODO This isn't working because the schema
                                         'CheckboxList' => 'Checkbox List',
                                         'Radio' => 'Radio buttons',
                                         'TagsInput' => 'Tags',
@@ -137,7 +137,7 @@ class AttributesRelationManager extends RelationManager
                                     ->schema(function (Forms\Get $get) {
                                         $fields = [];
                                         $defaultLocale = Locale::where('default', true)->first();
-                                        
+
                                         foreach (Locale::orderBy('default', 'desc')->get() as $locale) {
                                             $fields[] = Forms\Components\TextInput::make("values.{$locale->code}")
                                                 ->label($locale->name)
@@ -155,7 +155,7 @@ class AttributesRelationManager extends RelationManager
                                                     }
                                                 });
                                         }
-                                        
+
                                         return $fields;
                                     })
                                     ->columns(2),
@@ -175,7 +175,7 @@ class AttributesRelationManager extends RelationManager
 
                                 $options = $record->options->map(function ($option) {
                                     $values = [];
-                                    
+
                                     foreach ($option->values as $value) {
                                         $values[$value->locale->code] = $value->value;
                                     }

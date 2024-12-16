@@ -138,16 +138,18 @@ class GoldenProductService
     private function createAttributes(GoldenProduct $goldenProduct, array $attributes): void
     {
 
+        $saved = [];
         foreach ($attributes as $localeId => $attributeValues) {
-            $create = true;
             foreach ($attributeValues as $attributeConfigId => $value) {
 
-                if ($create) {
+                if (!array_key_exists($attributeConfigId, $saved)) {
                     $goldenProductAttribute = GoldenProductAttribute::create([
                         'golden_product_id' => $goldenProduct->id,
                         'product_type_attribute_id' => $attributeConfigId,
                     ]);
-                    $create = false;
+                    $saved[$attributeConfigId] = $goldenProductAttribute;
+                } else {
+                    $goldenProductAttribute = $saved[$attributeConfigId];
                 }
 
                 if (is_scalar($value)) {

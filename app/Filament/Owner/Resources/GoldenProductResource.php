@@ -22,6 +22,14 @@ use Illuminate\Support\Collection;
 use App\Models\Locale;
 use App\Filament\Owner\Resources\GoldenProductResource\RelationManagers\SellerProductsRelationManager;
 use App\Filament\Owner\Resources\GoldenProductResource\RelationManagers\VariantsRelationManager;
+use App\Models\GoldenProductAttribute;
+use App\Models\GoldenProductAttributeValue;
+use App\Models\ProductTypeAttribute;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GoldenProductResource extends Resource
 {
@@ -44,112 +52,87 @@ class GoldenProductResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $defaultLocale = Locale::where('default', true)->first();
+        $locales = Locale::orderBy('default', 'desc')->get();
+
+        $tabs = [];
+        foreach ($locales as $locale) {
+            $tabs[] = Tab::make($locale->name)
+                ->badge($locale->default ? 'Default' : null)
+
+                ->schema([
+                    Section::make('General Information')
+                        ->description('Basic product information and categorization')
+                        ->columns(2)
+                        ->schema([
+                            Forms\Components\TextInput::make("translations.{$locale->id}.name")
+                                ->label('Name')
+                                ->required($locale->default)
+                                ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, ?GoldenProduct $record) use ($locale) {
+                                    if (!$record) return;
+
+                                    $translation = $record->translations()
+                                        ->where('locale_id', $locale->id)
+                                        ->first();
+
+                                    if ($translation) {
+                                        $component->state($translation->name);
+                                    }
+                                }),
+                            Forms\Components\Select::make('product_type_id')
+                                ->relationship('productType', 'name')
+                                ->required()
+                                ->disabled()
+                                ->afterStateUpdated(function (Forms\Set $set, $state) {
+                                    $set('name', '');
+                                    $set('description', '');
+                                })
+                                ->selectablePlaceholder(false)
+                                ->label('Product Type'),
+                            Forms\Components\RichEditor::make("translations.{$locale->id}.description")
+                                ->label('Description')
+                                ->required($locale->default)
+                                ->columnSpanFull()
+                                ->afterStateHydrated(function (Forms\Components\RichEditor $component, $state, ?GoldenProduct $record) use ($locale) {
+                                    if (!$record) return;
+
+                                    $translation = $record->translations()
+                                        ->where('locale_id', $locale->id)
+                                        ->first();
+
+                                    if ($translation) {
+                                        $component->state($translation->description);
+                                    }
+                                }),
+                        ]),
+
+                    Section::make('Attributes')
+                        ->description(fn(Get $get) => 'Product type: ' . (ProductType::find($get('product_type_id'))?->name))
+                        ->schema(fn(Get $get): array => static::getAttributeFields($get('product_type_id'), $locale->id))
+                        ->columns(2)
+                        ->visible(fn(Get $get): bool => (bool)$get('product_type_id'))
+                        ->key("attributesSection_{$locale->id}")
+                ]);
+        }
+
         return $form
             ->schema([
-                Forms\Components\Select::make('active_locale')
-                    ->label('')
-                    ->options(function () {
-                        return Locale::query()
-                            ->orderBy('default', 'desc')
-                            ->orderBy('name')
-                            ->pluck('name', 'id');
-                    })
-                    ->default(function (Get $get) {
-                        $defaultLocale = Locale::where('default', true)->first();
-                        return $defaultLocale ? $defaultLocale->id : null;
-                    })
-                    ->live()
-                    ->afterStateUpdated(function ($state, Set $set, Get $get) {
-                        $locale = Locale::find($state);
-                        if (!$locale) return;
-
-                        $record = GoldenProduct::find($get('id'));
-                        if (!$record) return;
-
-                        $translation = $record->translations()
-                            ->where('locale_id', $locale->id)
-                            ->first();
-
-                        if ($translation) {
-                            $set('name', $translation->name);
-                            $set('description', $translation->description);
-                            $set('attributes', $translation->attributes ?? []);
-                        } else {
-                            $set('name', '');
-                            $set('description', '');
-                            $set('attributes', []);
-                        }
-                    })
-                    ->selectablePlaceholder(false)
+                Forms\Components\Hidden::make('active_locale')
+                    ->default($locales->first()->id),
+                Forms\Components\Hidden::make('product_type_id')
+                    ->default(fn($record) => $record?->product_type_id),
+                Tabs::make('Locales')
+                    ->tabs($tabs)
+                    ->columnSpanFull()
+                    ->persistTab()
                     ->extraAttributes([
-                        'class' => 'ml-auto w-[200px]'
+                        'x-on:tab-changed' => 'document.querySelector(\'input[name="active_locale"]\').value = $event.detail.tab.id',
                     ]),
 
-                Section::make('General Information')
-                    ->description('Basic product information and categorization')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->afterStateHydrated(function ($component, $state, $record) {
-                                if (!$state && $record) {
-                                    $defaultLocale = Locale::where('default', true)->first();
-                                    if (!$defaultLocale) return;
-
-                                    $translation = $record->translations()
-                                        ->where('locale_id', $defaultLocale->id)
-                                        ->first();
-
-                                    $component->state($translation?->name);
-                                }
-                            }),
-                        Forms\Components\Textarea::make('description')
-                            ->columnSpanFull()
-                            ->afterStateHydrated(function ($component, $state, $record) {
-                                if (!$state && $record) {
-                                    $defaultLocale = Locale::where('default', true)->first();
-                                    if (!$defaultLocale) return;
-
-                                    $translation = $record->translations()
-                                        ->where('locale_id', $defaultLocale->id)
-                                        ->first();
-
-                                    $component->state($translation?->description);
-                                }
-                            }),
-
-                        Forms\Components\Select::make('product_type_id')
-                            ->relationship('productType', 'name')
-                            ->native(false)
-                            ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                $productTypeId = $get('product_type_id');
-                                if (!$productTypeId) {
-                                    $set('attributes', null);
-                                    return;
-                                }
-
-                                $productType = ProductType::with('attributes')->find($productTypeId);
-                                if (!$productType) return;
-
-                                $attributes = collect($get('attributes') ?? []);
-
-                                $newAttributes = $productType->attributes->mapWithKeys(function ($attribute) use ($attributes) {
-                                    return [$attribute->name => $attributes[$attribute->name] ?? null];
-                                })->toArray();
-
-                                $set('attributes', $newAttributes);
-                            })
-                            ->required(),
-                    ]),
-
-                Section::make('Attributes')
-                    ->schema(fn(Get $get): array => static::getAttributeFields($get('product_type_id')))
-                    ->columns(2)
-                    ->visible(fn(Get $get): bool => (bool) $get('product_type_id')),
             ]);
     }
 
-    protected static function getAttributeFields(?string $productTypeId): array
+    protected static function getAttributeFields(?string $productTypeId, ?string $localeId): array
     {
         if (!$productTypeId) return [];
 
@@ -158,72 +141,152 @@ class GoldenProductResource extends Resource
 
         return $productType->attributes
             ->sortBy('rank')
-            ->map(function ($attribute) {
-                $baseField = match ($attribute->type) {
-                    'select' => Forms\Components\Select::make("attributes.{$attribute->id}")
+            ->map(function (ProductTypeAttribute $attribute) use ($localeId) {
+                $baseField = match ($attribute->field) {
+                    'TextInput' => Forms\Components\TextInput::make("golden_product_attributes.{$localeId}.{$attribute->id}")
                         ->label($attribute->name)
-                        ->options(function () use ($attribute) {
-                            $defaultLocale = Locale::where('default', true)->first();
+                        ->when($attribute->unit, fn($component) => $component->suffix($attribute->unit)),
+                    'Textarea' => Forms\Components\Textarea::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'RichEditor' => Forms\Components\RichEditor::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'MarkdownEditor' => Forms\Components\MarkdownEditor::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'Checkbox' => Forms\Components\Checkbox::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'Toggle' => Forms\Components\Toggle::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'Select' => Forms\Components\Select::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name)
+                        ->options(function () use ($attribute, $localeId) {
                             return $attribute->options()
-                                ->with(['values' => function ($query) use ($defaultLocale) {
-                                    $query->where('locale_id', $defaultLocale->id);
+                                ->with(['values' => function ($query) use ($localeId) {
+                                    $query->where('locale_id', $localeId);
+                                }])
+                                ->get()
+                                ->mapWithKeys(function ($option) use ($localeId) {
+                                    $optionValue = $option->values->where('locale_id', $localeId)->first();
+
+                                    // Log::info($localeId . '-' . $optionValue->id);
+                                    return $optionValue ? [$optionValue->id => $optionValue->value] : [];
+                                })
+                                ->filter();
+                        }),
+                    'MultiSelect' => Forms\Components\MultiSelect::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name)
+                        ->options(function () use ($attribute, $localeId) {
+                            return $attribute->options()
+                                ->with(['values' => function ($query) use ($localeId) {
+                                    $query->where('locale_id', $localeId);
                                 }])
                                 ->get()
                                 ->mapWithKeys(function ($option) {
                                     return [$option->id => $option->values->first()?->value];
-                                });
-                        })
-                        ->helperText($attribute->description)
-                        ->native(false)
-                        ->required($attribute->required),
-
-                    'color' => Forms\Components\ColorPicker::make("attributes.{$attribute->id}")
+                                })
+                                ->filter();
+                        }),
+                    'CheckboxList' => Forms\Components\CheckboxList::make("golden_product_attributes.{$localeId}.{$attribute->id}")
                         ->label($attribute->name)
-                        ->helperText($attribute->description)
-                        ->required($attribute->required),
-
-                    'boolean' => Forms\Components\Toggle::make("attributes.{$attribute->id}")
+                        ->options(function () use ($attribute, $localeId) {
+                            return $attribute->options()
+                                ->with(['values' => function ($query) use ($localeId) {
+                                    $query->where('locale_id', $localeId);
+                                }])
+                                ->get()
+                                ->mapWithKeys(function ($option) {
+                                    return [$option->id => $option->values->first()?->value];
+                                })
+                                ->filter();
+                        }),
+                    'Radio' => Forms\Components\Radio::make("golden_product_attributes.{$localeId}.{$attribute->id}")
                         ->label($attribute->name)
-                        ->helperText($attribute->description)
-                        ->required($attribute->required),
-
-                    default => Forms\Components\TextInput::make("attributes.{$attribute->id}")
-                        ->label($attribute->name)
-                        ->helperText($attribute->description)
-                        ->required($attribute->required),
+                        ->options(function () use ($attribute, $localeId) {
+                            return $attribute->options()
+                                ->with(['values' => function ($query) use ($localeId) {
+                                    $query->where('locale_id', $localeId);
+                                }])
+                                ->get()
+                                ->mapWithKeys(function ($option) {
+                                    return [$option->id => $option->values->first()?->value];
+                                })
+                                ->filter();
+                        }),
+                    'TagsInput' => Forms\Components\TagsInput::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    'ColorPicker' => Forms\Components\ColorPicker::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
+                    default => Forms\Components\TextInput::make("golden_product_attributes.{$localeId}.{$attribute->id}")
+                        ->label($attribute->name),
                 };
 
-                $field = $baseField->afterStateHydrated(function ($component, $state, $record) use ($attribute) {
-                    if (!$state && $record) {
-                        $selectedLocaleId = $component->getState(); // Get the selected locale ID from the component
+                return $baseField
+                    ->helperText($attribute->description)
+                    ->required($attribute->required)
+                    ->afterStateHydrated(function ($component, $state, ?Model $record) use ($attribute, $localeId) {
+                        if (!$record) return;
+
                         $goldenProductAttribute = $record->attributes()
                             ->where('product_type_attribute_id', $attribute->id)
                             ->first();
 
                         if (!$goldenProductAttribute) return;
 
-                        if ($goldenProductAttribute->is_option) {
-                            // Get the option value through the many-to-many relationship
-                            $optionValue = $goldenProductAttribute->productTypeAttributeOptionValues()
-                                // ->whereHas('locale', fn($query) => $query->where('id', $selectedLocaleId))
+                        if (!$goldenProductAttribute->is_option) {
+
+                            $value = $goldenProductAttribute->values()
+                                ->where('locale_id', $localeId)
+                                ->first();
+
+
+                            if ($value) {
+                                $component->state($value->value);
+                            }
+                        } else {
+                            $optionValue = DB::table('golden_product_attribute_product_type_attribute_option_value as pivot')
+                                ->join('product_type_attribute_option_values as values', 'values.id', '=', 'pivot.product_type_attribute_option_value_id')
+                                ->where('pivot.golden_product_attribute_id', $goldenProductAttribute->id)
+                                ->where('values.locale_id', $localeId)
+                                ->select('values.id')
                                 ->first();
 
                             if ($optionValue) {
-                                $component->state($optionValue->product_type_attribute_option_id);
+                                $component->state($optionValue->id);
                             }
-                        } else {
-                            // Get the direct value from golden_product_attribute_values
-                            $value = $goldenProductAttribute->values()
-                                ->where('locale_id', $selectedLocaleId)
-                                ->first();
-                            $component->state($value?->value);
                         }
-                    }
-                });
-
-                return $field;
+                    });
             })
             ->toArray();
+    }
+
+    protected static function getAttributeValue($record, $attribute, $localeId): mixed
+    {
+        if (!$localeId) return null;
+
+        $goldenProductAttribute = $record->attributes()
+            ->where('product_type_attribute_id', $attribute->id)
+            ->first();
+
+        if (!$goldenProductAttribute) return null;
+
+        return self::getLocalizedAttributeValue($goldenProductAttribute, $localeId);
+    }
+
+    protected static function getLocalizedAttributeValue(GoldenProductAttribute $goldenProductAttribute, $localeId): mixed
+    {
+        if ($goldenProductAttribute->is_option) {
+            $optionValue = $goldenProductAttribute->productTypeAttributeOptionValues()
+                ->whereHas('locale', fn($query) => $query->where('id', $localeId))
+                ->first();
+
+            return $optionValue?->product_type_attribute_option_value_id;
+        } else {
+
+            $value = $goldenProductAttribute->values()
+                ->where('locale_id', $localeId)
+                ->first();
+
+            return $value?->value;
+        }
     }
 
     protected function handleRecordCreation(array $data): Model

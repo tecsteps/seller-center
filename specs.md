@@ -70,3 +70,20 @@ How & when a golden product is created:
 - You might want to create your catalog (~ golden products) upfront and let sellers link their offers to it. This way you have full control over your catalog, but restrict the number of products.
 - You might want to create the golden products on the fly, when a seller uploads a product. This requires a review and rating process to ensure qualityl
 - There are also mixed approaches, where you create golden products on the fly based on seller's data and then improve/enrich them via a review process.
+
+
+# TODO
+* Multi-selcts are not possible with current schema. Needed?
+* Change of product-type requires a re-creation of the golden product
+* Rename of non-translatable attributes needs to be saved differently
+
+Challenge:
+Die übersetzten Options-Value, die jeweils zu einem Value gehören müssen gleichzeitig gewechselt werden, allerdings gibt es Klammer. Man könnte das localized value noch aus der Tablle rausziehen in ein product_type_attribute_option_value_localizeds. 
+
+  ProductTypeAttributeOptionValue:
+    name: string (e.g. skinny)
+
+
+  ProductTypeAttributeOptionValueLocalized:
+    value
+    localeId
