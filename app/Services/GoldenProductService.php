@@ -32,7 +32,7 @@ class GoldenProductService
      * TODO Save the remaining fields into unmapped attributes
      * TODO Unit conversion and field splitting
      */
-    public function createFromSellerProduct(SellerProduct $sellerProduct): GoldenProduct
+    public function createFromSellerProduct(SellerProduct $sellerProduct, $reload = false): GoldenProduct
     {
         // we don't create a golden product if it already exists
         // TODO
@@ -47,9 +47,9 @@ class GoldenProductService
         $attributes = $this->translateTextAttributeValues($mappedAttributes, $productType, $translations);
         $attributes = $this->addAttributeOptionValues($attributes, $mappedAttributes, $productType);
 
-        $goldenProduct = $this->createGoldenProduct($productType);
+        $goldenProduct = $this->createOrGetGoldenProduct($productType, $reload);
 
-        $this->createTranslations($goldenProduct, $translations);
+        $this->createTranslations($goldenProduct, $translations, $reload);
         $this->createAttributes($goldenProduct, $attributes);
 
         $this->updateSellerProduct($sellerProduct, $goldenProduct);
@@ -59,12 +59,15 @@ class GoldenProductService
 
 
 
-    private function createGoldenProduct(ProductType $productType): GoldenProduct
+    private function createOrGetGoldenProduct(ProductType $productType, bool $reload): GoldenProduct
     {
-        $goldenProduct = GoldenProduct::create([
-            'product_type_id' => $productType->id,
-        ]);
-
+        if ($reload) {
+            $goldenProduct = GoldenProduct::where('product_type_id', $productType->id)->first();
+        } else {
+            $goldenProduct = GoldenProduct::create([
+                'product_type_id' => $productType->id,
+            ]);
+        }
         return $goldenProduct;
     }
 
@@ -123,8 +126,12 @@ class GoldenProductService
         return $attributes;
     }
 
-    private function createTranslations(GoldenProduct $goldenProduct, array $translations): void
+    private function createTranslations(GoldenProduct $goldenProduct, array $translations, bool $reload): void
     {
+        if ($reload) {
+            $goldenProduct->translations()->delete();
+        }
+
         foreach (Locale::all() as $locale) {
             $translation = $translations[$locale->id];
             $goldenProduct->translations()->create([
@@ -137,6 +144,11 @@ class GoldenProductService
 
     private function createAttributes(GoldenProduct $goldenProduct, array $attributes): void
     {
+        foreach ($goldenProduct->attributes as $attribute) {
+            $attribute->productTypeAttributeOptionValues()->detach();
+            $attribute->values()->delete();
+        }
+        $goldenProduct->attributes()->delete();
 
         $saved = [];
         foreach ($attributes as $localeId => $attributeValues) {

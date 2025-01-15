@@ -30,6 +30,7 @@ use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\GoldenProductService;
 
 class GoldenProductResource extends Resource
 {
@@ -121,6 +122,18 @@ class GoldenProductResource extends Resource
                     ->default($locales->first()->id),
                 Forms\Components\Hidden::make('product_type_id')
                     ->default(fn($record) => $record?->product_type_id),
+                Forms\Components\Actions::make([
+                    Forms\Components\Actions\Action::make('reload')
+                        ->label('Reload')
+                        ->icon('heroicon-o-arrow-path')
+                        ->action(function ($record) {
+                            $sellerProduct = $record->sellerProducts()->first();
+                            if ($sellerProduct) {
+                                app(GoldenProductService::class)->createFromSellerProduct($sellerProduct, true);
+                            }
+                            return redirect(request()->header('Referer'));
+                        }),
+                ]),
                 Tabs::make('Locales')
                     ->tabs($tabs)
                     ->columnSpanFull()

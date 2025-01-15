@@ -130,7 +130,7 @@ models:
     slug: string
     type: enum:text,boolean,number,select,url,color
     is_translatable: boolean default:false
-    field: enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker
+    field: enum:TextInput,Textarea,Checkbox,Toggle,Select,ColorPicker,RichEditor,MarkdownEditor
     required: boolean default:false
     rank: integer default:0
     description: string nullable

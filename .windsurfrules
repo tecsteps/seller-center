@@ -1,0 +1,1 @@
+The database schema is defined in the "draft.yaml" file. Don't modifiy the models, except of "User". Also use draft.yaml to check the schema.

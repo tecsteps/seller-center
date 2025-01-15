@@ -296,10 +296,6 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="optionValue" spec="" >
-			<column name="golden_product_attribute_id" type="INTEGER" jt="4" mandatory="y" />
-			<column name="product_type_attribute_option_value_id" type="INTEGER" jt="4" mandatory="y" />
-		</table>
 		<table name="partnerships" spec="" >
 			<column name="id" type="INTEGER" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
@@ -669,7 +665,6 @@
 		<entity schema="Default" name="locations" color="F4DDBE" x="1105" y="527" />
 		<entity schema="Default" name="messages" color="C7F4BE" x="1836" y="935" />
 		<entity schema="Default" name="migrations" color="BED3F4" x="3910" y="1326" />
-		<entity schema="Default" name="optionValue" color="BED3F4" x="3910" y="1581" />
 		<entity schema="Default" name="partnerships" color="C7F4BE" x="1394" y="884" />
 		<entity schema="Default" name="password_reset_tokens" color="BED3F4" x="3910" y="1139" />
 		<entity schema="Default" name="prices" color="F4DDBE" x="289" y="238" />
@@ -693,15 +688,22 @@
 			<entity schema="Default" name="job_batches" />
 			<entity schema="Default" name="jobs" />
 			<entity schema="Default" name="migrations" />
-			<entity schema="Default" name="optionValue" />
 			<entity schema="Default" name="password_reset_tokens" />
 			<entity schema="Default" name="sessions" />
 			<entity schema="Default" name="users" />
 			<entity schema="Default" name="cache_locks" />
 		</group>
 	</layout>
-	<layout name="SC01" id="Layout-952" show_relation="name" >
-		<entity schema="Default" name="golden_products" color="3986C1" x="51" y="51" />
+	<layout name="SC01" id="Layout-952" show_relation="no_text" >
+		<entity schema="Default" name="golden_product_attribute_product_type_attribute_option_value" color="3986C1" x="1122" y="51" />
+		<entity schema="Default" name="golden_product_attribute_values" color="3986C1" x="646" y="272" />
+		<entity schema="Default" name="golden_product_attributes" color="3986C1" x="646" y="85" />
+		<entity schema="Default" name="golden_product_localizeds" color="3986C1" x="51" y="425" />
+		<entity schema="Default" name="golden_products" color="3986C1" x="357" y="476" />
+		<entity schema="Default" name="product_type_attribute_option_values" color="3986C1" x="1734" y="255" />
+		<entity schema="Default" name="product_type_attribute_options" color="3986C1" x="1411" y="255" />
+		<entity schema="Default" name="product_type_attributes" color="3986C1" x="1156" y="255" />
+		<entity schema="Default" name="product_types" color="3986C1" x="816" y="476" />
 	</layout>
 	<layout name="~Layout with Sample Tools" id="Layout-20f3" show_column_type="y" show_relation="name" >
 		<entity schema="Default" name="cache" color="BED3F4" x="3774" y="1088" />
@@ -723,7 +725,6 @@
 		<entity schema="Default" name="locations" color="F4DDBE" x="1292" y="493" />
 		<entity schema="Default" name="messages" color="C7F4BE" x="2193" y="901" />
 		<entity schema="Default" name="migrations" color="BED3F4" x="4250" y="1088" />
-		<entity schema="Default" name="optionValue" color="BED3F4" x="4250" y="1343" />
 		<entity schema="Default" name="partnerships" color="C7F4BE" x="1632" y="850" />
 		<entity schema="Default" name="password_reset_tokens" color="BED3F4" x="4250" y="901" />
 		<entity schema="Default" name="prices" color="F4DDBE" x="340" y="204" />
